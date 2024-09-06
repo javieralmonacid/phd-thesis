@@ -29,7 +29,7 @@
 %       - Faculty of Health Sciences
 %       - Faculty of Science
 
-\title{On the three-dimensional elastodynamics of skeletal muscle in the context of finite element simulations}
+\title{Computational strategies for the nonlinear elastodynamics of skeletal muscle tissue}
 \thesistype{Thesis}
 \author{Javier Alejandro Almonacid Paredes}
 \previousdegrees{%
@@ -49,7 +49,7 @@
 \committee{
     \chair{TBD}{Professor \\ Department of Mathematics}
     \member{Nilima Nigam}{Supervisor \\ Professor \\ Department of Mathematics}
-    \member{James Wakeling}{Committee Member \\ Professor \\ Department of Biomedical Physiology and Kinesiology}
+    \member{James Wakeling}{Committee Member (?)\\ Professor \\ Department of Biomedical Physiology and Kinesiology}
     \member{TBD}{Internal Examiner \\ Professor \\ Department of Mathematics}
     \member{TBD}{External Examiner \\ Professor \\ Department of Quantum Fields \\ Mars University}
 }
@@ -106,7 +106,16 @@
 % ...
 % ... add your own packages here!
 
-
+\usepackage{background}
+\backgroundsetup{
+  position=current page.north,
+  angle=0,
+  nodeanchor=north,
+  vshift=-10mm,
+  opacity=1,
+  scale=1.5,
+  contents=Submitted for revision on \today
+}
 
 
 %   OTHER CUSTOMIZATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -133,6 +142,75 @@
 % ...
 % ... add your own customizations here!
 
+\usepackage{bm,bbm}
+
+%-----------------------------------------------
+% Eliminate ugly boxes around references.
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+%------------------------------------------------
+
+\numberwithin{equation}{chapter}
+\numberwithin{figure}{chapter}
+\numberwithin{table}{chapter}
+
+
+\newtheorem{objective}{Objective}
+\renewcommand*{\theobjective}{\Alph{objective}}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{remark}[theorem]{Remark}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{example}[definition]{Example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  DEFINITIONS 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\*#1{{\mathbf{#1}}} % bold letters!
+\newcommand{\pder}[2]{\dfrac{\partial #1}{\partial #2}}
+\newcommand{\Dder}[2]{\dfrac{\mathrm{D} #1}{\mathrm{D} #2}}
+\newcommand{\der}[2]{\dfrac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\dder}[2]{\dfrac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\divs}[1]{{\mathrm{div} \, #1}}
+\newcommand{\Divs}[1]{{\mathrm{Div} \, #1}}
+\newcommand{\divt}[1]{{\bm{\mathrm{div}} \, #1}}
+\newcommand{\Divt}[1]{{\bm{\mathrm{Div}} \, #1}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\I}{{\bar{I}}}
+\newcommand{\FF}{{\bm{\mathcal{F}}}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\T}{\top}
+\renewcommand{\c}{\mathbbm{c}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\p}{\mathbbm{p}}
+\newcommand{\vphi}{\varphi}
+
+\def\bsigma{{\bm{\sigma}}}
+\def\btau{{\bm{\tau}}}
+\def\bchi{{\bm{\chi}}}
+\def\bxi{{\bm{\xi}}}
+\def\bphi{{\bm{\varphi}}}
+
+\newcommand{\javicomment}[1]{\noindent {\color{red}\textbf{Comment by Javi: #1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% END OF DEFINITIONS
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -170,6 +248,7 @@ This is an optional page. Use your choice of paragraph style for text on this pa
 \end{acknowledgements}
 
 \addtoToC{Table of Contents}%
+\hypersetup{linkbordercolor=black,hidelinks}
 \tableofcontents%
 \clearpage
 
@@ -198,6 +277,57 @@ This is an optional page. Use your choice of paragraph style for text on this pa
 
 Start writing or pasting in your text here. By default, only works cited in the text will be added to the bibliography~\cite{HolzapfelBook}.
 
+\section{Physiology of skeletal muscle}
+
+\section{State of the art in muscle modelling}
+
+\section{Continuum mechanics of deformable solids}
+
+This might be a long section, maybe could be a chapter at the beginning of part 2? Should include some comments on generic deformation $\rho_0 \*u_{tt} = \Divt{\*P} + \*f$ and reduction to 1D if this is left as a section in the Introduction.
+
+\chapter{Efficient solvers for multi-body models of the muscle-tendon unit}
+
+Work with Evan on mass enhanced muscle models. We need to discuss what would be appropriate to show here, besides the model and the numerical strategy (dynamic/mass effects? Focus on one cycle? Effects of different muscles and activities?).
+Github repository: mass-enhanced-muscle-models.
+
+\chapter{Physiological stability of multi-body models}
+
+Show that the mass enhanced muscle model yields a 1D PDE. Augment the PDE with a Neo-Hookean term. Bring back the PDE to a system of ODEs and show that this model is physiologically stable.
+Github repository: derived from mass-enhanced-muscle-model -> separate repository?
+
+
+\chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation}
+
+Newmark methods, Rothe's vs. method of lines comparisons.
+Github repository: one-dimensional-muscle-models
+
+\part{Three-dimensional elastodynamics}
+
+\chapter{A Lagrangian framework for a model of skeletal muscle tissue}
+
+Sections to include:
+\begin{enumerate}
+    \item Lagrangian model
+    \item Fully-implicit time discretization
+    \item Linearization strategies
+\end{enumerate}
+
+\chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics}
+
+\begin{enumerate}
+    \item Implementation details
+    \item Convergence
+    \item Nonlinear Solvers
+    \item Different muscle architectures (e.g. bi-pennate)
+\end{enumerate}
+
+\chapter{Gearing in muscle tissues: a first-of-its-kind computational study}
+
+From paper w/ James. Add different pennations. Cedar access?
+
+
+
+\chapter{Conclusions and future work}
 
 
 %   BACK MATTER  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -218,9 +348,15 @@ Start writing or pasting in your text here. By default, only works cited in the 
     \bibliography{references}
 
 \begin{appendices} % optional
-\chapter{Code}
 
-Appendices should be used for supplemental information that does not form part of the main research. Remember that figures and tables in appendices should not be listed in the List of Figures or List of Tables.
+\chapter{Force relationships}
+
+Describe in detail force-length and force-velocity relationships in use.
+Github repository: force-relationships
+
+\chapter{Strain energies}
+
+Include all strain energies: base material, ecm, cellular material, fat, aponeurosis/tendon.
 
 \end{appendices}
 \end{document}
