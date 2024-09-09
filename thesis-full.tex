@@ -292,15 +292,27 @@ This might be a long section, maybe could be a chapter at the beginning of part 
 Work with Evan on mass enhanced muscle models. We need to discuss what would be appropriate to show here, besides the model and the numerical strategy (dynamic/mass effects? Focus on one cycle? Effects of different muscles and activities?).
 Github repository: mass-enhanced-muscle-models.
 
+\medskip
+
+Things that are not in Evan's thesis:
+\begin{enumerate}
+    \item tendon dynamics
+    \item what happens as the number of masses increases (homogenization study)
+\end{enumerate}
+
 \chapter{Physiological stability of multi-body models}
 
 Show that the mass enhanced muscle model yields a 1D PDE. Augment the PDE with a Neo-Hookean term. Bring back the PDE to a system of ODEs and show that this model is physiologically stable.
 Github repository: derived from mass-enhanced-muscle-model -> separate repository?
 
+\medskip
+
+TITIN -> can we get a FL curve for this or do we have to resort to more intricate implementations?
+
 
 \chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation}
 
-Newmark methods, Rothe's vs. method of lines comparisons.
+Newmark methods, Rothe's vs. method of lines comparisons. Stiff solvers is (one of) the key mathematical concepts here.
 Github repository: one-dimensional-muscle-models
 
 \part{Three-dimensional elastodynamics}
