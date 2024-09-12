@@ -143,6 +143,7 @@
 % ... add your own customizations here!
 
 \usepackage{bm,bbm}
+\usepackage{empheq}
 
 %-----------------------------------------------
 % Eliminate ugly boxes around references.
@@ -186,6 +187,7 @@
 \newcommand{\divt}[1]{{\bm{\mathrm{div}} \, #1}}
 \newcommand{\Divt}[1]{{\bm{\mathrm{Div}} \, #1}}
 
+\newcommand{\depsilon}{\dot{\varepsilon}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\B}{\mathcal{B}}
 \newcommand{\F}{\mathcal{F}}
@@ -300,6 +302,80 @@ Things that are not in Evan's thesis:
     \item what happens as the number of masses increases (homogenization study)
 \end{enumerate}
 
+Understanding the elastodynamics of skeletal muscle requires us to have an idea on the expected behaviour of muscle models. As a first approach to this task, we consider one-dimensional actuators. These are models that are well-established in the literature and that are part of major biomechanics software, such as OpenSim and FEBio [REFS]. Despite their apparent simplicity, however, these models are typically made of one or more highly-nonlinear ODEs whose stiff character cannot be overlooked. 
+
+Motivated by the work of Chen [REF], we discuss ... 
+
+\section{Mathematical models}
+
+Consider the dynamic contraction of a muscle-tendon unit of length $L = L(t)$ as in Figure \ref{fig:typical_mtu}. Moreover, let $L_M$ and $L_T$ denote the muscle and tendon lengths, respectively, which satisfy $L_M(t) + L_T(t) = L(t)$ at every time $t \geq 0$.
+
+We first define the \textit{muscle stretch} $\lambda_M$ and {strain rate} $\depsilon_M$ as
+\begin{equation}
+    \lambda_M := \dfrac{L_M}{l_{mus}^{opt}}, \quad \depsilon_M = \dfrac{1}{\depsilon_0} \dder{\lambda_M}{t} = \dfrac{1}{l_{mus}^{opt} \, \depsilon_0} \dder{L_M}{t},
+\end{equation}
+where $l_{mus}^{opt}$ is the optimal muscle length and $\depsilon_0$ is the maximum unloaded shortening strain rate. Similarly, we define the tendon stretch $\lambda_T$ as
+\begin{equation}
+    \lambda_T = \dfrac{L_T}{l^{opt}_{ten}}, 
+\end{equation} 
+with $l_{ten}^{opt} = L(0) - l_{mus}^{opt}$ being the optimal tendon length. The optimal muscle and tendon length corresponds to the length of the muscle and tendon parts of the MTU, respectively, at which the (relaxed) muscle is in static equilibrium.  These values can be initially calculated from literature, however, because we will be dealing with experimental data, some calibration is needed to ensure simulations begin from dynamic equilibrium (see Appendix \ref{app:calibration_optimal_initial_values}).
+
+The first of two models to be considered in this chapter is shown in Figure \ref{fig:massless_model}. We refer to this model as the \textit{massless} model and its dynamics are given by the equation
+\begin{equation} \label{eq:massless_model}
+    F_{Hill}(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
+\end{equation}
+Note that this is a first-order implicit ODE in the muscle length $L_M$. An initial value that guarantees dynamic equilibrium at time $t=0$ can be computed following the procedure in Appendix \ref{app:calibration_optimal_initial_values}.
+
+As the name suggests, the model given in \eqref{eq:massless_model} views muscle as a \textit{massless} object, neglecting any inertial effects. One way to include mass effects to this model consists in distributing a set of $N$ masses throughout the muscle segment as in Figure \ref{fig:massenhanced_model}, in a model that is typically referred to as the \textit{mass-enhanced} model (cf. Steph, Evan, and others). The dynamics in this case are given by the set of second-order ODEs:
+\begin{subequations}
+    \begin{align}
+        m_1 \ddot{u}_1 &= F_2(\lambda_2, \depsilon_2) - F_1(\lambda_1, \depsilon_1), \\
+        m_2 \ddot{u}_2 &= F_3(\lambda_3, \depsilon_3) - F_2(\lambda_2, \depsilon_2), \\
+        &\hspace{0.6em} \vdots \\
+        m_N \ddot{u}_N &= F_T(\lambda_T) - F_N(\lambda_N, \depsilon_N).
+    \end{align}
+\end{subequations}
+Here, $u_i$ is the displacement of the $i$-th segment, that is,
+\begin{equation}
+    x_i = u_i + x_i^0, \quad i=1,\dots,N,
+\end{equation}
+where $x_i^0$ is the initial position of the $i$-th segment. Using this notation, the segment stretches and strain rates can be computed as
+\begin{equation}
+    \lambda_1 = \dfrac{u_1 + l_s^0}{l_s^{opt}}, \quad \lambda_2 = \dfrac{u_2-u_1 + l_s^0}{l_s^{opt}}, \quad \dots \quad, \lambda_N = \dfrac{u_N-u_{N-1} + l_s^0}{l_s^{opt}},
+\end{equation}
+and
+\begin{equation} \label{eq:massenhanced_model}
+    \depsilon_1 = \dfrac{\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \depsilon_2 = \dfrac{\dot{u}_2-\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \dots \quad, \depsilon_N = \dfrac{\dot{u}_N - \dot{x}_{N-1}}{l_s^{opt} \depsilon_0},
+\end{equation}
+with $l_s^0 := L_M(0)/N$ is the initial length of each segment. Provided an appropriate value for $L_M(0)$ has been found, the initial values for the system \eqref{eq:massenhanced_model} are simply zero displacements and zero velocities.
+
+
+\begin{figure}
+    \caption{Representative muscle with tendon}
+    \label{fig:typical_mtu}
+\end{figure}
+
+\begin{figure}
+    \caption{Massless model}
+    \label{fig:massless_model}
+\end{figure}
+
+\begin{figure}
+    \caption{Mass-enhanced model}
+    \label{fig:massenhanced_model}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
 \chapter{Physiological stability of multi-body models}
 
 Show that the mass enhanced muscle model yields a 1D PDE. Augment the PDE with a Neo-Hookean term. Bring back the PDE to a system of ODEs and show that this model is physiologically stable.
@@ -362,6 +438,43 @@ From paper w/ James. Add different pennations. Cedar access?
     \bibliography{references}
 
 \begin{appendices} % optional
+
+\chapter{Calibration of optimal and initial muscle parameters in the context of experimental data}
+\label{app:calibration_optimal_initial_values}
+
+This is from Evan's thesis and the report TR2023-04. Needs to be updated to the appropriate notation.
+
+To minimize overshooting at the beginning of the simulation due to potential imbalance of forces, we must first calibrate our model. The idea is that a system that starts at rest should remain at rest if the initial length of the elements corresponds to their optimal length (in this case, $\widehat{\lambda}_i = 1$). Moreover, the sum of forces should also be zero at the beginning of the simulation. This affects the optimal and initial lengths, respectively, of the muscle belly and tendon.
+
+
+Let $r$ denote the \textit{estimated} ratio between the length of the muscle belly and the length of the MTU. Then, we can \textit{estimate} the optimal muscle belly and tendon length as follows:
+\[
+	\widetilde{l_{mus}^{opt}} := l_{MTU}^{opt} r, \qquad \widetilde{l_{ten}^{opt}} := l_{MTU}^{opt}(1-r).
+\]
+First, in a situation where the MTU is resting at optimal length, the muscle and tendon forces should balance: $F_M(1) = F_T(1)$. However, because there might be discrepancy between the normalization factors used to construct the force-length relationships and the ones used in this work, we assume that the true optimal lengths are small deviations of the estimated ones:
+\[
+	l_{mus}^{opt} = \widetilde{l_{mus}^{opt}} + \Delta l^{opt}, \qquad l_{ten}^{opt} = \widetilde{l_{ten}^{opt}} - \Delta l^{opt}.
+\]
+The correction $\Delta l^{opt}$ can then be found by solving the equation
+\begin{equation}
+	F_P\left( \dfrac{\widetilde{l_{mus}^{opt}}}{\widetilde{l_{mus}^{opt}} + \Delta l^{opt}} \right) = F_T \left( \dfrac{\widetilde{l_{ten}^{opt}}}{\widetilde{l_{ten}^{opt}} - \Delta l^{opt}} \right).	
+\end{equation}
+
+
+Similarly, we can estimate the initial muscle belly and tendon lengths:
+\[
+	\widetilde{l_{mus}^0} := L(0)r, \qquad \widetilde{l_{ten}^0} := L(0)(1-r).
+\]
+Therefore, the \textit{true} initial muscle belly and tendon lengths is given by
+\[
+	l_{mus}^0 = \widetilde{l_{mus}^0} - \Delta l^0, \qquad l_{ten}^0 = \widetilde{l_{ten}^0} + \Delta l^0.
+\]
+The correction in this case is found by solving:
+\begin{equation}
+	F_M \left( \dfrac{\widetilde{l_{mus}^0} - \Delta l^0}{l_{mus}^{opt}}\right) = F_T \left( \dfrac{\widetilde{l_{ten}^0} + \Delta l^0}{l_{ten}^{opt}}\right).
+\end{equation}
+
+
 
 \chapter{Force relationships}
 
