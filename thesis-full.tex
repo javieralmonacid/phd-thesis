@@ -99,6 +99,8 @@
 \usepackage{amssymb}                            % (1)
 \usepackage{amsthm}                             % (2)
 \usepackage{graphicx}                           % (3)
+\graphicspath{{figs/}}
+\usepackage{epstopdf}
 \usepackage[pdfborder={0 0 0}]{hyperref}        % (4)
 % \usepackage{pdfpages}                         % (5)
 % ...
@@ -116,6 +118,9 @@
   scale=1.5,
   contents=Submitted for revision on \today
 }
+
+\usepackage{circuitikz}
+\usetikzlibrary{patterns,hobby,decorations.pathmorphing}
 
 
 %   OTHER CUSTOMIZATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -289,7 +294,7 @@ This might be a long section, maybe could be a chapter at the beginning of part 
 
 \part{One-dimensional elastodynamics}
 
-\chapter{Efficient solvers for multi-body models of the muscle-tendon unit}
+\chapter{Inertial effects in multi-body mass-spring models of the muscle-tendon unit}
 
 Work with Evan on mass enhanced muscle models. We need to discuss what would be appropriate to show here, besides the model and the numerical strategy (dynamic/mass effects? Focus on one cycle? Effects of different muscles and activities?).
 Github repository: mass-enhanced-muscle-models.
@@ -304,34 +309,125 @@ Things that are not in Evan's thesis:
 
 Understanding the elastodynamics of skeletal muscle requires us to have an idea on the expected behaviour of muscle models. As a first approach to this task, we consider one-dimensional actuators. These are models that are well-established in the literature and that are part of major biomechanics software, such as OpenSim and FEBio [REFS]. Despite their apparent simplicity, however, these models are typically made of one or more highly-nonlinear ODEs whose stiff character cannot be overlooked. 
 
-Motivated by the work of Chen [REF], we discuss ... 
+\hrulefill
 
-\section{Mathematical models}
+\section{Mathematical description}
 
-Consider the dynamic contraction of a muscle-tendon unit of length $L = L(t)$ as in Figure \ref{fig:typical_mtu}. Moreover, let $L_M$ and $L_T$ denote the muscle and tendon lengths, respectively, which satisfy $L_M(t) + L_T(t) = L(t)$ at every time $t \geq 0$.
+Consider the dynamic contraction of a muscle-tendon unit of length $L = L(t)$. Moreover, let $L_M$ and $L_T$ denote the muscle and tendon lengths, respectively, which satisfy $L_M(t) + L_T(t) = L(t)$ at every time $t \geq 0$.
 
-We first define the \textit{muscle stretch} $\lambda_M$ and {strain rate} $\depsilon_M$ as
+We first define the \textit{muscle stretch} $\lambda_M$, the \textit{muscle strain} $\varepsilon_M$, and the {strain rate} $\depsilon_M$ as
 \begin{equation}
-    \lambda_M := \dfrac{L_M}{l_{mus}^{opt}}, \quad \depsilon_M = \dfrac{1}{\depsilon_0} \dder{\lambda_M}{t} = \dfrac{1}{l_{mus}^{opt} \, \depsilon_0} \dder{L_M}{t},
+    \lambda_M := \dfrac{L_M}{l_{mus}^{opt}}, \qquad \varepsilon_M := \lambda_M - 1, \qquad \depsilon_M = \dfrac{1}{\depsilon_0} \dder{\lambda_M}{t} = \dfrac{1}{l_{mus}^{opt} \, \depsilon_0} \dder{L_M}{t},
 \end{equation}
-where $l_{mus}^{opt}$ is the optimal muscle length and $\depsilon_0$ is the maximum unloaded shortening strain rate. Similarly, we define the tendon stretch $\lambda_T$ as
+where $l_{mus}^{opt}$ is the optimal muscle length and $\depsilon_0$ is the maximum unloaded shortening strain rate. Similarly, we define the \textit{tendon stretch} $\lambda_T$ and \textit{tendon strain} $\varepsilon_T$ as
 \begin{equation}
-    \lambda_T = \dfrac{L_T}{l^{opt}_{ten}}, 
+    \lambda_T := \dfrac{L_T}{l^{opt}_{ten}}, \qquad \varepsilon_T := \lambda_T - 1,
 \end{equation} 
 with $l_{ten}^{opt} = L(0) - l_{mus}^{opt}$ being the optimal tendon length. The optimal muscle and tendon length corresponds to the length of the muscle and tendon parts of the MTU, respectively, at which the (relaxed) muscle is in static equilibrium.  These values can be initially calculated from literature, however, because we will be dealing with experimental data, some calibration is needed to ensure simulations begin from dynamic equilibrium (see Appendix \ref{app:calibration_optimal_initial_values}).
 
-The first of two models to be considered in this chapter is shown in Figure \ref{fig:massless_model}. We refer to this model as the \textit{massless} model and its dynamics are given by the equation
-\begin{equation} \label{eq:massless_model}
-    F_{Hill}(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
+In a simple model, such as the one shown in Figure \ref{fig:muscle_models_1D}A, muscle can be thought as a one-dimensional spring containing a contractile element (CE) and a parallel elastic element (PEE). The first one is related to the force produced by actin-myosin interactions during activation, whereas the latter is related to passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres that form the muscle fibre. The muscle force $F_M$ in this case is given by Hill's equation,
+\begin{equation} \label{eq:Hill_force}
+    F_{Hill}(\lambda, \depsilon) = F_0 \Big\{ a(t) F_A(\lambda) F_V(\depsilon) + F_P(\lambda) \Big\}.
 \end{equation}
-Note that this is a first-order implicit ODE in the muscle length $L_M$. An initial value that guarantees dynamic equilibrium at time $t=0$ can be computed following the procedure in Appendix \ref{app:calibration_optimal_initial_values}.
+Several components can be identified in this equation:
+\begin{enumerate}
+    \item $F_0$ is the maximum isometric force that the muscle in study can exert on the tendon,
+    \item $a = a(t)$ is an activation function characterizing the influx of $\mathrm{Ca}_2^+$ ions that trigger the formation of cross-bridges between actins and myosins within sacomeres. This function can be computed given an excitation $u(t)$ using Zajac's equation \cite{Zajac1989}:
+    \begin{equation}
+        \dfrac{da}{dt} + \dfrac{a(t)}{\tau_{act}} \left( \beta + (1-\beta)u(t) \right) = \dfrac{u(t)}{\tau_{act}},
+    \end{equation}
+    \item $F_A = F_A(\lambda)$ is the active force-length relationship, 
+    \item $F_V = F_V(\depsilon)$ is the force-velocity relationship, 
+    \item $F_P = F_P(\lambda)$ is the passive force-length relationship.
+\end{enumerate} 
+The force relationships $F_A$, $F_V$, and $F_P$ are typically fit from experimental data obtained through tensile experiments, and therefore do not have a standard expression. For this particular set of experiments, we use least-squares fits of the B\'{e}zier curves used by Ross et. al [CITATION]. The exact definition of these curves is available in Appendix B. Moreover, the muscle force $F_M$ is balanced by the tendon force $F_T$ at all times, that is
+\begin{equation} \label{eq:massless_model}
+    F_M(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
+\end{equation}
 
-As the name suggests, the model given in \eqref{eq:massless_model} views muscle as a \textit{massless} object, neglecting any inertial effects. One way to include mass effects to this model consists in distributing a set of $N$ masses throughout the muscle segment as in Figure \ref{fig:massenhanced_model}, in a model that is typically referred to as the \textit{mass-enhanced} model (cf. Steph, Evan, and others). The dynamics in this case are given by the set of second-order ODEs:
-\begin{subequations}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \centering
+        \node at (-2.8,1) {\huge \textbf{A}};
+        \node[inner sep=0pt] at (0,0)
+            {\includegraphics[width=0.3\textwidth]{hill-massless.eps}};
+        \node at (-0.92,0.5) {\footnotesize CE};
+        \node at (-0.92, -0.47) {\footnotesize PEE};
+        \node at (1.33,-0.2) {SEE};
+        \node at (-0.92, -1.25) {\footnotesize $L_M$};
+        \node at (1.33, -1.25) {\footnotesize $L_T$};
+        \node at (0.1, 1.45) {\footnotesize $\vec{F}_M$};
+        \node at (0.7, 1.45) {\footnotesize $\vec{F}_T$};
+    \end{tikzpicture}
+    \hspace{0.5em}
+    \begin{tikzpicture}
+        \centering
+        \node at (-4.5,1) {\huge \textbf{B}};
+        \node[inner sep=0pt] at (0,0)
+            {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced.eps}};
+        \node at (-2.31, 0.1) {\tiny $m_1$};
+        \node at (-0.56, 0.1) {\tiny $m_2$};
+        \node at (1.94, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
+        \node at (-3.2, 0.5) {\tiny CE$_1$};
+        \node at (-3.2, -0.5) {\tiny PEE$_1$};
+        \node at (-3.2, -1.26) {\footnotesize $l_1$};
+        \node at (-1.45, 0.5) {\tiny CE$_2$};
+        \node at (-1.45, -0.5) {\tiny PEE$_2$};
+        \node at (-1.45, -1.26) {\footnotesize $l_2$};
+        \node at (1.08, 0.5) {\tiny CE$_{\hspace{-0.15em}N}$};
+        \node at (1.08, -0.5) {\tiny PEE$_{\hspace{-0.15em}N}$};
+        \node at (1.08, -1.26) {\footnotesize $l_N$};
+        \node at (3.05, -0.2) {\tiny SEE};
+        \node at (3.05, -1.26) {\footnotesize $L_T$};
+        \node at (-2.6, 1.45) {\footnotesize $\vec{F}_1$};
+        \node at (-2.0, 1.45) {\footnotesize $\vec{F}_2$};
+        \node at (-0.9, 1.45) {\footnotesize $\vec{F}_2$};
+        \node at (-0.3, 1.45) {\footnotesize $\vec{F}_3$};
+        \node at (1.65, 1.45) {\footnotesize $\vec{F}_N$};
+        \node at (2.25, 1.45) {\footnotesize $\vec{F}_T$};
+        \node at (0.1,0.14) {\footnotesize $\dots$};
+        \node at (-0.1,-1.0) {\footnotesize $\dots$};
+    \end{tikzpicture}
+    \caption{(A) A simple Hill-type model of the MTU (muscle region in pink, tendon region in grey) using massless springs. Depicted here are the (active) contractile element (CE), the passive elastic element (PEE), and the series elastic element (SEE) representing the tendon. (B) A multi-body mode of the MTU that does not neglect the mass of the muscle, which is equally distributed throughout the muscle segment.}
+    \label{fig:muscle_models_1D}
+\end{figure}
+
+%\begin{circuitikz}
+    %ground
+    %\pattern[pattern=north east lines] (0,0) rectangle (7,.25);
+    %\draw[thick] (0,.25) -- (7,.25);
+    
+    %\draw (3,.25) to[spring, l=$k$] (3,2);
+    %\draw (4,.25) to[damper, l_=$b$] (4,2);
+    %\draw[fill=gray!40] (2.5,2) rectangle (4.5,3);
+    %\node at (3.5,2.5) {$m$};
+    
+    %\draw[thick, ->] (3.5,4) -- (3.5,3);
+    %\node at (3.75,3.75) {$F$};   
+%\end{circuitikz}
+
+%\begin{circuitikz}
+    
+    %\pattern[pattern=north east lines] (0,0) rectangle (0.2, 2);
+    %\draw[thick] (0.2, 0) -- (0.2, 2);
+    %\draw (0.2, 1) -- (0.8, 1);
+    %\draw (0.8, 1) -- (0.8, 1.5) -- (1.3, 1.5);
+    %\draw (1.9, 1.5) ellipse (6mm and 3mm);
+    %\draw (2.5, 1.5) -- (3.0, 1.5);
+    %\draw (0.8, 1) -- (0.8, 0.5) -- (1.0, 0.5);
+    %\draw (1.0, 0.5) to[R] ++(1.8, 0) -- (3.0, 0.5);
+    %\draw (3.0, 0.5) -- (3.0, 1.5);
+    %\draw (3.0, 1.0) -- (3.6, 1.0);
+
+%\end{circuitikz}
+
+Equation \eqref{eq:massless_model} (which we refer to as the \textit{massless} model) represents a model of the MTU in which the mass of the muscle is not taken into consideration. While this may seem like an outrageous simplification of the problem, this is actually considered the ``gold-standard'' in muscle modelling. Hence, \textbf{this model's absence of mass (and therefore inertial forces) raises the question of whether including mass has any effect in the prediction of the dynamics (including forces) of the system}. In an attempt to answer this, Chen \cite{EvanThesis} has put forward a muscle model in which the mass of the muscle is equally distributed into $N$ segments (see Figure \ref{fig:muscle_models_1D}B). The dynamics in this model (which we refer to as the \textit{mass-enhanced} model) are given by the set of second-order ODEs:
+\begin{subequations} \label{eq:massenhanced_model}
     \begin{align}
         m_1 \ddot{u}_1 &= F_2(\lambda_2, \depsilon_2) - F_1(\lambda_1, \depsilon_1), \\
         m_2 \ddot{u}_2 &= F_3(\lambda_3, \depsilon_3) - F_2(\lambda_2, \depsilon_2), \\
-        &\hspace{0.6em} \vdots \\
+        &\hspace{0.6em} \vdots \notag \\
         m_N \ddot{u}_N &= F_T(\lambda_T) - F_N(\lambda_N, \depsilon_N).
     \end{align}
 \end{subequations}
@@ -339,32 +435,35 @@ Here, $u_i$ is the displacement of the $i$-th segment, that is,
 \begin{equation}
     x_i = u_i + x_i^0, \quad i=1,\dots,N,
 \end{equation}
-where $x_i^0$ is the initial position of the $i$-th segment. Using this notation, the segment stretches and strain rates can be computed as
+where $x_i^0$ is the initial position of the $i$-th segment. The segment stretches and strain rates, i.e.
+\[
+\lambda_i = \dfrac{l_i}{l_s^{opt}} = \dfrac{l_i}{l_{mus}^{opt}/N}, \quad \depsilon_i = \dfrac{\dot{\lambda_i}}{\depsilon_0}, \quad i = 1,\dots,N,
+\]
+can be written in terms of the displacements $u_i$ as
 \begin{equation}
     \lambda_1 = \dfrac{u_1 + l_s^0}{l_s^{opt}}, \quad \lambda_2 = \dfrac{u_2-u_1 + l_s^0}{l_s^{opt}}, \quad \dots \quad, \lambda_N = \dfrac{u_N-u_{N-1} + l_s^0}{l_s^{opt}},
 \end{equation}
 and
-\begin{equation} \label{eq:massenhanced_model}
+\begin{equation}
     \depsilon_1 = \dfrac{\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \depsilon_2 = \dfrac{\dot{u}_2-\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \dots \quad, \depsilon_N = \dfrac{\dot{u}_N - \dot{x}_{N-1}}{l_s^{opt} \depsilon_0},
 \end{equation}
-with $l_s^0 := L_M(0)/N$ is the initial length of each segment. Provided an appropriate value for $L_M(0)$ has been found, the initial values for the system \eqref{eq:massenhanced_model} are simply zero displacements and zero velocities.
+with $l_s^0 := L_M(0)/N$ is the initial length of each segment.
 
 
-\begin{figure}
-    \caption{Representative muscle with tendon}
-    \label{fig:typical_mtu}
-\end{figure}
 
-\begin{figure}
-    \caption{Massless model}
-    \label{fig:massless_model}
-\end{figure}
+\section{Biomechanical data and initial conditions}
 
-\begin{figure}
-    \caption{Mass-enhanced model}
-    \label{fig:massenhanced_model}
-\end{figure}
+To compare the performance of the muscle models \eqref{eq:massless_model} and \eqref{eq:massenhanced_model}, we use the motion-capture and electromyography (EMG) data collected in \cite{EvanThesis}. The data corresponds to the human muscle-tendon unit dynamics of three muscles (medial gastrocnemius (MG), vastus medialis (VM), and semitendinosus (ST)) during three tasks (walking, cycling, and running). In particular, we are given to as a set of traces of muscle excitation $\widehat{u}$ and MTU length $L$ over the span of 24.99 seconds.
 
+TO DO HERE
+
+\begin{enumerate}
+    \item Explain subject data (mass, height, tasks).
+    \item Explain how muscle volume is computed.
+    \item initial conditions (either refer to Appendix A or bring those contents here).
+\end{enumerate}
+
+\section{Main results}
 
 
 
