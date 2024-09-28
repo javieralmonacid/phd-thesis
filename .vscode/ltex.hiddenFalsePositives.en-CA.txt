@@ -1,0 +1,1 @@
+{"rule":"WHETHER","sentence":"^\\QHence, this model's absence of mass (and therefore inertial forces) raises the question of whether including mass is beneficial.\\E$"}
