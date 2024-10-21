@@ -318,17 +318,24 @@ This might be a long section, maybe could be a chapter at the beginning of part 
 
 %\hrulefill
 
-One-dimensional models of skeletal muscle are highly effective in capturing the overall dynamics of skeletal muscle. Their relative simplicity allows physiologists to perform simulations on a range of subjects, muscles, and tasks. 
+One-dimensional models of skeletal muscle are effective in capturing the overall dynamics of skeletal muscle. Their relative simplicity allows physiologists to perform cheap forward dynamics simulations on a range of subjects, muscles, and tasks.
 
-Consider, for instance, the protocol developed by Chen in \cite{EvanThesis} to record data from a human subject during locomotor tasks. Here, 24 LED motion-capture markers are secured to the skin over the pelvis and lower extremities of each participant to capture kinematic and kinetc data. Furthermore, bipolar Ag/AgCl surface EMG electrodes are positioned over the bellies of 10 different muscles to capture electromyographic (EMG) data. After this setup is complete, subjects asked to perform 4 different tasks (walking and running on a treadmill, hopping, and sit-to-stand from a chair) with appropriate breaks in between. Data is recorded for about 30 seconds per task and each task is repeated twice. This means that, if data is collected for 20 subjects, up to $20 \times 10 \times 8 = 1600$ different simulations can be performed. Thus, accurate and efficient models and numerical algorithms are required to analyze the data in a feasible timeframe.
+Consider, for instance, the protocol developed by Chen in \cite{EvanThesis} to record data from a human subject during locomotor tasks. Here, 24 LED motion-capture markers are secured to the skin over the pelvis and lower extremities of each participant to capture kinematic and kinetic data. Furthermore, bipolar Ag/AgCl surface electromyography (EMG) electrodes are positioned over the bellies of 10 different muscles to capture EMG data. After this setup is complete, subjects asked to perform 4 different tasks (walking and running on a treadmill, hopping, and sit-to-stand from a chair) with appropriate breaks in between. Data is recorded for about 30 seconds per task and each task is repeated twice. This means that, if data is collected for 20 subjects, up to $20 \times 10 \times 8 = 1600$ different simulations could be performed. Thus, accurate and efficient models and numerical algorithms are required to analyze the data in a feasible timeframe.
 
-In this project, we implement a set of MATLAB routines for a multi-body model of the muscle-tendon unit (MTU) developed by Chen in \cite{EvanThesis}. Moreover, we study the inertial (mass) effects in a particular subset of forward dynamics simulations using previously collected data \cite{EvanThesis,Dick2016}. These effects are typically neglected in the literature due to the popularity of biomechanics software, such as OpenSim \cite{Delp2007OpenSim}, but several studies have consistently shown that there are certain scenarios where inertia is not negligible \cite{EvanThesis,RossWakeling2016Multibody}. First, we mathematically describe the ordinary differential equations (ODEs) describing these MTU models. Next, we describe the data and parameters in use for this study. Then, we describe the computational implementation of the solvers required for this study, which will compute important quantities, such as lengths and velocities for muscle and tendon, as well of muscle force. Finally, we describe the inertial effects observed in the simulations and compare these to the output of a typical model that does not take into account the mass of the muscle.
+In this project, we implement a set of MATLAB routines for a multi-body model of the muscle-tendon unit (MTU) developed by Chen in \cite{EvanThesis}, which has its origins on the work by G\"{u}nther et al. \cite{Gunther2012}, Ross \& Wakeling \cite{RossWakeling2016Multibody}, and Ross et al. \cite{Ross2018}. Moreover, we study the inertial (mass) effects in a particular subset of forward dynamics simulations using previously collected data \cite{EvanThesis,Dick2016}. These effects are typically neglected in the literature (e.g. in the popular biomechanics software OpenSim \cite{Delp2007OpenSim}), but several studies have consistently shown that there are certain scenarios where inertia is not negligible \cite{EvanThesis,RossWakeling2016Multibody}. First, we mathematically describe the ordinary differential equations (ODEs) describing these MTU models. Next, we describe the data and parameters in use for this study. Then, we describe the computational implementation of the solvers required for this study, which will compute important quantities, such as lengths and velocities for muscle and tendon, as well of muscle force. Finally, we describe the inertial effects observed in the simulations and compare these to the output of a typical model that does not take into account the mass of the muscle.
 
 %Using the data collected in \cite{EvanThesis}, we consider two subjects\footnote{One subject performed walking and running tasks, while a different one performed the cycling task. Given that morphological differences are not considered in this study, we will treat these two subjects as a single one.} and select a set of three muscles: medial gastrocnemius (MG), vastus medialis (VM), and semitendinosus (ST); and a set of three tasks: walking, cycling, and running. 
 
 \section{Mathematical description}
 
-Consider the dynamic contraction of a muscle-tendon unit of length $L = L(t)$. Moreover, let $L_M$ and $L_T$ denote the muscle and tendon lengths, respectively, which satisfy $L_M(t) + L_T(t) = L(t)$ at every time $t \geq 0$.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{mtu_sketch.jpeg}
+    \caption{Sketch of an MTU (nicer version to come).}
+    \label{fig:mtu_sketch}
+\end{figure}
+
+Consider the dynamic contraction of a muscle-tendon unit of length $L = L(t)$. Moreover, let $L_M$ and $L_T$ denote the muscle and tendon lengths, respectively, which satisfy $L_M(t) + L_T(t) = L(t)$ at every time $t \geq 0$ (see Figure \ref{fig:mtu_sketch}).
 
 We first define the \textit{muscle stretch} $\lambda_M$, the \textit{muscle strain} $\varepsilon_M$, and the \textit{muscle strain rate} $\depsilon_M$ as
 \begin{equation}
@@ -342,7 +349,7 @@ with $l_{ten}^{opt} = L(0) - l_{mus}^{opt}$ being the optimal tendon length. The
 
 In a simple model, such as the one shown in Figure \ref{fig:muscle_models_1D}A, muscle can be thought as a one-dimensional spring containing a contractile element (CE) and a parallel elastic element (PEE). The first one is related to the force produced by actin-myosin interactions during activation, whereas the latter is related to passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres that form the muscle fibre. The muscle force $F_M$ in this case is given by Hill's equation,
 \begin{equation} \label{eq:Hill_force}
-    F_{Hill}(\lambda, \depsilon) = F_0 \Big\{ a(t) F_A(\lambda) F_V(\depsilon) + F_P(\lambda) \Big\}.
+    F_{Hill}(\lambda, \depsilon) = F_0 \Big\{ a(t) F_A(\lambda_M) F_V(\depsilon_M) + F_P(\lambda_M) \Big\}.
 \end{equation}
 In this expression:
 \begin{enumerate}
@@ -350,19 +357,14 @@ In this expression:
     \begin{equation}
         F_0 = \sigma_0 \cdot PCSA_0 = \sigma_0 \cdot \dfrac{V_{0,mus}}{l_{mus}^{opt}},
     \end{equation}
-    where $\sigma_0$ is the maximum isometric stress of muscle tissue, $PCSA_0$ is the optimal physiological cross sectional area (PCSA), and $V_{0,mus}$ is the muscle volume;
+    where $\sigma_0$ is the maximum isometric stress of muscle tissue, $PCSA_0$ is the optimal physiological cross-sectional area (PCSA), and $V_{0,mus}$ is the muscle volume;
     \item $a = a(t)$ is an activation function characterizing the influx of $\mathrm{Ca}_2^+$ ions that trigger the formation of cross-bridges between actins and myosins within sacomeres. This function can be computed given an excitation $u(t)$ using Zajac's equation \cite{Zajac1989}:
     \begin{equation} \label{eq:zajac}
         \dfrac{da}{dt} + \dfrac{a(t)}{\tau_{act}} \left( \beta + (1-\beta)u(t) \right) = \dfrac{u(t)}{\tau_{act}};
     \end{equation}
-    \item $F_A = F_A(\lambda)$ is the active force-length relationship, 
-    \item $F_V = F_V(\depsilon)$ is the force-velocity relationship, 
-    \item $F_P = F_P(\lambda)$ is the passive force-length relationship.
+    \item $F_A = F_A(\lambda_M)$ is known as the active force-length relationship, whereas $F_V = F_V(\depsilon)$ is known as the force-velocity relationship. They are related to the CE of the model and describe the force produced due to actin-myosin interactions during activation; 
+    \item $F_P = F_P(\lambda_M)$ is known as the passive force-length relationship. It is related to the PEE and describes the force produced by passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres.
 \end{enumerate} 
-The force relationships $F_A$, $F_V$, and $F_P$ are typically fit from experimental data obtained through tensile experiments, and therefore do not have a standard expression. For this particular set of experiments, we use least-squares fits of the B\'{e}zier curves used by Ross et. al \cite{RossWakeling2016Multibody}. These curves are shown in Figure \ref{fig:force_curves_1D} and their exact definitions are available in Appendix B. The muscle force $F_M$ is balanced by the tendon force $F_T$ at all times, that is
-\begin{equation} \label{eq:massless_model}
-    F_M(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
-\end{equation}
 
 \begin{figure}
     \centering
@@ -376,7 +378,7 @@ The force relationships $F_A$, $F_V$, and $F_P$ are typically fit from experimen
     \label{fig:force_curves_1D}
 \end{figure}
 
-
+The force relationships $F_A$, $F_V$, and $F_P$ are typically fit from experimental data obtained through tensile experiments, and therefore do not have a standard expression. For this particular set of experiments, we use least-squares fits of the B\'{e}zier curves used by Ross et. al \cite{RossWakeling2016Multibody}. These curves are shown in Figure \ref{fig:force_curves_1D} and their exact definitions are available in Appendix \ref{app:force_relationships}. 
 
 \begin{figure}
     \centering
@@ -454,8 +456,11 @@ The force relationships $F_A$, $F_V$, and $F_P$ are typically fit from experimen
     %\draw (3.0, 1.0) -- (3.6, 1.0);
 
 %\end{circuitikz}
-
-The first-order implicit ODE \eqref{eq:massless_model} (which we refer to as the \textit{massless} model) represents a model of the MTU in which the mass of the muscle is not taken into consideration. While this may seem like an outrageous simplification of the problem, it is actually what is being solved in the backend of many popular biomechanics software, such as OpenSim \cite{Delp2007OpenSim}. Hence, \textbf{this model's absence of mass (and therefore inertial forces) raises the question of whether including mass has any effect in the prediction of the dynamics of the system}. In an attempt to answer this, Chen \cite{EvanThesis} has put forward a muscle model in which the mass of the muscle is equally distributed into $N$ segments (see Figure \ref{fig:muscle_models_1D}B), forming a multi-body system with $N$ bodies. The dynamics in this model (which we refer to as the \textit{mass-enhanced} model) are given by the set of second-order ODEs:
+For the model in Figure \ref{fig:muscle_models_1D}A, the muscle force $F_M \equiv F_{Hill}$ is balanced by the tendon force $F_T$ at all times, that is
+\begin{equation} \label{eq:massless_model}
+    F_M(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
+\end{equation}
+This first-order implicit ODE, which we refer to as the \textit{massless} model, represents a model of the MTU in which the mass of the muscle is not taken into consideration. While this may seem like an outrageous simplification of the problem, it is actually what is being solved in the backend of many popular biomechanics software, such as OpenSim \cite{Delp2007OpenSim}. Hence, \textbf{this model's absence of mass (and therefore inertial forces) raises the question of whether including mass has any effect in the prediction of the dynamics of the system}. In an attempt to answer this, Chen \cite{EvanThesis} has put forward a muscle model in which the mass of the muscle is equally distributed into $N$ segments (see Figure \ref{fig:muscle_models_1D}B), forming a multi-body system with $N$ bodies. The dynamics in this model, which we refer to as the \textit{mass-enhanced} model, are given by the set of second-order ODEs:
 \begin{subequations} \label{eq:massenhanced_model}
     \begin{align}
         m_1 \ddot{u}_1 &= F_2(\lambda_2, \depsilon_2) - F_1(\lambda_1, \depsilon_1), \\
@@ -464,7 +469,7 @@ The first-order implicit ODE \eqref{eq:massless_model} (which we refer to as the
         m_N \ddot{u}_N &= F_T(\lambda_T) - F_N(\lambda_N, \depsilon_N).
     \end{align}
 \end{subequations}
-Here, $m_1 = m_2 = \dots = m_N = m_{mus}/N$, where the mass of the muscle $m_{mus}$ depends on its volume $V_{0,mus}$ through the (initial) density of muscle tissue $\rho_0$, which is constant across mammalian species \cite{MendezKeys1960}:
+Here, $m_1 = m_2 = \dots = m_N = m_{mus}/N$, where the mass of the muscle $m_{mus}$ depends on its (initial) volume $V_{0,mus}$ through the (initial) density of muscle tissue $\rho_0$, which is constant across mammalian species \cite{MendezKeys1960}:
 \begin{equation}
     \rho_0 = \dfrac{m_{mus}}{V_{0,mus}} = 1,060 \ \dfrac{\text{kg}}{\text{m}^3}.
 \end{equation}
@@ -506,7 +511,7 @@ and
 \begin{equation}
     \depsilon_1 = \dfrac{\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \depsilon_2 = \dfrac{\dot{u}_2-\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \dots \quad, \depsilon_N = \dfrac{\dot{u}_N - \dot{x}_{N-1}}{l_s^{opt} \depsilon_0},
 \end{equation}
-with $l_s^0 := L_M(0)/N$ is the initial length of each segment and $l_s^{opt} = l_{mus}^{opt}/N$. Moreover, the muscle length in this case is simply given by the position of the last mass, i.e. $L_M = x_N$.
+with $l_s^0 := L_M(0)/N$ is the initial length of each segment and $l_s^{opt} = l_{mus}^{opt}/N$. In particular, the muscle length can be computed directly from the position of the last mass, i.e. $L_M = x_N$.
 
 To complete the description of the massless and mass-enhanced models (equations \eqref{eq:massless_model} and \eqref{eq:massenhanced_model}, respectively), we have to provide the optimal muscle length $l_{mus}^{opt}$, as well as the initial muscle length $L_M(0)$. The latter is sufficient to provide initial conditions for the system \eqref{eq:massenhanced_model} (assuming that the system of $N$ bodies is initially at rest, i.e. $\dot{u}_i(0) = 0$). Because we will be working with experimentally-obtained data and force relationships that are particular to this study, $l_{mus}^{opt}$ and $L_M(0)$ can only be \textit{estimated} from the literature, so the true value must be computed to ensure simulations start from static equilibrium. This topic will be discussed in the next section.
 
@@ -525,7 +530,7 @@ For each muscle, we can first estimate the optimal muscle length as
 \begin{equation}
 	\widetilde{l_{mus}^{opt}} := l_{MTU}^{opt} r_{mus}, \qquad \widetilde{l_{ten}^{opt}} := l_{MTU}^{opt}(1-r_{mus}).
 \end{equation}
-Where $l_{MTU}^{opt}$ is the optimal MTU length (given) and $r_{mus}$ is the muscle-to-MTU-length ratio (see Table \ref{tab:1d-parameters}). Ideally, $l_{mus}^{opt}$ should be such that (inactive) muscle and tendon forces balance, i.e. $F_M = F_T$ (see, for example, Figure \ref{fig:muscle_models_1D}A). However, because different studies use different analytical expression for the force relationships in Figure \ref{fig:force_curves_1D}, we must think of this estimate as a deviation $\Delta l_{mus}^{opt}$ from the true value $l_{mus}^{opt}$, i.e.
+Where $l_{MTU}^{opt}$ is the optimal MTU length (given) and $r_{mus}$ is the muscle-to-MTU-length ratio (see Table \ref{tab:1d-parameters}). Ideally, $l_{mus}^{opt}$ should be such that (inactive) muscle and tendon forces balance, i.e. $F_M = F_T$ (see, for example, Figure \ref{fig:muscle_models_1D}A). However, because different studies use different analytical expressions for the force relationships in Figure \ref{fig:force_curves_1D}, we must think of this estimate as a deviation $\Delta l_{mus}^{opt}$ from the true value $l_{mus}^{opt}$, i.e.
 \begin{equation}
     l_{mus}^{opt} = \widetilde{l_{mus}^{opt}} + \Delta l^{opt}_{mus}, \qquad l_{ten}^{opt} = \widetilde{l_{ten}^{opt}} - \Delta l^{opt}_{mus}.
 \end{equation}
@@ -534,7 +539,7 @@ Then, the true values $l_{mus}^{opt}$ and $l_{ten}^{opt}$ can be obtained by sol
     F_P\left( \dfrac{\widetilde{l_{mus}^{opt}}}{\widetilde{l_{mus}^{opt}} + \Delta l^{opt}} \right) = F_T \left( \dfrac{\widetilde{l_{ten}^{opt}}}{\widetilde{l_{ten}^{opt}} - \Delta l^{opt}} \right).
 \end{equation}
 
-In a similar fashion, to ensure the simulation begins from static equilibrium, we assume that the given MTU length $L(t)$ only provides estimates for the initial muscle and tendon lengths, that is:
+In a similar fashion, to ensure the simulation begins from static equilibrium, we assume that the given initial MTU length $L(0)$ only provides estimates for the initial muscle and tendon lengths, that is:
 \begin{equation}
     \widetilde{L_M(0)} = L(0) \cdot r_{mus}, \quad \widetilde{L_T(0)} = L(0) \cdot (1-r_{mus}).
 \end{equation}
@@ -571,7 +576,7 @@ Solvers for the massless \eqref{eq:massless_model} and mass-enhanced model \eqre
 \end{table}
 
 As mentioned in the introduction to this thesis, most of our knowledge in human biomechanics comes from experiments performed in small animals, such as frogs, rats, and cats. 
-However, it is known that larger (thus heavier) muscles will yield more inertial effects \cite{EvanThesis,Ross2018} than smaller ones, so the size difference should not always be neglected. This motivates the consideration of scaled up versions of the muscles in study. In this way, a scaling factor of $s$ means that the MTU length will be scaled up by a factor of $s$, the physiological cross sectional area of muscle by a factor of $s^2$, the muscle volume by a factor of $s^3$, and so on. For example, in studies of gearing, the MG from young rats considered by Holt et al. \cite{Holt2016} had an average volume of $8.4906 \cdot 10^{-7} \ m^3$. In turn, the subject used in this study for walking and running tasks had a MG volume of about $2.3348 \cdot 10^{-4} \ m^3$. That is about 275 times the volume of the rat MG, equivalent to a scaling factor of about 6.5. In this study, we will use scales of 1 and 10.
+However, it is known that larger (thus heavier) muscles will yield more inertial effects than smaller ones, so the size difference should not always be neglected \cite{EvanThesis,Ross2018}. This motivates the consideration of scaled up versions of the muscles in study. In this way, a scaling factor of $s$ means that the MTU length will be scaled up by a factor of $s$, the physiological cross sectional area of muscle by a factor of $s^2$, the muscle volume by a factor of $s^3$, and so on. For example, in studies of gearing, the MG from young rats considered by Holt et al. \cite{Holt2016} had an average volume of $8.4906 \cdot 10^{-7} \ m^3$. In turn, the subject used in this study for walking and running tasks had a MG volume of about $2.3348 \cdot 10^{-4} \ m^3$. That is about 275 times the volume of the rat MG, equivalent to a scaling factor of about 6.5. In this study, we will use scales of 1 and 10.
 
 
 \section{Main results}
@@ -605,7 +610,7 @@ Here, we observe how the tendon acts as a strut when $s=1$, but it is no longer 
 
 Another important feature is that, when $s=10$, we observe a development of impulsive forces when transitioning from $\depsilon_M < 0$ to $\depsilon_M > 0$. This is something that has not been described previously (cf. \cite{EvanThesis,Ross2018}) because the dynamics in these works are much smoother. We also note that the results in Figure \ref{fig:multibody_traces_ST_running} were computed using $N=64$ masses (see Table \ref{tab:matlab_solvers}) because the simulation was not fully resolved when $N=16$ masses were used. 
 
-The phenomenon described above is a strong indication that, in certain scenarios, the number of masses in the model might have to be modified. To view this in more detail, we performed a homogenization study by varying the number of masses from 0 (i.e., a simulation using the massless model) to 128 masses. We portray these results in Figure \ref{fig:multibody-homog-study}. Here, we observe how it is only when using $N=128$ masses that we do not observe any artificial oscillations. However, simulating 18 seconds of data took about 42 hours and a significant amount of memory, so this is not a feasible approach for studying multiple muscle-task combinations. This also suggests that the problem could be better approached using a one-dimensional \textit{continuum} model (see next chapter), that is, a model derived from an infinitely large number of masses (i.e. $N \to \infty$). Furthermore, to prove that this is a phenomenon tied to the space discretization and not to the choice of time stepping scheme, we perform a study in which we fix the number of masses to $N=16$, the absolute tolerance to $10^{-10}$, and vary the relative tolerance from $10^{-2}$ down to $10^{-10}$. We show these results in Figure \ref{fig:multibody-reltol} where we see no effect in the resolution of the dynamics, although the solver that increase the resolution in time as the relative tolerance decreases (see Table \ref{tab:multibody-reltol-avg-deltat}).
+The phenomenon described above is a strong indication that, in certain scenarios, the number of masses in the model might need to be modified from the standard $N=16$ suggested by Ross et al. \cite{Ross2018-1D}. To view this in more detail, we performed a homogenization study by varying the number of masses from 0 (i.e., a simulation using the massless model) to 128 masses. We portray these results in Figure \ref{fig:multibody-homog-study}. Here, we observe how it is only when using $N=128$ masses that we do not observe any artificial oscillations. However, simulating 18 seconds of data took about 42 hours of computational time and a significant amount of memory, so this is not a feasible approach for studying multiple muscle-task combinations. This also suggests that the problem could be better approached using a one-dimensional \textit{continuum} model (see next chapter), that is, a model derived from an infinitely large number of masses (i.e. $N \to \infty$). Furthermore, to prove that this is a phenomenon tied to the space discretization and not to the choice of time stepping scheme, we perform a study in which we fix the number of masses to $N=16$, the absolute tolerance to $10^{-10}$, and vary the relative tolerance from $10^{-2}$ down to $10^{-10}$. We show these results in Figure \ref{fig:multibody-reltol} where we see no effect in the resolution of the dynamics, even though the solver increases the resolution in time as the relative tolerance decreases (see Table \ref{tab:multibody-reltol-avg-deltat}).
 
 \begin{table}
     \centering
@@ -722,7 +727,7 @@ From paper w/ James. Add different pennations. Cedar access?
 
 \begin{appendices} % optional
 
-\chapter{Force relationships}
+\chapter{Force relationships} \label{app:force_relationships}
 
 Describe in detail force-length and force-velocity relationships in use.
 Github repository: force-relationships
