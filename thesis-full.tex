@@ -661,9 +661,6 @@ The phenomenon described above is a strong indication that, in certain scenarios
 \end{figure}
 
 
-
-
-
 \chapter{Physiological stability of multi-body models}
 
 Show that the mass enhanced muscle model yields a 1D PDE. Augment the PDE with a Neo-Hookean term. Bring back the PDE to a system of ODEs and show that this model is physiologically stable.
@@ -672,6 +669,14 @@ Github repository: derived from mass-enhanced-muscle-model -> separate repositor
 \medskip
 
 TITIN -> can we get a FL curve for this or do we have to resort to more intricate implementations?
+
+\hrulefill
+
+In this chapter, we focus on the \textit{dynamical} stability of the mass-enhanced model introduced in the previous chapter. More precisely, we study the instability of the system \eqref{eq:massenhanced_model} during isomeric contractions along a region of the total FL relationship known as the \textit{descending limb}, a phenomenon known as the \textit{descending limb instability} (DLI). Given that this is only a computational phenomenon and not a physiological one, it is clear that models such as \eqref{eq:massenhanced_model} lack an important feature describing skeletal muscle tissue. 
+
+First, we show that the mass-enhanced model \eqref{eq:massenhanced_model} is nothing but a particular discretization of a one-dimensional \textit{partial} differential equation (PDE). Then, we introduce an additional term to this PDE that can be seen as a passive element not captured by the PEE in Hill's equation \eqref{eq:Hill_force} (that is, the passive force-length relationship $f_P$). Then, from this PDE, we retrieve a new version of the mass-enhanced model for which we repeat the stability tests that describe the DLI. We will see that this new model is indeed stable at all regions of the total FL relationship.
+
+\section{Background}
 
 
 \chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation}
