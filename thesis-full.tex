@@ -126,6 +126,7 @@
                 shapes.geometric}
 
 \usepackage{makecell}
+\usepackage[percent]{overpic}
 
 
 %   OTHER CUSTOMIZATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,6 +176,7 @@
 \renewcommand*{\theobjective}{\Alph{objective}}
 \newtheorem{theorem}{Theorem}[chapter]
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{claim}[theorem]{Claim}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
@@ -302,7 +304,7 @@ This might be a long section, maybe could be a chapter at the beginning of part 
 
 \part{One-dimensional elastodynamics}
 
-\chapter{Inertial effects in a multi-body mass-spring model of the muscle-tendon unit}
+\chapter{Inertial effects in a multi-body mass-spring model of the muscle-tendon unit} \label{ch:mass_enhanced_model}
 
 %Work with Evan on mass enhanced muscle models. We need to discuss what would be appropriate to show here, besides the model and the numerical strategy (dynamic/mass effects? Focus on one cycle? Effects of different muscles and activities?).
 %Github repository: mass-enhanced-muscle-models.
@@ -701,20 +703,404 @@ The phenomenon in the previous subsection is a strong indication that, in certai
 
 \chapter{Physiological stability of multi-body models}
 
-Show that the mass enhanced muscle model yields a 1D PDE. Augment the PDE with a Neo-Hookean term. Bring back the PDE to a system of ODEs and show that this model is physiologically stable.
+%Show that the mass enhanced muscle model yields a 1D PDE. Augment the PDE with a Neo-Hookean term. Bring back the PDE to a system of ODEs and show that this model is physiologically stable.
 Github repository: derived from mass-enhanced-muscle-model -> separate repository?
 
-\medskip
+%\medskip
 
-TITIN -> can we get a FL curve for this or do we have to resort to more intricate implementations?
+%TITIN -> can we get a FL curve for this or do we have to resort to more intricate implementations?
 
-\hrulefill
+%\hrulefill
 
 In this chapter, we focus on the \textit{dynamical} stability of the mass-enhanced model introduced in the previous chapter. More precisely, we study the instability of the system \eqref{eq:massenhanced_model} during isomeric contractions along a region of the total FL relationship known as the \textit{descending limb}, a phenomenon known as the \textit{descending limb instability} (DLI). Given that this is only a computational phenomenon and not a physiological one, it is clear that models such as \eqref{eq:massenhanced_model} lack an important feature describing skeletal muscle tissue. 
 
-First, we show that the mass-enhanced model \eqref{eq:massenhanced_model} is nothing but a particular discretization of a one-dimensional \textit{partial} differential equation (PDE). Then, we introduce an additional term to this PDE that can be seen as a passive element not captured by the PEE in Hill's equation \eqref{eq:Hill_force} (that is, the passive force-length relationship $f_P$). Then, from this PDE, we retrieve a new version of the mass-enhanced model for which we repeat the stability tests that describe the DLI. We will see that this new model is indeed stable at all regions of the total FL relationship.
+First, we describe the DLI and an experiment that replicates it based on the mass-enhanced model introduced in the previous chapter. Next, we show that this model can be viewed as a particular discretization of a one-dimensional \textit{partial} differential equation (PDE). Then, we introduce an additional term to this PDE that can be seen as a passive element not captured by the PEE in Hill's equation \eqref{eq:Hill_force} (that is, the passive force-length relationship $f_P$). Finally, from this PDE, we retrieve a new version of the mass-enhanced model for which we repeat the stability tests that describe the DLI. We will see that this new model is indeed stable at all regions of the total FL relationship.
 
 \section{Background}
+
+The FL relationship, described for the first time in 1966 for the ST muscle in frogs \cite{GordonHuxleyJulian1966}, is an important contribution to Hill-type muscle models (HMMs). The active component is generally measured using isometric contractions, that is, the muscle is stretched to a desired length \textit{and then} activated to 100\%. This experiment yields a bell-like curve in which the muscle force increases for increasing muscle lengths below optimal length (i.e. $\lambda_M < 1$), but decreases once the muscle is stretched past optimal length (i.e. $\lambda_M > 1$). The former region is known as the \textit{ascending} limb of the active FL relationship, while the latter is known as the \textit{descending} limb (see Figure \ref{fig:ascending_descending_limbs}A). In turn, the passive force only acts (non-negligibly) for muscle lengths above optimal length, primarily to prevent overstretching.
+
+\begin{figure}
+    \centering
+    \begin{overpic}[width=\textwidth]{FL_ascending_descending.png}
+        \put (4,33) {{\huge \textbf{A}}}
+        \put (50,33) {{\huge \textbf{B}}}
+    \end{overpic}
+    \caption{(A) Active and passive FL relationships. The region $\lambda_M < 1$ corresponds to the ascending limb (in blue) since the curve has a positive slope. In turn, the region $\lambda_M > 1$ corresponds to the descending limb (in ochre) which has a distinctive negative slope. (B) When active and passive forces are added, they form the \textit{total} FL relationship, which typically has a dip region (i.e. a region with negative slope) around $1 < \lambda_M < 1.35$.}
+    \label{fig:ascending_descending_limbs}    
+\end{figure}
+
+When active and passive forces are combined, the resulting curve may have a ``dip'' region because the passive curve has a slope that is not positive enough to overtake the negative slope of the active curve (see Figure \ref{fig:ascending_descending_limbs}B). This is particularly problematic if the goal is to simulate isometric contractions in this dip region using a multibody model such as the mass-enhanced model \eqref{eq:massenhanced_model}. Indeed, a small perturbation of the system in this dip generates dynamics that do not reflect the behaviour of skeletal muscle. This phenomenon is known as the \textit{descending limb instability} and has been a subject of discussion for almost 20 years \cite{AllingerEpsteinHerzog1996,YeoEtAl2023NumericalInstability,Zahalak1997}. It is an instability of \textit{dynamical} type. This means that it is tied to model itself and not to the numerical discretization. We show next that the mass-enhanced model is not free from this nuisance with a simple experiment proposed by Yeo et al. \cite{YeoEtAl2023NumericalInstability}.
+
+\section{The descending limb instability in a multibody model}
+
+\subsection{Mathematical model for an isometric contraction}
+
+
+Consider a muscle modelled as a series of $N$ contractile elements with $N-1$ masses distributed in the same fashion as the mass-enhanced model \eqref{eq:massenhanced_model} (see Figure \ref{fig:model_isometric_contraction}). Moreover, assume that the length is given by $\lambda_M L_M$, where $L_M$ is the optimal muscle length and $\lambda_M$ is a given muscle stretch. Then, the system of ODEs that models that dynamic of this system is given by
+\begin{subequations} \label{eq:odes_hill_only}
+    \begin{align}
+        m_1 \ddot{u}_1 &= F_2(\lambda_2, \depsilon_2) - F_1(\lambda_1, \depsilon_1), \\
+        m_2 \ddot{u}_2 &= F_3(\lambda_3,\depsilon_3) - F_2(\lambda_2,\depsilon_2), \\
+        &\hspace{0.6em} \vdots \notag \\
+        m_{N-1} \ddot{u}_{N-1} &= F_N(\lambda_N, \depsilon_N) - F_{N-1}(\lambda_{N-1}, \depsilon_{N-1}).
+    \end{align}
+\end{subequations}
+Here, for $i=1,\dots,N-1$, $u_i$ is the displacement of the $i$-th segment, $m_i = m_{mus} / (N-1)$ with $m_{mus}$ being the mass of the muscle, and the forces $F_i$ are given by Hill's force:
+\begin{equation} \label{eq:Hill_force_stability}
+    F_i(\lambda_i, \depsilon_i) = F_{Hill}(\lambda_i,\depsilon_i) = F_0 \left\{ F_A(\lambda_i) F_V(\depsilon_i) + F_P(\lambda_i) \right\}.    
+\end{equation}
+Note that, unlike the expression in \eqref{eq:Hill_force}, we are assuming a fully active muscle (i.e. $a(t) = 1$). As before, the segment stretches $\lambda_i$ are given by:
+\begin{subequations} \label{eq:def_stretches_stability}
+   \begin{align}
+        \lambda_1 &= \dfrac{u_1}{l_s^{opt}} + \lambda_M, \\
+        \lambda_i &= \dfrac{u_i-u_{i-1}}{l_s^{opt}} + \lambda_M, \quad i=2,\dots,N-1, \\
+        \lambda_N &= \dfrac{-u_{N-1}}{l_s^{opt}} + \lambda_M,
+   \end{align}
+\end{subequations}
+with $l_s^{opt} = L_M / N$, whereas the strain rates $\depsilon_i$ are just:
+\begin{equation} \label{eq:def_strain_rates_stability}
+    \depsilon_i = \dfrac{1}{\depsilon_0} \dfrac{d\dot\lambda_i}{dt}, \quad i=1,\dots,N.
+\end{equation}
+We remark that, because we are modelling an isometric contraction, these strain rates will be near zero, and thus the contribution from the FV relationship is negligible since $F_V(0) = 1$. However, we decide to leave this dependence in the definition of Hill's force \eqref{eq:Hill_force_stability} and in the right-hand side of \eqref{eq:odes_hill_only} not only to preserve the structure of the muscle model but also to reuse the computational tools developed in the previous chapter.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \centering
+        %\node at (-4.5,1) {\huge \textbf{B}};
+        \node[inner sep=0pt] at (0,0)
+            {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced-isometric.eps}};
+        \node at (-2.31, 0.1) {\tiny $m_1$};
+        \node at (-0.56, 0.1) {\tiny $m_2$};
+        \node at (1.94, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
+        \node at (-3.2, 0.5) {\tiny CE$_1$};
+        \node at (-3.2, -0.5) {\tiny PEE$_1$};
+        \node at (-3.2, -1.26) {\footnotesize $l_1$};
+        \node at (-1.45, 0.5) {\tiny CE$_2$};
+        \node at (-1.45, -0.5) {\tiny PEE$_2$};
+        \node at (-1.45, -1.26) {\footnotesize $l_2$};
+        \node at (1.08, 0.15) {\tiny CE$_{{N-1}}$};
+        \node at (1.08, -0.5) {\tiny PEE$_{{N-1}}$};
+        \node at (2.85, 0.15) {\tiny CE$_{N}$};
+        \node at (2.85, -0.5) {\tiny PEE$_{N}$};
+        \node at (1.08, -1.26) {\footnotesize $l_{N-1}$};
+        \node at (2.85, -1.26) {\footnotesize $l_{N}$};
+        \node at (-2.6, 1.45) {\footnotesize $\vec{F}_1$};
+        \node at (-2.0, 1.45) {\footnotesize $\vec{F}_2$};
+        \node at (-0.9, 1.45) {\footnotesize $\vec{F}_2$};
+        \node at (-0.3, 1.45) {\footnotesize $\vec{F}_3$};
+        \node at (1.5, 1.45) {\footnotesize $\vec{F}_{N-1}$};
+        \node at (2.25, 1.45) {\footnotesize $\vec{F}_N$};
+        \node at (0.1,0.14) {\footnotesize $\dots$};
+        \node at (-0.1,-1.0) {\footnotesize $\dots$};
+    \end{tikzpicture}
+    \caption{Mass-enhanced muscle model adapted for an isometric contraction.}
+    \label{fig:model_isometric_contraction}
+\end{figure}
+ 
+
+\subsection{Stability of the zero solution} \label{sec:stability_zero_solution}
+
+Let us write model for the isometric contraction \eqref{eq:odes_hill_only} as a system of first order ODEs:
+\begin{eqnarray} \label{eq:odes_hill_only_first_order}
+    \dfrac{d\vec{\xi}}{dt}= \vec{g}\left( \vec{\xi} \, \right),
+\end{eqnarray}
+where the state vector $\vec{\xi}$ and the right-hand side $\vec{g}$ are given by:
+\[
+    \vec{\xi} = \left( \begin{array}{c}
+        \vec{u} \\ \vec{v} 
+    \end{array} \right) = \left( \begin{array}{c}
+        u_1 \\ \vdots \\ u_{N-1} \\\hline v_1 \\ \vdots \\ v_{N-1}
+    \end{array} \right), \quad 
+    \vec{g}\left( \vec{\xi} \, \right) =  \left( \begin{array}{c}
+        \vec{g}_1 \\ \vec{g}_2
+    \end{array} \right) = \left(
+    \begin{array}{c}
+        v_1/m_1 \\ 
+        \vdots \\ 
+        v_{N-1}/m_{N-1} \\\hline
+        F(\lambda_2) - F(\lambda_1) \\
+        \vdots \\
+        F(\lambda_N) - F(\lambda_{N-1})
+    \end{array} \right),
+\]
+and $F$ is given by Hill's equation (assuming $a=1$ and $\depsilon_i = 0$):
+\begin{eqnarray}
+    F(\lambda) = F_0 \Big\{ F_A(\lambda) + F_P(\lambda) \Big\}.
+\end{eqnarray}
+Without loss of generality, we may also assume that $m_i = m_{mus}/(N-1)$.
+
+It is clear that the zero solution (i.e. $\xi = (\vec{0},\vec{0})$) is an equilibrium point of the system \eqref{eq:odes_hill_only_first_order} since \eqref{eq:def_stretches_stability} yields $\lambda_1 = \dots = \lambda_N = \lambda_M$ and therefore $\vec{g}(\vec{0},\vec{0}) = \vec{0}$. According to the theorem of Hartman-Grobman \cite{HartmanGrobman}, we may linearize the \eqref{eq:odes_hill_only_first_order} around the origin to analyze its stability at this equilibrium point:
+\begin{equation}
+    \dfrac{d\vec{\xi}}{dt}= J_{g}\left( \vec{0}, \vec{0} \, \right) \vec{\xi}.
+\end{equation}
+Here, the Jacobian of $\vec{g}$ is given by
+\begin{equation}
+    J_g(\vec{u}, \vec{v}) = \left[ \begin{array}{cc}
+        \*0 & \*M \\
+        \*D & \*0
+    \end{array} \right],
+\end{equation}
+where $\*M \in \R^{N-1 \times N-1}$ is a diagonal matrix with entries:
+\[
+    \*M_{i,i} = \left( \pder{\vec{g}_1}{\vec{v}} \right)_{i,i} = \dfrac{N-1}{m_{mus}}, \quad i = 1, \dots, N-1,
+\]
+and $\*D \in \R^{N-1 \times N-1}$ is the tridiagonal matrix with entries:
+\[
+    \begin{aligned}
+        \*D_{i,i} &= -\frac{1}{l_s^{opt}} \left[ F_\lambda(\lambda_i+1) - F_\lambda(\lambda_i) \right], \\
+        \*D_{i,i+1} &= \*D_{i+1,i}= \dfrac{F_\lambda(\lambda_i)}{l_s^{opt}},
+    \end{aligned}
+\]
+with $F_\lambda = \frac{dF}{d\lambda}$. In particular, when $(\vec{u}, \vec{v}) = (\vec{0}, \vec{0})$, we have
+\begin{equation}
+    J_g(\vec{0}, \vec{0}) = \left[ \begin{array}{cc}
+        \*0 & \frac{N-1}{m_{mus}} \*I_{N-1} \\
+        \frac{F_\lambda(\lambda_M)}{l_s^{opt}} \*D_0 & \*0
+    \end{array} \right],
+\end{equation}
+where $\*I_{N-1} \in \R^{N-1 \times N-1}$ is the identity matrix and $\*D_0 \in \R^{N-1 \times N-1}$ is the matrix
+\begin{equation}
+    \*D_0 = \left[ \begin{array}{ccccc}
+        -2 & 1 & 0 & \cdots & 0 \\
+        1 & -2 & 1 & \cdots & 0 \\
+          & \ddots & \ddots & \ddots\\
+        0 &\cdots & 0 & 1 & -2
+    \end{array} \right].
+\end{equation}
+The latter is a matrix typically found in finite difference schemes for ODEs and PDEs (see, e.g., \cite{Strikwerda}). In particular, its eigenvalues are:
+\begin{equation}
+    \omega_k = -4 \sin^2 \left( \dfrac{k\pi}{2N} \right), \quad k = 1, \dots, N-1.
+\end{equation}
+
+Given that
+\[
+    \det \left(\lambda \*I_{2(N-1)} - J_g(\vec{0}, \vec{0}) \right) = \det \left(\lambda^2 \*I_{} - \dfrac{F_\lambda(\lambda_M) (N-1)}{l_s^{opt} m_{mus}} \*D_0\right),
+\]
+we have two cases, depending on the sign of $F_\lambda(\lambda_M)$. First, if $F_\lambda(\lambda_M) > 0$ (that is, the muscle is contracted on the \textit{ascending} limb of the FL relationship), then the eigenvalues of the Jacobian are
+\begin{equation}
+    \lambda_k = \pm 2 \dfrac{F_\lambda(\lambda_M) (N-1)}{l_s^{opt} m_{mus}} \sin \left( \dfrac{k\pi}{2N} \right) i, \quad k = 1, \dots, N-1,
+\end{equation}
+with $i=\sqrt{-1}$. Although all the eigenvalues are purely complex, they are distinct, and therefore the system \eqref{eq:odes_hill_only_first_order} is stable according to \cite[Theorem 13.1]{HairerNorsettWanner}. Similarly, if $F_\lambda(\lambda_M) < 0$ (that is, the muscle is contracted on the \textit{descending} limb of the FL relationship), then the eigenvalues are
+\begin{equation}
+    \lambda_k = \pm 2 \dfrac{F_\lambda(\lambda_M) (N-1)}{l_s^{opt} m_{mus}} \sin \left( \dfrac{k\pi}{2N} \right), \quad k = 1, \dots, N-1.
+\end{equation}
+Because of the presence of positive eigenvalues, the system \eqref{eq:odes_hill_only_first_order} is unstable. This is a mathematical characterization of the \textit{descending limb instability} (DLI).
+
+\subsubsection*{A numerical example}
+
+To observe the DLI, let us consider as in \cite{YeoEtAl2023NumericalInstability} a muscle of length $L_M = 0.3$ m, $F_0 = 525 $ N, and the maximum strain rate to $\depsilon_0 = 5$ s$^{-1}$. Moreover, we take $N=17$ masses and an initial condition $u_i = \eta_i$, $\dot{u}_i = 0$, for $i=1,\dots,N-1$, with $\eta_i$ being some artificially-introduced Gaussian noise (1\%). We consider three isometric contractions in different parts of the FL curve:
+\begin{enumerate}
+    \item On the ascending limb at $\lambda_M = 0.85$,
+    \item On the descending limb at $\lambda_M = 1.15$,
+    \item Not on the ascending limb but at a point where the derivative of the FL curve is positive: $\lambda_M  = 1.45$.
+\end{enumerate}
+We show these results in Figure \ref{fig:hill_only_unstable}. Here, we see that when $\lambda_M = 0.85$ or $\lambda_M = 1.45$, we have that $F_\lambda(\lambda_M) > 0$ and therefore the system eventually returns to a static equilibrium where all the segments have the same length. However, when $\lambda_M = 1.15$, we have that $F_\lambda(\lambda_M) < 0$ and a bifurcation is produced: muscle segments diverge to two different lengths that produce the same force.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{05_no_bm_unstable.png}
+    \caption{Stability of an isometric contraction according to the system of ODEs \eqref{eq:odes_hill_only}. The elements (as well as the muscle) are stretched initially at around 85\% (left), 115\% (middle), and 145\% (right) of the muscle's optimal length. At an initial stretch of 115\%, the descending limb instability causes the segments to bifurcate to two different lengths.}
+    \label{fig:hill_only_unstable}
+\end{figure}
+
+\section{Stabilizing the model}
+
+The model \eqref{eq:odes_hill_only} allows for an arbitrary number of contractile units. Therefore, it is perfectly reasonable to assume a large enough $N$ can reduce each contractile unit into the representation of a sarcomere. In this scenario, the DLI would tell us that sarcomeres may undergo sudden overstretching or ``popping'' when the muscle is isometrically stretched beyond optimal length. And while this \textit{is} a physiological phenomenon (known as the \textit{sarcomere popping} \cite{Morgan1990,MorganProske2004,MorganProske2006}), experiments on single myofibrils show a rather stable behaviour of sarcomeres, i.e. no ``popping'' (see, e.g., \cite{JohnstonJinhaHerzog2016}).
+
+Deriving an accurate, stable, and physiologically-informed muscle model is then an almost Sisyphean task. The properties of skeletal muscle tissue are so heterogeneous that the behaviour of a first-stretched-then-activated muscle fibre is completely different compared to one which is first activated and then stretched. At the sarcomere level, this active stretching typically yields FL curves that do not have a dip region, leading to forces that are above the maximum isometric force. This phenomenon is known as \textit{residual force enhancement} (RFE) and could explain why sarcomeres are stable in both ascending and descending limbs of the active FL curve \cite{JoumaaLeonardHerzog2008}. 
+
+These history-dependent effects are typically attributed to \textit{titin}, the largest protein in the human body and a part of the PEE in sarcomeres. Upon active stretch, titin binds to actin to increase its stiffness \cite{Nishikawa2020}, with a large enough increase that the total FL curve no longer has a dip region (whenever it has one), thus \textit{convexifying} the curve. Therefore, it is no surprise that muscle models that do include titin as an activation-dependent elastic element are stable \cite{HeidlaufEtAl2016,HeidlaufEtAl2017,LemosEtAl2001,Millard2024,SampaioDeOliveiraUchida2025}.
+
+RFE has always been observed in single muscle fibres from humans and animals \cite{JoumaaLeonardHerzog2008, Pinnell2019,RassierPavlov2012}. However, RFE may not always be observed \textit{in vivo} at the whole muscle level \cite{Bakenecker2020,Chapman2018,Hinks2024}, yet the contractions are still stable. Could there be components different than titin that bring stability to a muscle fibre?
+
+In mathematical terms, the DLI can be overcome by adding \textit{any} stiff-enough elastic element (not necessarily titin) to Hill's model \eqref{eq:Hill_force_stability}. Many times unnoticed, this is actually typical in 3D models of muscle that include a hyperelastic base material component \cite{AlmonacidEtAl2022_SIAP_Paper}. Hence, we can draw inspiration from these models to add a hyperelastic component to the system \eqref{eq:odes_hill_only} and show that the resulting model is stable on both limbs of the active FL curve. To achieve this goal, we must first derive a continuum model of muscle fibre.
+
+\subsection{The continuum limit of the mass-enhanced model}
+
+Consider the model \eqref{eq:odes_hill_only} but with an additional mass at the right end that is pulled with a constant force $F_{ext}$ and assume that $m_i = m_{mus}/N$ and a muscle that is not pre-stretched, i.e. $\lambda_M = 1$. Moreover, let us consider $l_s^{opt} = L_{mus}^{opt}/N =: \Delta x$. Then, after some algebraic manipulations, the system \eqref{eq:odes_hill_only} becomes:
+\begin{subequations} \label{eq:continuum_model_1}
+    \begin{align}
+        \dfrac{m_{mus}}{L_{mus}^{opt}} \ddot{u}_1 &= \dfrac{F(\lambda_2, \depsilon_2) - F(\lambda_1, \depsilon_1)}{\Delta x}, \\
+        \dfrac{m_{mus}}{L_{mus}^{opt}} \ddot{u}_2 &= \dfrac{F(\lambda_3,\depsilon_3) - F(\lambda_2,\depsilon_2)}{\Delta x}, \\
+        &\hspace{0.6em} \vdots \notag \\
+        \dfrac{m_{mus}}{L_{mus}^{opt}} \ddot{u}_{N} &= \dfrac{F_{ext} - F(\lambda_{N}, \depsilon_{N})}{\Delta x}.
+    \end{align}
+\end{subequations}
+In particular, the segment stretches $\lambda_i$ and strain rates $\depsilon_i$ now read:
+\begin{equation} \label{eq:continuum_model_2}
+    \lambda_i = 1 + \dfrac{u_i-u_{i-1}}{\Delta x},
+\end{equation}
+and
+\begin{equation} \label{eq:continuum_model_3}
+    \depsilon_i = \dfrac{1}{\depsilon_0} \dfrac{d}{dt} \left( \dfrac{u_i-u_{i-1}}{\Delta x} \right).
+\end{equation}
+
+We are interested in studying the behaviour of the system \eqref{eq:continuum_model_1}-\eqref{eq:continuum_model_3} as $N \to \infty$, or equivalently, as $\Delta x \to 0$. This is the \textit{continuum limit}. In this case, equations \eqref{eq:continuum_model_2} and \eqref{eq:continuum_model_3} define the following the quantities:
+\begin{equation}
+    \lambda(x,t) := \lim_{\Delta x \to 0} \lambda_i = 1 + \pder{u}{x},
+\end{equation}
+and
+\begin{equation}
+    \depsilon(x,t) = \lim_{\Delta x \to 0} \depsilon_i = \dfrac{1}{\depsilon_0} \pder{}{t}\left(\pder{u}{x} \right) = \dfrac{1}{\depsilon_0} \pder{\lambda}{t}.
+\end{equation}
+That is, we have recovered the one-dimensional version of the stretch and strain rate variables that are commonly considered in solid mechanics. Moreover, we can make the following claim with respect to the system \eqref{eq:continuum_model_1}.
+
+\begin{claim} \label{cl:hill_pde}
+The system of ODEs \eqref{eq:continuum_model_1} corresponds to a first-order method of lines discretization of the partial differential equation (PDE):
+\begin{equation} \label{eq:hill_pde_1}
+    \rho_{0,L} \pder{^2 u(x,t)}{t^2}  = \pder{F(\lambda(x,t),\depsilon(x,t))}{x}, \quad 0 < x < L_{mus}^{opt}, \quad 0 < t < \infty,
+\end{equation}
+subject to boundary conditions
+\begin{subequations} \label{eq:hill_pde_2}
+    \begin{align}
+        u(0,t) &= 0, \\
+        F(\lambda(\cdot, t),\depsilon (\cdot, t))\Big|_{x=L_{mus}^{opt}} &= F_{ext}(t), \label{eq:Neumann_F_ext}
+    \end{align}
+\end{subequations}
+and initial conditions
+\begin{equation} \label{eq:hill_pde_3}
+    u(x,0) = \pder{u}{t} = 0.
+\end{equation}
+Here, $F$ corresponds to Hill's force defined in \eqref{eq:Hill_force_stability} and $\rho_{0,L} := m_{mus}/L_{mus}^{opt}$ is a linear density.
+\end{claim}
+
+Note that the Neumann condition \eqref{eq:Neumann_F_ext} to a nonlinear type of boundary condition depending on $\frac{\partial u}{\partial x}$. Thus, the problem \eqref{eq:hill_pde_1}-\eqref{eq:hill_pde_3} is at least well-defined. Whether it is \textit{well-posed} (that is, given a smooth $F_{ext}$, the problem has a unique regular solution depending continuously on $F_{ext}$) or not is a different story and will not be discussed here. As it is known, this can only be done in limited scenarios (for instance, when $F$ is linear, see \cite{TruesdellNoll2004}), so a general result cannot be stated for arbitrary $F$ and $F_{ext}$.
+
+\begin{proof}
+    Consider a discretization $\{x_0, x_1, \dots, x_N\}$ with constant spacing $\Delta x := L_{mus}^{opt}/N$ of the interval $[0,L_{mus}^{opt}]$ where $x_0 = 0$ and $x_N = L_{mus}^{opt}$, then, define $u_i := u(x_i,t)$ for $t \geq 0$, $i=1,\dots,N$. Furthermore, consider a backwards first-order formula for the stretch and strain rates, that is,
+    \[
+        \lambda_i = \lambda(x_i,t) = 1 + \dfrac{u_i-u_{i-1}}{\Delta x},
+    \]
+    and
+    \[
+        \depsilon_i = \depsilon(x_i, t) = \dfrac{1}{\depsilon_0}\dfrac{d\lambda_i}{dt}.
+    \]
+    These are precisely \eqref{eq:continuum_model_2} and \eqref{eq:continuum_model_3}. Now, to discretize the gradient on the right-hand side of \eqref{eq:hill_pde_1}, consider a forwards first-order difference:
+    \[
+        \rho_{0,L} \dfrac{d^2 u_i}{dt^2} = \dfrac{F(\lambda_{i+1},\depsilon_{i+1}) - F(\lambda_i, \depsilon_i)}{\Delta x}, \quad i =1, \dots, N.
+    \]
+    Given that there is not an $x_{N+1}$ mass, the force require at this ``ghost'' node can be taken precisely as $F_{ext}$ according to the boundary condition \eqref{eq:Neumann_F_ext}. Hence, the previous expression is just \eqref{eq:continuum_model_1}.
+\end{proof}
+
+\subsection{Convexifying the FL relationship}
+
+Let us introduce a base material component to Hill's force \eqref{eq:Hill_force_stability}. First, consider the expression for the force exerted by a one-dimensional hyperelastic (Neo-Hookean) material
+\begin{equation}
+    F_{NH}(\lambda) = \left\{
+        \begin{aligned}
+            &F_0 \dfrac{\kappa}{\sigma_0} \left( \widehat{\mathcal{L}}_{\mu} \lambda +  \dfrac{\widehat{\mathcal{L}}_{\lambda} \log(\lambda) - \widehat{\mathcal{L}}_\mu}{\lambda}\right), \quad &\lambda \geq 1, \\
+            &0, \quad &\text{otherwise}.
+        \end{aligned}
+    \right.
+\end{equation}
+Here, $\kappa$ is the bulk modulus of muscle, $\sigma_0$ is the maximum isometric stress, and the (non-dimensional) Lam\'{e} parameters are given by
+\begin{equation}
+    \widehat{\mathcal{L}}_{\lambda} = \dfrac{\nu}{(1-\nu)(1-2\nu)}, \quad \widehat{\mathcal{L}}_{\mu} = \dfrac{1}{2(1+\nu)},
+\end{equation}
+with $\nu$ being the Poisson's ratio of muscle tissue, which can be set to $\nu = 0.499$ owing to the (near-)incompressibility of muscle \cite{Kuthe2016}.
+
+Then, consider the following expression for the muscle force in \eqref{eq:hill_pde_1}:
+\begin{equation} \label{eq:force_hill_plus_bm}
+    F(\lambda, \depsilon) = (1-\chi_{BM}) F_{Hill}(\lambda, \depsilon) + \chi_{BM} F_{NH}(\lambda),
+\end{equation}
+where $\chi_{BM}$ denotes the fraction of base material that could be present in a muscle fibre\footnote{In principle, the PDE \eqref{eq:hill_pde_1} can be seen as a model for the one-dimensional deformation of a muscle fibre in which every point inside is subjected to Hill's force. However, if we think of a fibre as a bundle of myofibrils, then we can consider, for instance, the sarcoplasmic reticulum as part of the base material of a fibre.}. In this way, the more base material we introduce in the model, the more we can convexify the FL curve. Luckily, $\chi_{BM}$ does not have to be large to bring stability to the system, as we will see in the experiment below.
+
+\section{A stabilized mass-enhanced muscle model}
+
+Following the result in Claim \ref{cl:hill_pde}, we can write a stabilized version of \eqref{eq:odes_hill_only} using the force expression \eqref{eq:force_hill_plus_bm}:
+\begin{subequations} \label{eq:odes_hill_stabilized}
+    \begin{align}
+        m_1 \ddot{u}_1 &= (1-\chi_{BM})\left[ F_{Hill}(\lambda_2, \depsilon_2) - F_{Hill}(\lambda_1, \depsilon_1) \right] + \chi_{BM}\left[ F_{BM}(\lambda_2) - F_{BM}(\lambda_1) \right], \\
+        m_2 \ddot{u}_2 &= (1-\chi_{BM})\left[ F_{Hill}(\lambda_3, \depsilon_3) - F_{Hill}(\lambda_2, \depsilon_2) \right] + \chi_{BM}\left[ F_{BM}(\lambda_3) - F_{BM}(\lambda_2) \right], \\
+        &\hspace{0.6em} \vdots \notag \\
+        m_{N-1} \ddot{u}_{N-1} &= (1-\chi_{BM})\left[ F_{Hill}(\lambda_N, \depsilon_N) - F_{Hill}(\lambda_{N-1}, \depsilon_{N-1}) \right] + \chi_{BM}\left[ F_{BM}(\lambda_N) - F_{BM}(\lambda_{N-1}) \right],
+    \end{align}
+\end{subequations}
+with the stretches $\lambda_i$ and strain rates $\depsilon_i$ as in \eqref{eq:def_stretches_stability} and \eqref{eq:def_strain_rates_stability}, respectively.
+
+Then, we can repeat the experiment from Section \ref{sec:stability_zero_solution} to test the stability of the zero solution. In particular, we take in equation \eqref{eq:force_hill_plus_bm} a bulk modulus $\kappa = 10^6 \ \text{Pa}$ and a maximum isometric stress $\sigma_0 = 200 \ \text{kPa}$ \cite{AlmonacidEtAl2022_SIAP_Paper}. Furthermore, we consider $\chi_{BM} = 0.0015$, that is, we assume that 99.85\% of the force that a muscle fibre produces is due to Hill's force and 0.15\% from a base material contribution. We portray the resulting forces in Figure \ref{fig:forces_stabilized}. In particular, the total force \eqref{eq:force_hill_plus_bm} shows RFE for muscle lengths above optimal (i.e. $\lambda_M > 1$).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{03_forces_with_bm.png}
+    \caption{Forces in the stabilized model \eqref{eq:odes_hill_stabilized}. When the base material component (yellow) is added to the active (blue) and passive (red) forces, the total force (black) is a monotonically increasing function.}
+    \label{fig:forces_stabilized}
+\end{figure}
+
+In Figure \ref{fig:hill_plus_nh_stable} we show these results which show (1): no difference for $\lambda_0 = 0.85$ since the Neo-Hookean term does not act for stretches below 1, (2): stabilization on the descending limb of the active FL curve, shown in the figure for $\lambda_0 = 1.15$, and (3): rapid stabilization due to a stiffer passive element. Therefore, it is clear that the base material component has a stabilizing effect in these isometric contractions. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{06_with_bm_stable.png}
+    \caption{Stability of an isometric contraction according to the system of ODEs \eqref{eq:odes_hill_stabilized}. As before, the elements (as well as the muscle) are stretched initially at around 85\% (left), 115\% (middle), and 145\% (right) of the muscle's optimal length. In all cases, the contractions are stable since the derivative of the total force (made of active, passive, and base material components) is always positive.}
+    \label{fig:hill_plus_nh_stable}
+\end{figure}
+
+\section{Nondimensionalization of the continuum system and the influence of mass}
+
+The elastice model \eqref{eq:hill_pde_1} with the force $F$ given by \eqref{eq:Hill_force_stability} can be used to explain the mass effects discussed in Chapter \ref{ch:mass_enhanced_model} in a succinct way. First, let
+\begin{equation}
+    \widehat{F}_{Hill} = \dfrac{F_{Hill}}{F_0}, \quad \widehat{F}_{NH} = \dfrac{F_{NH}}{F_0},
+\end{equation}
+denote the nondimensional versions of the Hill and Neo-Hookean force terms. Moreover, consider the following nondimensional variants for displacement, space, and time variables:
+\begin{equation}
+    \widehat{u} = \dfrac{u}{L_{mus}^{opt}}, \quad \widehat{x} = \dfrac{x}{L_{mus}^{opt}}, \quad \widehat{t} = \dfrac{t}{1/\depsilon_0}.
+\end{equation}
+Plugging these quantities into \eqref{eq:hill_pde_1} we obtain:
+\begin{equation} \label{eq:nondim_1}
+    \dfrac{\rho_{0,L} (L_{mus}^{opt})^2 \depsilon_0^2}{F_0} \pder{^2 \widehat{u}}{\widehat{t}^2} = (1-\chi_{BM}) \widehat{F}_{Hill} + \chi_{BM} \dfrac{\kappa}{\sigma_0} \widehat{F}_{BM}.
+\end{equation}
+All terms in the previous equation are nondimensional, but we can further rearrange the terms in the left-hand side to obtain some physical meaning for this number. 
+
+Recall that $\rho_{0,L}$ is a \textit{linear} density (it has units of $\text{kg} \ \text{m}^{-1}$). We can convert this quantity into the more common \textit{volumetric} density $\rho_0$ through the cross-sectional area (CSA) of a muscle fibre, that is,
+\begin{equation}
+    \rho_{0,L} = \rho_0 \cdot CSA.
+\end{equation}
+Moreover, because the maximum isometric force $F_0$ can be written in terms of the maximum isometric stress as $F_0 = \sigma_0 \cdot CSA$, the number on the left-hand side of \eqref{eq:nondim_1} can be written as
+\begin{equation}
+    \dfrac{\rho_0 (L_{mus}^{opt})^2 \depsilon_0^2}{F_0} = \dfrac{\rho_0 (L_{mus}^{opt})^2 \depsilon_0}{\sigma_0 / \depsilon_0}.
+\end{equation}
+The nondimensional number in the previous expression can be viewed as a ratio between inertial forces (due to mass) and viscous forces. As such, we call this number the \textit{musculoskeletal Reynolds number} ($\text{Re}_{MSK}$), akin to the Reynolds number commonly found in fluid dynamics. In this way, we can rewrite \eqref{eq:nondim_1} as:
+\begin{equation}
+    \text{Re}_{MSK} \pder{^2 \widehat{u}}{\widehat{t}^2} = (1-\chi_{BM}) \widehat{F}_{Hill} + \chi_{BM} \dfrac{\kappa}{\sigma_0} \widehat{F}_{BM}.
+\end{equation}
+
+\begin{table}
+    \centering
+    \begin{tabular}{|c|c|c|} \hline
+        $s$ & $\depsilon_0$ [s$^{-1}$] & $\text{Re}_{MSK}$ \\\hline
+        1 & 5 & $1.1925 \cdot 10^{-5}$ \\\hline
+        1 & 10 & $4.77 \cdot 10^{-5}$ \\\hline
+        10 & 5 & $1.1925 \cdot 10^{-3}$  \\\hline
+        10 & 10 & $4.77 \cdot 10^{-3}$  \\\hline
+    \end{tabular}
+    \caption{Variation in the musculoskeletal Reynolds number $\text{Re}_{MSK}$ when a scaling factor $s$ is introduced for two different maximum (unloaded) strain rates (5 $\text{s}^{-1}$ and 10 $\text{s}^{-1}$). Here, $\rho_0 = 1.060 \text{ kg} \ \text{m}^{-3}$, $\sigma_0 = 200 \ \text{kPa}$, $L_{mus}^{opt} = 0.3 \ \text{m}$.}
+    \label{tab:re_msk}
+\end{table}
+
+Therefore, if the length of the muscle scales by a factor $s$, the rescaled musculoskeletal Reynolds number becomes:
+\begin{equation}
+    \text{Re}_{MSK} = s^2 \, \dfrac{\rho_0 (L_{mus}^{opt})^2 \depsilon_0}{\sigma_0 / \depsilon_0}.
+\end{equation}
+This explains why one can expect, in this one-dimensional context, that mass effects are larger for larger scales, longer muscles (such as the semitendinosus (ST)), and muscles that contain a higher proportion of faster fibres (i.e., larger $\depsilon_0$). See Table \ref{tab:re_msk} for some values of this nondimensional number. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation}
