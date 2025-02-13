@@ -35,3 +35,6 @@
 
 ### Compiled output ###
 *.pdf
+
+### Other files ###
+draft-elements_of_continuum_mechanics.tex
