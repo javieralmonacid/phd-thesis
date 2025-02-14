@@ -1109,7 +1109,7 @@ Therefore, if the length of the muscle scales by a factor $s$, the rescaled musc
 This explains why one can expect, in this one-dimensional context, that mass effects are larger for larger scales, longer muscles (such as the semitendinosus), and muscles that contain a higher proportion of faster fibres (i.e., larger $\depsilon_0$). See Table \ref{tab:re_msk} for some values of this nondimensional number. 
 
 
-\chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation}
+\chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation} \label{ch:neohookean}
 
 %Newmark methods, Rothe's vs. method of lines comparisons. Stiff solvers is (one of) the key mathematical concepts here.
 %Github repository: one-dimensional-elasticity
@@ -2410,7 +2410,7 @@ and
     \caption{Constants in the SEF defining intramuscular fat. \label{tab:constants_fat}}
 \end{table}
 
-\section{Extending the SEF to the muscle-tendon unit}
+\section{Extending the SEF to the muscle-tendon unit} \label{sec:extension_sef_mtu}
 
 From the expressions in the previous section, we can (at least, formally) construct the following SEF for muscle tissue:
 \begin{equation}
@@ -2454,11 +2454,135 @@ where $\kappa_{apo}$ and $\kappa_{tendon}$ are the bulk moduli for aponeurosis a
 
 \section{Lagrangian formulation of the elastodynamic problem}
 
-\subsection{A first order, fully implicit time discretization}
+Let $\B_0 \subset \R^3$ be a geometrical representation of the underformed muscle-tendon unit (MTU), potentially containing a combination of muscle, aponeurosis, and tendon, as described in \ref{sec:extension_sef_mtu}. The boundary of this body, $\partial \B_0$, can be subdivided into two parts: $\partial \B_0 = \Gamma_{0,D} \cup \Gamma_{0,N}$, with $\Gamma_{0,D} \cap \Gamma_{0,N} = \emptyset$. They represent respectively the Dirichlet and Neumann parts of the boundary in the reference configuration. Let also $\B_t$ denote the deformed MTU at time $t > 0$.
 
-\subsection{Comparison with the Eulerian formulation}
+The elastodynamic deformation of the MTU can be modelled using a system of PDEs in which, given an initial displacement $\*U_0 \in \*H^1(\B_0)$, an initial velocity $\*V_0 \in \*H^1(\B_0)$, an initial pressure $p_0 \in L^2(\B_0)$, a body force $\*f_0(\cdot, t) \in \*L^2(\B_0)$, a prescribed traction $\*T(\cdot,t) \in \*H^{-1/2}(\Gamma_{N,0})$, and a prescribed displacement $\*U_D(\cdot, t) \in \*H^{1/2}(\Gamma_{D,0})$, we want to find large (material) displacements $\*U(\cdot,t) \in \*H^1(\B_0)$, a (material) velocity $\*V \in \*H^1(\B_0)$, a (material) internal pressure $p(\cdot,t) \in L^2(\B_0)$, and a (material) dilation $D(\cdot, t) \in L^2(\B_0)$ such that
 
-\subsection{Linearization, elasticity tensors}
+\begin{subequations} \label{eq:LF_main_system}
+    \begin{align}
+        \label{eq:LF_main_system_1}\pder{\*U}{t} &= \*V  \quad \text{in } \B_0 \times (0,\infty),\\
+        \label{eq:LF_main_system_2}\rho_0 \pder{\*V}{t} - \Divt{\*P(\*U,\*V,p,D)} &= \*f_0 \quad \text{in } \B_0 \times (0,\infty), \\
+        \label{eq:LF_main_system_3}J(\*U) - D &= 0 \quad \text{in } \B_0 \times (0,\infty), \\
+        \label{eq:LF_main_system_4}p-\Psi'_{vol}(D) &= 0 \quad \text {in } \B_0 \times (0,\infty), \\
+        \*U &= \*U_D \quad \text{on } \Gamma_{D,0} \times (0,\infty), \\
+        \label{eq:bc_traction_0}\*P(\*U,\*V,p,D) \*N &= \*T \quad \text{on }\Gamma_{N,0} \times (0,\infty), \\
+        \*U = \*U_0, \quad \*V=\*V_0, \quad p=p_0, \quad D &= D_0 \quad \text{in } \B_0 \times \{t=0\}.
+    \end{align}
+\end{subequations}
+Here, the first expression corresponds to the definition of the material velocity (see Remark \ref{re:velocity_def}), whereas the second equation is just Cauchy's first equation of motion written in the Lagrangian description (see \cite[Section 4.3]{HolzapfelBook}). In addition, $\rho_0$ denotes the \textit{reference density} of the MTU, and although it might depend on space coordinates $\*X$, it does not depend on time.
+
+The set of equations \eqref{eq:LF_main_system} corresponds to a dynamic extension of the Euler-Lagrange equations that arise from the stationarity of the potential:
+\begin{equation} \label{eq:potential_qs}
+    \Pi(\*U,p,D) = \int_{\B_0} \Psi_{vol}(D) + p(J(\*U) - D) + \Psi_{iso}(\bar{\*C}) - \int_{\B_0} \*f_0 \cdot \*U.
+\end{equation}
+Therefore, we refer to \eqref{eq:LF_main_system} as the \textit{dynamic} system. In turn, if we neglect the effect of the velocity on the system (i.e. $\*V \equiv 0$) as in \eqref{eq:potential_qs}, then we refer to \eqref{eq:LF_main_system} as the \textit{quasi-static} system.
+
+We also note that the system \eqref{eq:LF_main_system_1}-\eqref{eq:LF_main_system_4} is equivalent to the Eulerian formulation developed by Dominguez \cite{Seba}:
+\begin{subequations} \label{eq:EF_main}
+    \begin{align}
+    \label{eq:EF_1}\pder{\*u}{t} &= \*v  \quad \text{in } \B_t,\\
+    \label{eq:EF_2}\pder{(\rho \*v)}{t} + \divt{(\rho \*v \otimes \*v)} - \divt{\bsigma(\*u,\*v,p,D)} &= \*f \quad \text{in } \B_t, \\
+    \label{eq:EF_3}J(\*u)-D &= 0 \quad \text{in } \B_t, \\
+    \label{eq:EF_4}p-\Psi'_{vol}(D) &= 0 \quad \text {in } \B_t,
+    \end{align}
+\end{subequations}
+where the density in the current configuration $\rho$ is given by
+\begin{equation}
+    \rho = \dfrac{\rho_0}{J(\*u)},
+\end{equation}
+and the body force $\*f$ is:
+\begin{equation}
+    \*f(\*x,t) = J(\*U)^{-1} \, \*f_0(\bm{\varphi}^{-1}(\*x,t),t).
+\end{equation}
+However, we have chosen to work with the Lagrangian formulation \eqref{eq:LF_main_system} because it leads to a simpler variational formulation, which consequently leads to a (significantly) simpler linearization of the problem (see below).
+
+\section{A first order, fully implicit time discretization}
+
+Based on the Neo-Hookean experiments we performed in Chapter \ref{ch:neohookean}, we discretize \eqref{eq:LF_main_system} using Rothe's method with a first-order time stepping scheme. Hence, consider a time step size $\Delta t = T/N$ and time steps $t_n = n \Delta t$, with $n=0,\dots,N$ and $T > 0$ the simulation end time. For each $n \geq 0$, we seek approximations $\*U^{n+1}(\*X) \approx \*U(\*X,t^{n+1})$, $\*V^{n+1}(\*X) \approx \*V(\*X,t^{n+1})$, $p^{n+1}(\*X) \approx p(\*X,t^{n+1})$, $D^{n+1}(\*X) \approx D(\*X,t^{n+1})$ such that:
+\begin{subequations}
+    \begin{align}
+    \dfrac{\*U^{n+1} - \*U^n}{\Delta t} &= \*V^{n+1} \quad \text{in } \B_0, \\
+    \rho_0 \dfrac{\*V^{n+1} - \*V^n}{\Delta t} - \Divt{\*P(\*U^{n+1}, \*V^{n+1}, p^{n+1}, D^{n+1})} &= \*f_0^{n+1} \quad \text{in } \B_0, \\
+    J(\*U^{n+1}) - D^{n+1} &= 0 \quad \text{in } \B_0, \\
+    p^{n+1}-\Psi'_{vol}(D^{n+1}) &= 0 \quad \text {in } \B_0, \\
+    \label{eq:bc0_1} \*U^{n+1} &= \*U_D^{n+1} \quad \text{on } \Gamma_{D,0}, \\
+    \label{eq:bc0_2} \*P(\*U^{n+1},\*V^n,p^{n+1},D^{n+1}) \*N &= \*T^{n+1} \quad \text{on }\Gamma_{N,0}.
+    \end{align}
+\end{subequations}
+Combining the first two equations above we obtain the following displacement-pressure-dilation system: for each $n \geq 0$, find $\*U^{n+1}$, $p^{n+1}$, and $D^{n+1}$ such that:
+\begin{subequations}\label{eq:LF_time}
+    \begin{align}
+    \label{eq:LF_time_1}\rho_0 \*U^{n+1} - \Delta t^2 \, \Divt{\*P(\*U^{n+1}, \*V^{n+1}, p^{n+1}, D^{n+1})} &= \rho_0 \*U^n + \Delta t \, \rho_0 \*V^n + \Delta t^2 \*f_0^{n+1}, \\
+    \label{eq:LF_time_2}D^{n+1}-J(\*u^{n+1}) &= 0 , \\
+    \label{eq:LF_time_3}p^{n+1}-\Psi'_{vol}(D^{n+1}) &= 0,
+    \end{align}
+\end{subequations}
+with boundary conditions \eqref{eq:bc0_1} and \eqref{eq:bc0_2}. 
+
+To construct the nonlinear variational formulation for this problem, consider test functions $\delta \*U \in \*H^1_0(\B_0)$, $\delta p \in L^2(\B_0)$, and $\delta D \in L^2(\B_0)$. Multiplying \eqref{eq:LF_time_1} by $\delta \*U$ and integrating by parts, we obtain
+\begin{multline} \label{eq:weak0_1}
+    \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta \*U + \Delta t^2 \int_{\B_0} \*P(\*U^{n+1},\*V^{n+1}) : \nabla_0(\delta \*U)  \\
+    = \int_{\B_0} \rho_0 \*U^n \cdot \delta\*U + \Delta t \int_{\B_0} \rho_0 \*V^n \cdot \delta\*U + \Delta t^2 \int_{\B_0} \*f_0^{n+1} \cdot \delta\*U + \Delta t^2 \int_{\Gamma_{N,0}} \*T^{n+1} \cdot \delta \*U.
+\end{multline}
+Furthermore, we can use \eqref{eq:def_PK1} to rewrite the second term in the previous expression as:
+\begin{multline*}
+    \int_{\B_0} \*P(\*U^{n+1},\*V^{n+1}, p^{n+1}, D^{n+1}) : \nabla_0(\delta \*U) \\
+    \begin{aligned}
+        &= \int_{\B_0}  J(\*U^{n+1}) \, \bsigma(\*U^{n+1},\*V^n, p^{n+1}, D^{n+1}) : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1} \\
+        &= \int_{\B_0}  \btau(\*U^{n+1},\*V^n, p^{n+1}, D^{n+1}) : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1}.
+    \end{aligned}
+\end{multline*}
+Thus, we can rewrite \eqref{eq:weak0_1} as
+\begin{multline} \label{eq:weak0_2}
+\int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta \*U + \Delta t^2 \int_{\B_0} \btau(\*U^{n+1},\*V^{n+1}) : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1}  \\
+= \int_{\B_0} \rho_0 \*U^n \cdot \delta\*U + \Delta t \int_{\B_0} \rho_0 \*V^n \cdot \delta\*U + \Delta t^2 \int_{\B_0} \*f_0^{n+1} \cdot \delta\*U + \Delta t^2 \int_{\Gamma_{N,0}} \*T^{n+1} \cdot \delta \*U. 
+\end{multline}
+
+Similarly, for equations \eqref{eq:LF_time_2} and \eqref{eq:LF_time_3}, we multiply them respectively by test functions $\delta p \in L^(\B_0)$ and $\delta D \in L^2(\B_0)$ and integrate:
+\begin{equation} \label{eq:weak_3}
+    \int_{\B_0} \Big\{  J(\*U^{n+1}) - D^{n+1}  \Big\} \cdot \delta p = 0,
+    \end{equation}
+and
+\begin{equation} \label{eq:weak_4}
+    \int_{\B_0} \Big\{ \psi'_{vol}(D^{n+1}) - p^{n+1} \Big\} \cdot \delta D = 0.
+\end{equation}
+
+Finally, multiplying \eqref{eq:weak0_2} by $\Delta t^{-2}$ and adding it to \eqref{eq:weak_3} and \eqref{eq:weak_4}, we obtain the following nonlinear formulation of the semi-discrete problem \eqref{eq:LF_time}: find $\*U^{n+1} \in \*H^1(\B_0)$, $p^{n+1} \in L^2(\B_0)$, and $D^{n+1} \in L^2(\B_0)$ such that
+\begin{equation} \label{eq:LF_weak}
+    R(\*U^{n+1},p^{n+1},D^{n+1} ; \delta\*U, \delta p, \delta D) = 0,
+\end{equation}
+for any $\delta\*U \in \*H_0^1(\B_0)$, $\delta p \in L^2(\B_0)$, and $\delta D \in L^2(\B_0)$, where
+\begin{align} \label{eq:def_R_LF}
+    \notag R(\*U^{n+1},&p^{n+1},D^{n+1} ; \delta\*U, \delta p, \delta D) := \\
+    \notag &\Delta t^{-2} \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta\*U + \int_{\B_0} \btau(\*U^{n+1},\*V^{n+1}, p^{n+1}, D^{n+1}) : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1} \\
+    \notag &+ \int_{\B_0} \Big\{ J(\*U^{n+1}) - D^{n+1} \Big\} \cdot \delta p + \int_{\B_0} \Big\{ \psi'_{vol}(D^{n+1}) - p^{n+1} \Big\} \cdot \delta D \\
+    \notag &- \Delta t^{-1} \int_{\B_0} \rho_0 \*V^n \cdot \delta\*U - \Delta t^{-2} \int_{\B_0} \rho_0 \*U^n \cdot \delta \*U - \int_{\Gamma_{N,0}} \*T^{n+1} \cdot \delta\*U \\
+    &- \int_{\B_0} \*f_0^{n+1} \cdot \delta \*U.
+\end{align}
+
+Before jumping into the linearization of this expression, let us see how this formulation differs from the one introduced in \cite{Seba}.
+
+\begin{remark}
+    Consider the variational formulation for the Eulerian system \eqref{eq:EF_main} as in \cite[Equation 6.22]{Seba} pulled back to the reference configuration: find $\*U^{n+1} \in \*H^1(\B_0)$, $p^{n+1} \in L^2(\B_0)$, and $D^{n+1} \in L^2(\B_0)$ such that
+    \begin{equation} \label{eq:EF_weak}
+        \widetilde{R}(\*U^{n+1},p^{n+1},D^{n+1} ; \delta\*U, \delta p, \delta D) = 0,
+    \end{equation}
+    for any $\delta\*U \in \*H_0^1(\B_0)$, $\delta p \in L^2(\B_0)$, and $\delta D \in L^2(\B_0)$, where
+    \begin{align} \label{eq:def_R_EF}
+        \notag \widetilde{R}(\*U^{n+1},&p^{n+1},D^{n+1} ; \delta\*U, \delta p, \delta D) := \\
+        \notag &\Delta t^{-2} \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta \*U + \int_{\B_0} \btau(\*U^{n+1},\*V^n, p^{n+1}, D^{n+1}) : \nabla^S_0(\delta\*U) \, \*F(\*U^{n+1})^{-1} \\
+        \notag &+ \int_{\B_0} \Big\{  J(\*U^{n+1}) - D^{n+1} \Big\} \cdot \delta p + \int_{\B_0} \Big\{ \psi'_{vol}(D^{n+1}) - p^{n+1} \Big\} \cdot \delta D  \\
+        \notag &- \Delta t^{-1} \int_{\B_0} \rho_0 \dfrac{J(\*U^{n+1})}{J(\*U^{n})} \*V^n \cdot \delta\*U \\
+        \notag &-\int_{\B_0} \left(\rho_0 \dfrac{J(\*U^{n+1})}{J(\*U^{n})} \*V^n \otimes \*V^n\right) : \nabla^S_0(\delta \*U) \, \*F(\*U^{n+1})^{-1} \\
+        \notag &+ \int_{\Gamma_{N,0}}  \left(\rho_0 \dfrac{J(\*U^{n+1})}{J(\*U^{n})} \*V^n \otimes \*V^n \right) \*F(\*U^{n+1})^{-T} \*N \cdot \delta \*U \\
+        &- \Delta t^{-2} \int_{\B_0} \rho_0 \*U^n \cdot \delta \*U - \int_{\Gamma_{N,0}} \*T^{n+1} \cdot \delta\*U - \int_{\B_0} \*f_0^{n+1} \cdot \delta \*U.
+    \end{align}
+    Given that the Eulerian and the Lagrangian formulations model the exact same biological system but in difference frames of reference, it is clear that the nonlinear weak formulations \eqref{eq:LF_weak} and \eqref{eq:EF_weak} are approximating the same problem. However, the linearization for these problems involves the computation of derivatives with respect to $\*U^{n+1}$, $p^{n+1}$, and $D^{n+1}$ for the first four terms in \eqref{eq:def_R_LF}, as opposed to the first seven in \eqref{eq:def_R_EF}. Furthermore, the weak problem \eqref{eq:LF_weak} represents a departure from \eqref{eq:EF_weak} since we are now treating the velocity implicitly in the Kirchhoff stress $\btau$, as opposed to the explicit treatment in \eqref{eq:def_R_EF}.
+\end{remark}
+
+\section{Newton's method}
+
+\section{Linearization}
 
 
 \chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics}
