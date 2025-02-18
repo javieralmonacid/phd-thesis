@@ -2038,7 +2038,7 @@ In turn, the \textit{spatial velocity gradient} is given by
 \*l(\*x,t) = \pder{\*v(\*x,t)}{\*x}.
 \end{equation}
 We may relate these two quantities using the expression
-\begin{equation}
+\begin{equation} \label{eq:def_l_spatial_velocity_gradient}
 \*l = \dot{\*F} \*F^{-1}.
 \end{equation}
 Furthermore, we can additively decompose the spatial velocity gradient into its symmetric and skew-symmetric parts:
@@ -2179,14 +2179,14 @@ In turn, the isochoric part, $\*S_{iso}$, is given by
 \begin{equation} \label{eq:def_S_iso}
 \*S_{iso} = J^{-2/3} \P : \bar{\*S},
 \end{equation}
-where $\bar{\*S}$ is the \textbf{ficticious PK2 stress tensor}:
+where $\bar{\*S}$ is the \textbf{fictitious PK2 stress tensor}:
 \begin{equation} \label{eq:def_S_bar}
     \bar{\*S} := 2 \pder{\Psi_{iso}(\bar{\*C})}{\bar{\*C}},
 \end{equation}
 and $\P$ is the projection tensor defined in \eqref{eq:def_projection_material}.
 
 Pushing forward the equation describing $\*S$ (i.e., \eqref{eq:def_S}) according to \eqref{eq:push_forward_tau}, we obtain that the Kirchhoff stress $\btau$ can be described as
-\begin{equation}
+\begin{equation} \label{eq:def_tau}
 \btau = \btau_{vol} + \btau_{iso},
 \end{equation}
 where the volumetric part, $\btau_{vol}$, is given by
@@ -2197,7 +2197,7 @@ and the isochoric part, $\btau_{iso}$ is given by
 \begin{equation} \label{eq:def_tau_iso}
 \btau_{iso} = \bar{\*F} (\P : \bar{\*S}) \bar{\*F}^\T = \p : \bar{\btau}, \quad
 \end{equation}
-where $\bar{\btau}$ is the \textbf{ficticious Kirchhoff stress tensor}:
+where $\bar{\btau}$ is the \textbf{fictitious Kirchhoff stress tensor}:
 \begin{equation} \label{eq:def_tau_bar}
     \bar{\btau} = \bar{\*F} \bar{\*S} \bar{\*F}^\T,
 \end{equation} 
@@ -2210,7 +2210,7 @@ Linearization techniques such as Newton's method require the computation of four
 \C = 2\pder{\*S(\*C)}{\*C} \quad \text{or} \quad C_{ABCD} = 2\pder{S_{AB}}{C_{CD}}.
 \end{equation}
 In the spatial description, the elasticity tensor $\c$ can be obtained by a push-forward of the material tensor $\C$, that is,
-\begin{equation}
+\begin{equation} \label{eq:def_c_spatial}
 \c = J^{-1} \bchi_*(\C) \quad \text{or} \quad c_{abcd} = J^{-1} F_{aA} F_{bB} F_{cC} F_{dD} C_{ABCD}.
 \end{equation}
 
@@ -2230,7 +2230,7 @@ In turn, the isochoric part, $\C_{iso}$, can be computed as (see \cite[Example 6
 \begin{equation}
 \C_{iso} = \P \, \bar{\C} \, \P^\T + \dfrac{2}{3} \left(J^{-2/3} \bar{\*S} : \*C \right) \tilde{\P} - \dfrac{2}{3} \left( \*C^{-1} \otimes \*S_{iso} + \*S_{iso} \otimes \*C^{-1} \right),
 \end{equation}
-where the \textbf{ficticious elasticity tensor} $\bar{\C}$ in the material description is given by
+where the \textbf{fictitious elasticity tensor} $\bar{\C}$ in the material description is given by
 \begin{equation} \label{eq:def_C_bar}
     \bar{\C} = 2 J^{-4/3} \pder{\bar{\*S}}{\bar{\*C}},
 \end{equation}
@@ -2242,17 +2242,17 @@ In the spatial description, the picture is similar and fortunately, the expressi
 \begin{equation} \label{eq:def_c}
 \c = \c_{vol} + \c_{iso},
 \end{equation}
-where the volumetric part, $\c_{vol}$ can be written as
+where the volumetric and isochoric parts are respectively given by:
 \begin{equation}
-J \c_{vol} = pJ(\*I \otimes \*I - 2p\mathbb{I}) + J^2 \der{^2 \Psi_{vol}(J)}{J^2} \*I \otimes \*I.
+J \c_{vol} = pJ(\*I \otimes \*I - 2p\mathbb{I}) + J^2 \der{^2 \Psi_{vol}(J)}{J^2} \*I \otimes \*I,
 \end{equation}
-In turn, the isochoric part, $\c_{iso}$ can be computed as
+and
 \begin{equation} \label{eq:Jc_iso}
-J\c_{iso} = \p \, \bar{\c} \, \p + \dfrac{2}{3} \mathrm{tr}(\bar{\btau}) \p - \dfrac{2}{3} \left( \*I \otimes \btau_{iso} + \btau_{iso} \otimes \*I \right),
+J\c_{iso} = \p \, \bar{\c} \, \p + \dfrac{2}{3} \mathrm{tr}(\bar{\btau}) \p - \dfrac{2}{3} \left( \*I \otimes \btau_{iso} + \btau_{iso} \otimes \*I \right).
 \end{equation}
-where $\p$ is the spatial projection tensor defined in \eqref{eq:def_projection_spatial} and the \textbf{ficticious elasticity tensor} $\bar{\c}$ in the spatial description is given by
+Note that we have multiplied these tensors by $J$ as, ultimately, the weak formulations will require us compute $J\c$. In the previous expression, $\p$ is the spatial projection tensor defined in \eqref{eq:def_projection_spatial} and $\bar{\c}$ is the \textbf{fictitious elasticity tensor} in the spatial description defined as push-forward of $\bar{\C}$:
 \begin{equation} \label{eq:def_c_bar}
-\bar{\c} = \bchi_*(\bar{\*C}) \quad \text{or} \quad \bar{c}_{abcd} = F_{aA} F_{bB} F_{cC} F_{dD} \bar{C}_{ABCD} = \bar{F}_{aA} \bar{F}_{bB} \bar{F}_{cC} \bar{F}_{dD} \, J^{4/3} \bar{C}_{ABCD},
+\bar{\c} = \bchi_*(\bar{\C}) \quad \text{or} \quad \bar{c}_{abcd} = F_{aA} F_{bB} F_{cC} F_{dD} \bar{C}_{ABCD} = \bar{F}_{aA} \bar{F}_{bB} \bar{F}_{cC} \bar{F}_{dD} \, J^{4/3} \bar{C}_{ABCD},
 \end{equation}
 where $\bar{C}_{ABCD}$ is computed according to \eqref{eq:def_C_bar}. Note that the term $\p \, \bar{\c} \, \p$ can be seen component wise as 
 \begin{equation}
@@ -2295,7 +2295,7 @@ Next, we assume that the isochoric component of $\Psi$ takes the form:
 \begin{equation}
     \Psi_{iso} = (1-\chi_{fat}) \left( \Psi_{fibre} + \Psi_{bm} \right) + \chi_{fat} \Psi_{fat},
 \end{equation}
-where $\chi_{fat}$ is the fraction of intramuscular fat present in muscle tissue. In terms of stresses these SEFs induce, from Section \ref{sec:cons_eqs_PK2_kirchhoff_general} (and in particular from the definition of the isochoric Kirchhoff stress in \eqref{eq:def_tau_iso}), we notice that an expression for $\btau_{iso}$ can be found by computing first the ficticious PK2 stress $\bar{\*S}$ \eqref{eq:def_S_bar}, and then the ficticious Kirchhoff stress $\bar{\btau}$ by pushing-forward $\bar{\*S}$ (see Equation \ref{eq:def_tau_bar}). This will be the main idea of the following subsections.
+where $\chi_{fat}$ is the fraction of intramuscular fat present in muscle tissue. In terms of stresses these SEFs induce, from Section \ref{sec:cons_eqs_PK2_kirchhoff_general} (and in particular from the definition of the isochoric Kirchhoff stress in \eqref{eq:def_tau_iso}), we notice that an expression for $\btau_{iso}$ can be found by computing first the fictitious PK2 stress $\bar{\*S}$ \eqref{eq:def_S_bar}, and then the fictitious Kirchhoff stress $\bar{\btau}$ by pushing-forward $\bar{\*S}$ (see Equation \ref{eq:def_tau_bar}). This will be the main idea of the following subsections.
 
 \subsection{Muscle fibres in a 3D continuum}
 
@@ -2304,7 +2304,7 @@ where $\chi_{fat}$ is the fraction of intramuscular fat present in muscle tissue
     2 \I_4 \pder{\Psi_{fibre}}{\I_4} = \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}),
 \end{equation}
 where $\sigma_{Hill}$ is Hill's muscle model written in terms of the maximum isometric stress $\sigma_{0,mus}$:
-\begin{equation}
+\begin{equation} \label{eq:def_hill_stress_sigma}
     \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}) = \sigma_{0,mus} \left( a(\*X,t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right).
 \end{equation}
 In this expression, the active stress-stretch relationship $\sigma_A$, the stress-strain rate relationship $\sigma_V$, and the passive stress-stretch relationship $\sigma_P$ can be taken exactly as the active force-length $F_V$, force-velocity $F_V$, and passive force-length $F_P$ relationships in \eqref{eq:Hill_force}, respectively (all these quantities are dimensionless, see Appendix \ref{app:force_relationships}). Furthermore, we now allow the activation function to also vary in space.
@@ -2314,7 +2314,7 @@ Following Equation \eqref{eq:def_S_bar}, the corresponding fictitious PK2 stress
     \bar{\*S}_{fibre} = 2 \pder{\Psi_{fibre}}{\bar{\*C}} = 2 \pder{\Psi_{fibre}}{\I_4} \pder{\I_4}{\*C}.
 \end{equation}
 Thus, using \eqref{eq:ode_fibre_sef} together with \eqref{eq:derivatives_invariants}, the expression for $\bar{\*S}_{fibre}$ reads:
-\begin{equation}
+\begin{equation} \label{eq:def_S_fibre}
     \bar{\*S}_{fibre} = \dfrac{1}{\bar{\lambda}^2} \sigma_{0,mus} \left( a(\*X,t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right) \*a_0(\*X) \otimes \*a_0(\*X)
 \end{equation}
 where $\*a_0$ is the initial orientation vector of a fibre crossing through the point $\*X$. Moreover, according to \eqref{eq:def_tau_bar}, we obtain that:
@@ -2560,7 +2560,31 @@ for any $\delta\*U \in \*H_0^1(\B_0)$, $\delta p \in L^2(\B_0)$, and $\delta D \
     &- \int_{\B_0} \*f_0^{n+1} \cdot \delta \*U.
 \end{align}
 
-Before jumping into the linearization of this expression, let us see how this formulation differs from the one introduced in \cite{Seba}.
+We may also refer to \eqref{eq:LF_weak} as the (semi-discretized) \textit{principle of virtual work} \cite{HolzapfelBook}. In particular, we may split $R$ into three components:
+\begin{equation}
+    R = R_{ine} + R_{int} - R_{ext}.
+\end{equation}
+The (semi-discrete) work due to inertial, internal, and external forces are respectively given by:
+\begin{align}
+    \notag R_{ine}(\*U^{n+1} ; \delta\*U) &= \Delta t^{-2} \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta\*U \\
+    \notag &- \Delta t^{-2} \int_{\B_0} \rho_0 \*U^n \cdot \delta\*U \\
+    \label{eq:def_Rine}&- \Delta t^{-1} \int_{\B_0} \rho_0 \*V^n \cdot \delta\*U, \\
+    \notag R_{int}(\*U^{n+1}, p^{n+1}, D^{n+1} ; \delta\*U, \delta p, \delta D) &= \int_{\B_0} \btau^{n+1} : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1} \\
+    \notag &+ \int_{\B_0} \Big\{ J(\*U^{n+1}) - D^{n+1} \Big\} \cdot \delta p \\
+    \label{eq:def_Rint}&+ \int_{\B_0} \Big\{ \psi'_{vol}(D^{n+1}) - p^{n+1} \Big\} \cdot \delta D, \\
+    \label{eq:def_Rext}R_{ext}(\delta \*U) &=  \int_{\Gamma_{N,0}} \*T^{n+1} \cdot \delta\*U + \int_{\B_0} \*f_0^{n+1}  \cdot \delta\*U,
+\end{align}
+where we have written $\btau^{n+1} = \btau(\*U^{n+1},\*V^{n+1}, p^{n+1}, D^{n+1})$.
+
+\begin{remark}
+    Using this notation, the quasi-static problem reads: find $\*U^{n+1} \in \*H^1(\B_0)$, $p^{n+1} \in L^2(\B_0)$, and $D^{n+1} \in L^2(\B_0)$ such that
+    \begin{equation}
+        R_{int}(\*U^{n+1}, p^{n+1}, D^{n+1} ; \delta\*U, \delta p, \delta D) = R_{ext}(\delta \*U),
+    \end{equation} 
+    for all virtual displacements $\delta\*U \in \*H_0^1(\B_0)$, virtual pressures $\delta p \in L^2(\B_0)$, and virtual dilations $\delta D \in L^2(\B_0)$. Recall that, in this case, the equations do not involve
+\end{remark}
+
+Before jumping into the linearization of the nonlinear problem \eqref{eq:LF_weak}, let us see how this formulation differs from the one introduced in \cite{Seba}.
 
 \begin{remark}
     Consider the variational formulation for the Eulerian system \eqref{eq:EF_main} as in \cite[Equation 6.22]{Seba} pulled back to the reference configuration: find $\*U^{n+1} \in \*H^1(\B_0)$, $p^{n+1} \in L^2(\B_0)$, and $D^{n+1} \in L^2(\B_0)$ such that
@@ -2580,9 +2604,222 @@ Before jumping into the linearization of this expression, let us see how this fo
     Given that the Eulerian and the Lagrangian formulations model the exact same biological system but in difference frames of reference, it is clear that the nonlinear weak formulations \eqref{eq:LF_weak} and \eqref{eq:EF_weak} are approximating the same problem. However, the linearization for these problems involves the computation of derivatives with respect to $\*U^{n+1}$, $p^{n+1}$, and $D^{n+1}$ for the first four terms in \eqref{eq:def_R_LF}, as opposed to the first seven in \eqref{eq:def_R_EF}. Furthermore, the weak problem \eqref{eq:LF_weak} represents a departure from \eqref{eq:EF_weak} since we are now treating the velocity implicitly in the Kirchhoff stress $\btau$, as opposed to the explicit treatment in \eqref{eq:def_R_EF}.
 \end{remark}
 
-\section{Newton's method}
-
 \section{Linearization}
+
+\subsection{Newton's method}
+
+Given $\*U^n$, $\*V^n$, $\*U^{n+1}_k$, $p^{n+1}_k$, and $D^{n+1}_k$, we want to find updates $\*d \*U_k$, $d p_k$, and $d D_k$ such that:
+\begin{multline} \label{eq:newton}
+    \quad \bm{\mathcal{D}}R(\*U^{n+1}_k, p^{n+1}_k, D^{n+1}_k) \Big(d \*U_k, d p_k, d D_k ; \delta \*U, \delta p, \delta D \Big) \\
+    = - R(\*U^{n+1}_k, p^{n+1}_k, D^{n+1}_k ; \delta \*U, \delta p, \delta D), \quad
+\end{multline}
+for all virtual increments $(\delta \*U, \delta p, \delta D)$, then update the solution as
+\begin{equation} \label{eq:update_theory}
+\*U^{n+1}_k = \*U^{n+1}_k + \*d \*U_k, \quad 
+p^{n+1}_k = p^{n+1}_k + d p_k, \quad 
+D^{n+1}_k = D^{n+1}_k + d D_k,
+\end{equation}
+until a convergence criterion is satisfied. Here, $\bm{\mathcal{D}} R$ denotes the G\^{a}teaux derivative of the operator $R$ ($\bm{\mathcal{D}} R$ also known as the \textbf{tangent operator}). At the current time step, we set the initial solution as the converged one from the previous time step, i.e.,
+\begin{equation}
+\*U_0^{n+1} = \*U^n,
+\end{equation}
+with analogous expressions for the pressure and dilation. Therefore, the solution can be updated as:
+\begin{equation} \label{eq:update_practice}
+\*U^{n+1}_{k+1} = \*U^{n+1}_k + \*d\*U_k = \*U^{n+1}_{k-1} + \*d\*U_{k-1} + \*d \*U_k = \dots = \*U_0^{n+1} + \Delta \*U_k = \*U^n + \Delta \*U_k,
+\end{equation}
+where we have defined the object:
+\begin{equation}
+\Delta \*U_k = \sum_{l = 0}^k \*d \*U_k.
+\end{equation}
+
+\begin{remark}
+Computationally speaking, at the beginning of every time step, one would set the object $\Delta \*U_k$ to zero and then start updating recursively this quantity with each Newton step $\*d \*U_k$. Then, once convergence has been achieved, we can obtain the converged solution for the current time step as in the last equality of \eqref{eq:update_practice}. This approach turns out to be less prone to numerical (round off) errors than updating the solution directly as in \eqref{eq:update_theory}.
+\end{remark}
+
+\begin{remark}[Boundary conditions for the linearized system]
+    Consistent with the variational problem \eqref{eq:LF_weak}, the linearized problem \eqref{eq:newton} requires boundary conditions for the displacements $\*d \*U_k$ at each iteration $k$ (at least in principle). To determine this, let us assume that for the time step $t_{n+1}$, the method converges in $K+1$ iterations. Thus, we can set $\*U^{n+1} := \*U_{K+1}^{n+1}$ and therefore, according to \eqref{eq:update_practice},
+    \[
+    \Delta \*U_K = \*d\*U_0 + \*d\*U_1 + \dots + \*d\*U_K = \*U^{n+1} - \*U^n.
+    \]
+    However, the displacements $\*U^{n+1}$ and $\*U^n$ are known along the Dirichlet part of the boundary. This suggests that, on $\Gamma_{0,D}$, we can set
+    \begin{equation}
+    \begin{aligned}
+    \*d\*U_0 &= \*U^{n+1} - \*U^n, \\
+    \*d\*U_1 &= \*0,  \\
+    &\hspace{0.6em}\vdots \\
+    \*d\*U_K &= \*0,
+    \end{aligned}
+    \end{equation}
+    that is, the incremental displacement $\*U^{n+1}-\*U^n$ is only implemented at the first Newton iteration and zero Dirichlet boundary conditions can be assumed for the rest.
+\end{remark}
+
+\subsection{Construction of the block-matrix system}
+
+We begin populating the elements forming the tangent operator $\bm{\mathcal{D}} R$ by linearizing each term in \eqref{eq:LF_weak}. First, for the inertial contribution, only the first term in \eqref{eq:def_Rine} depends on the current displacement, so the linearization of this term yields:
+\begin{equation}
+    \*K_{ine}^{\delta \*U, \*d \*U} := \der{}{\epsilon}R_{ine}(\*U_k^{n+1} + \epsilon \*d\*U_k ; \delta\*U) \Big|_{\epsilon = 0} = \Delta t^{-2} \int_{\B_0} \rho_0 \, \*d\*U_k \cdot \delta \*U.
+\end{equation}
+
+Next, for the internal contribution, the linearization of the first term in \eqref{eq:def_Rint} is discussed in general terms in \cite[Chapter 8]{HolzapfelBook}. This yields the term:
+\begin{equation} \label{eq:def_K_int_11}
+    \*K_{int}^{\delta \*U, \*d \*U} = \int_{\B_0} \nabla (\delta \*U) : J\c^{n+1}_k : \nabla(\*d\*U_k) + \int_{\B_0} \nabla(\delta \*U) : \nabla (\*d\*U_k) \btau^{n+1},
+\end{equation}
+where $\c^{n+1}_k = \c(\*U^{n+1}_k, \*V^{n+1}_k, p^{n+1}_k, D^{n+1}_k)$ is the fourth-order elasticity tensor defined in \eqref{eq:def_c_spatial}. The computation of this tensor will be the main focus of Section \ref{sec:elasticity_tensors}.
+
+The rest of the contributions with respect to virtual displacements are easier to compute. Following \eqref{eq:def_tau}, we use the decomposition 
+\begin{equation}
+    \btau = \btau_{vol}(J) + \btau_{iso}(\*U,\*V),
+\end{equation}
+as the pressure only appears in the volumetric part of the Kirchhoff stress and there is no dependence on the approximate dilation $D$:
+\begin{equation}
+\begin{aligned}
+\*K^{\delta \*U, dp} &= \der{}{\epsilon} R_{int}(\*U^{n+1}_k, p^{n+1}_k + \epsilon dp_k, D^{n+1}_k; \delta\*U) \Big|_{\epsilon=0} \\
+&= \int_{\B_0} dp_k J \, \*I : \nabla(\delta\*U) \\
+&= \int_{\B_0} dp_k J \, \*I : \Big\{ \nabla_0(\delta\*U) \*F(\*U^{n+1}_k)^{-1} \Big\}
+\end{aligned},
+\end{equation}
+and $\*K^{\delta\*U, dD} = 0$. Next, for the contributions with respect to virtual pressures, we have
+\begin{equation}
+\begin{aligned}
+\*K^{\delta p, \*d\*U} &= \der{}{\epsilon} R_{int}(\*U^{n+1}_k + \epsilon \*d\*U_k, p^{n+1}_k, D^{n+1}_k ; \delta p) \Big|_{\epsilon=0} \\
+&= \int_{\B_0} \delta p J \, \*I : \nabla (\*d\*U_k) \\
+&= \int_{\B_0} \delta p J \, \*I : \Big\{ \nabla_0 (\*d\*U_k) \*F(\*U^{n+1}_k)^{-1} \Big\},
+\end{aligned}
+\end{equation}
+$\*K^{\delta p, dp} = 0$, and
+\begin{equation}
+\begin{aligned}
+\*K^{\delta p, dD} &= \der{}{\epsilon}R_{int}(\*U^{n+1}_k, p^{n+1}_k, D^{n+1}_k + \epsilon dD_k ; \delta p) \Big|_{\epsilon=0} \\
+&= - \int_{\B_0} dD \, \delta p.
+\end{aligned}
+\end{equation}
+Finally, for the contributions with respect to virtual dilations, we have $\*K^{\delta D, \*d\*U} = 0$, 
+\begin{equation}
+\begin{aligned}
+\*K^{\delta D, dp} &= \der{}{\epsilon} R_{int}(\*U^{n+1}_k, p^{n+1}_k + \epsilon dp_k, D^{n+1}_k; \delta D) \Big|_{\epsilon=0}  \\
+&= -\int_{\B_0}  dp \, \delta D,
+\end{aligned}
+\end{equation}
+and
+\begin{equation}
+\begin{aligned}
+\*K^{\delta D, dD} &= \der{}{\epsilon}R_{int}(\*U^{n+1}_k, p^{n+1}_k, D^{n+1}_k + \epsilon dD_k ; \delta D) \Big|_{\epsilon=0} \\
+&= \int_{\B_0} \Psi_{vol}''(D^{n+1}_k) \, dD \, \delta D.
+\end{aligned}
+\end{equation}
+
+Therefore, the problem \eqref{eq:newton} can be (at least formally) written in matrix form as:
+\begin{equation} \label{eq:LF_linear_system}
+    \left[\begin{matrix}
+    \*K_{ine}^{\delta \*U, \*d\*U} + \*K_{int}^{\delta \*U, \*d\*U} & \*K^{\delta \*U, dp} & \*0 \\
+    \*K^{\delta p, \*d\*U} & \*0 & \*K^{\delta p, dD} \\
+    \*0 & \*K^{\delta D, dp} & \*K^{\delta D, dD}
+    \end{matrix}\right] 
+    \left( \begin{matrix}
+      d\*U_k \\ dp_k \\ dD_k
+    \end{matrix}\right) = -
+    \left(\begin{matrix}
+      R_{ine}(\*U^{n+1}_k) + R_{int}(\*U^{n+1}_k) \\
+      R_{int}(p^{n+1}_k)\\
+      R_{int}(D^{n+1}_k)
+    \end{matrix}\right).
+\end{equation}
+
+\subsection{Fourth-order elasticity tensors} \label{sec:elasticity_tensors}
+
+To compute the fourth-order elastcity tensor $\c^{n+1}$, we first need to find the material tensor $\bar{\C}$ (see Equations \eqref{eq:def_c}, \eqref{eq:Jc_iso}, and \eqref{eq:def_c_bar}). Furthermore, each contribution to isochoric SEF $\Psi_{iso}$ yields a different contribution to the elasticity tensor $\bar{\C}$. For example, if we assume the material contains muscle fibres \eqref{eq:ode_fibre_sef}, base material \eqref{eq:def_Psi_bm}, and intramuscular fat \eqref{eq:def_Psi_fat}, that is:
+\begin{equation}
+    \Psi_{iso} = (1-\alpha)(\Psi_{fibre} + \Psi_{bm}) + \alpha \Psi_{fat},
+\end{equation}
+then
+\begin{equation}
+    \bar{\C} = (1-\alpha)(\bar{\C}_{fibre} + \bar{\C}_{bm}) + \alpha \bar{\C}_{fat},
+\end{equation}
+with analogous expressions if ECM, cell, tendon, or aponeurosis tissues are included.
+
+The derivation of all parts that make the $\bar{\C}$ tensor follows the same structure, so we will only focus on the fibre contribution. First, according to \eqref{eq:def_C_bar}, we have
+\begin{equation}
+    J^{4/3} \bar{\C}_{fibre}^{n+1} = 2 \pder{\bar{\*S}_{fibre}^{n+1}}{\bar{\*C}^{n+1}} = 2 \pder{\bar{\*S}_{fibre}^{n+1}}{\I_4^{n+1}} \otimes \pder{\I_4^{n+1}}{\bar{\*C}^{n+1}},
+\end{equation}
+which, from \eqref{eq:derivatives_invariants} and the particular expression for $\bar{\*S}_{fibre}$ in \eqref{eq:def_S_fibre}, we obtain
+\begin{align}
+    \notag J^{4/3} \bar{\C}_{fibre}^{n+1} &= 2 \pder{}{\I_4^{n+1}} \left[ \dfrac{1}{\I_4^{n+1}} \sigma_{Hill}(\I_4^{n+1})\right] \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0 \\
+    &= 2 \left[ -\dfrac{1}{\left(\I_4^{n+1}\right)^2} \sigma_{Hill}(\I_4^{n+1}) + \dfrac{1}{\I_4^{n+1}} \pder{\sigma_{Hill}(\I_4^{n+1})}{\I_4^{n+1}} \right] \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0
+\end{align}
+At this juncture, we emphasize that these expressions are meant to be evaluated at the current Newton iteration $k$ (see \eqref{eq:def_K_int_11}). Thus, using the expression for Hill's fibre stress \eqref{eq:def_hill_stress_sigma}, we obtain
+\begin{align}
+    \notag \pder{\sigma_{Hill}(\I_4^{n+1})}{\I_4^{n+1}} &= \pder{\sigma_{Hill}(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \pder{\bar{\lambda}^{n+1}_k}{\I_4^{n+1}} +  \pder{\sigma_{Hill}(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k)}{\bar{\depsilon}^{n+1}_k} \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} \pder{\bar{\lambda}^{n+1}_k}{\I_4^{n+1}} \\
+    \notag &= \sigma_{0,mus} \left[ a^{n+1} \der{\sigma_L(\bar{\lambda}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \sigma_V(\bar{\depsilon}^{n+1}_k) + \der{\sigma_P(\bar{\lambda}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \right] \dfrac{1}{2\bar{\lambda}^{n+1}_k} \\
+    &\hspace{9em}+ \sigma_{0,mus} a^{n+1} \sigma_L(\bar{\lambda}^{n+1}_k) \der{\sigma_{V}(\bar{\depsilon}^{n+1}_k)}{\bar{\depsilon}^{n+1}_k} \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} \dfrac{1}{2\bar{\lambda}^{n+1}_k}.
+\end{align}
+
+In particular, following the definition of the modified strain rate $\bar{\depsilon}$ in \eqref{eq:def_strain_rate_bar} we consider:
+\begin{equation}
+    \bar{\depsilon}^{n+1}_k = \dfrac{1}{\depsilon_0} \dfrac{(\bar{\*F}_k^{n+1}\*a_0)^\T (\p : \*d^{n+1}_k) (\bar{\*F}_k^{n+1} \*a_0)}{\bar{\lambda}^{n+1}_k},
+\end{equation}
+where, according to \eqref{eq:def_l_spatial_velocity_gradient},
+\begin{equation}
+    \*d_k^{n+1} = \mathrm{symm} \left( \dfrac{\*F_k^{n+1} - \*F^n}{\Delta t} \left(\*F_k^{n+1}\right)^{-1} \right).
+\end{equation}
+However, for the term $\pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k}$ (and only for this term), we approximate $\bar{\depsilon}^{n+1}_k$ as:
+\begin{equation}
+    \bar{\depsilon}^{n+1}_k \approx \dfrac{\bar{\lambda}^{n+1}_k - \bar{\lambda}^n}{\Delta t},
+\end{equation}
+and thus we set:
+\begin{equation}
+    \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} = \dfrac{1}{\Delta t}.
+\end{equation}
+
+Therefore, the full expression for $J^{4/3} \bar{\C}_{fibre}^{n+1}$ reads:
+\begin{equation}
+    \notag J^{4/3} \bar{\C}_{fibre}^{n+1} = \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) \, \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0,
+\end{equation}
+where
+\begin{align}
+    \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) = &- \dfrac{2}{\left( \bar{\lambda}^{n+1}_k \right)^4} \, \sigma_{0,mus} a^{n+1} \sigma_L(\bar{\lambda}^{n+1}_k) \sigma_V(\bar{\depsilon}^{n+1}_k) \\
+    \notag &+ \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} a^{n+1} \der{\sigma_L}{\bar{\lambda}} \left( \bar{\lambda}^{n+1}_k \right) \sigma_V(\bar{\depsilon}^{n+1}_k) \\
+    \notag &+ \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} a^{n+1} \sigma_L(\bar{\lambda}^{n+1}_k) \der{\sigma_V}{\bar{\depsilon}} \left( \bar{\depsilon}^{n+1}_k \right) \dfrac{1}{\Delta t} \\
+    \notag &- \dfrac{2}{\left( \bar{\lambda}^{n+1}_k \right)^4} \, \sigma_{0,mus} \sigma_P(\bar{\lambda}^{n+1}_k) \\
+    &+ \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} \der{\sigma_P}{\bar{\lambda}} \left( \bar{\lambda}^{n+1}_k  \right)
+\end{align}
+In this way,
+\begin{equation}
+    \bar{\c}_{fibre}^{n+1} = \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) \, \bar{\*a} \otimes \bar{\*a} \otimes \bar{\*a} \otimes \bar{\*a},
+\end{equation}
+where $\bar{\*a} = \bar{\*F} \*a_0$.
+
+\begin{remark}
+    If the simulation is quasi-static, then Hill's stress does not depend on the fibre strain rate, and therefore
+    \begin{equation}
+        \bar{\c}_{fibre}^{n+1} = \widetilde{\mathfrak{C}} \left(\bar{\lambda}^{n+1}_k \right) \, \bar{\*a} \otimes \bar{\*a} \otimes \bar{\*a} \otimes \bar{\*a},
+    \end{equation}
+    where
+    \begin{align}
+        \notag \widetilde{\mathfrak{C}} \left(\bar{\lambda}^{n+1}_k \right) = &-\dfrac{2\sigma_{0,mus}}{(\bar{\lambda}^{n+1})^4} \, \left[ a^{n+1} \widehat{\sigma}_A(\bar{\lambda}^{n+1})  + \widehat{\sigma}_P(\bar{\lambda}^{n+1}) \right] \\
+        &+ \dfrac{\sigma_{0,mus}}{(\bar\lambda^{n+1})^3} \Bigg[ a^{n+1} \der{\widehat{\sigma}_A(\bar\lambda^{n+1})}{\bar\lambda^{n+1}} + \der{\sigma_P(\bar{\lambda}^{n+1})}{\bar{\lambda}^{n+1}} \Bigg]
+    \end{align}
+\end{remark}
+
+Following the same procedure, we obtain the contributions to $\bar{\c}$ from the base material components:
+\begin{align}
+    \bar{\c}_{bm}^{n+1} &= 4 s_{bm} \sigma_{0,bm} \left( 6 c_3 (\I_1-3) + 2c_2 \right) \, \*I \otimes \*I \\
+    \bar{\c}_{ecm}^{n+1} &= 4 s_{ecm} \left( 6 c_3 (\I_1-3) + 2c_2 \right) \, \*I \otimes \*I \\
+    \bar{\c}_{cel}^{n+1} &= 4 s_{cell} \left( 6 c_3 (\I_1-3) + 2c_2 \right) \, \*I \otimes \*I
+\end{align}
+(with the constants defined in Table \ref{tab:constants_base_material_muscle}) and from the intramuscular fat:
+\begin{equation}
+    \bar{\c}_{fat}^{n+1} = 4 s_{fat} \left( 6 c_3 (\I_1-3) + 2c_2 \right) \, \*I \otimes \*I,
+\end{equation}
+with the constants in this case defined in Table \ref{tab:constants_fat}.
+
+\section{Finite element approximation}
+
+Let $\mathcal{T}_h$ be an unstructured mesh made of hexahedra $T \in \mathcal{T}_h$, each with diameter $h_T$. Furthermore, define the mesh size $h := \max_{T \in \mathcal{T}_h} h_T$ and let $P_k(T)$ be the space of polynomials of degree $\leq k$ over $T \in \mathcal{T}_h$, with $\*P_k(T) := P_k(T) \times P_k(T) \times P_k(T)$. Then, for $k \geq 0$, we consider the following finite element spaces:
+\begin{align}
+    \*Q_{k+1} &= \left\{ \*W \in \mathcal{C}(\B_0) \ : \ \*W \Big|_T \in \*P_{k+1}(T) \quad \forall \ T \in \mathcal{T}_h \right\} \\
+    P_k &= \left\{ q \in L^2(\B_0) \ : \ q \Big|_T \in P_k(T) \quad \forall \ T \in \mathcal{T}_h \right\}.
+\end{align}
+In this way, the triplet displacement-pressure-dilation is approximated using the $\*Q_{k+1} \times P_k \times P_k$ element. For $k=1$, this implies that the displacements are approximated using quadratic 27-node Lagrange $\*Q_2$ elements, while pressures and dilations are approximated with discontinuous elements $P_1$ (based on monomials, 4 degrees of freedom per element). The discretization of the linear systems \eqref{eq:LF_linear_system} as well as the implementation will be the focus of the next chapter.
 
 
 \chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics}
