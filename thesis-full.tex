@@ -130,6 +130,8 @@
 \usepackage{comment}
 \usepackage{scalerel}
 \usepackage{siunitx}
+\usepackage{bibentry}
+\nobibliography*
 
 
 %   OTHER CUSTOMIZATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1917,12 +1919,14 @@ We studied the performance of several time stepping schemes for one-dimensional 
 
 \chapter{A Lagrangian framework for a model of skeletal muscle tissue} \label{ch:lagrangian_formulation}
 
-Sections to include:
-\begin{enumerate}
-    \item Lagrangian model
-    \item Fully-implicit time discretization
-    \item Linearization strategies
-\end{enumerate}
+In this Chapter, we focus on the development of the theoretical background for a 3D solver of dynamic skeletal muscle deformation, which we shall call \textit{Flexodeal}. Some parts of this Chapter have been published in:
+
+\medskip
+\noindent \bibentry{AlmonacidEtAl2022_SIAP_Paper}
+\medskip
+
+First, we introduce some concepts of continuum mechanics that are required to understand problems of large deformation of transversely isotropic materials. Then, we describe a series of models for the different components of the muscle-tendon unit (MTU) that have been previously introduced. Next, we rewrite the dynamic model introduced by Dominguez \cite{Seba} in a different frame of reference to obtain a more compact formulation with fully computable terms. Finally, we discretize the continuous problem using a first-order fully-implicit time stepping scheme and introduce a new nonlinear formulation, to then provide details on its linearization. 
+
 
 \section{Elements of continuum mechanics}
 
@@ -2435,22 +2439,71 @@ The previous expressions are applicable only to geometries made entirely of musc
 \begin{equation}
     \Psi_{MTU}(\*X,t) = \Psi_{muscle}(\*X,t) \bchi_M(\*X) + \Psi_{apo}(\*X,t) \bchi_A(\*X) + \Psi_{ten}(\*X,t) \bchi_T(\*X),
 \end{equation}
-where $\bchi_M(\*X)$, $\bchi_A(\*X)$, and $\bchi_T(\*X)$ are indicator functions on $\B_0^M$, $\B_0^A$, and $\B_0^T$, respectively. Furthermore, the bulk modulus $\kappa$ takes the form
+where $\bchi_M(\*X)$, $\bchi_A(\*X)$, and $\bchi_T(\*X)$ are indicator functions on $\B_0^M$, $\B_0^A$, and $\B_0^T$, respectively. Here, following \cite{Paper1_WakelingEtAl2020}, we consider the following SEF for the tendon and aponeurosis components:
 \begin{equation}
-    \kappa(\*X) = \kappa_{muscle} \bchi_M(\*X) + \kappa_{apo} \bchi_A(\*X) + \kappa_{ten} \bchi_T(\*X),
+    \Psi_{tis} = \Psi_{vol,tis}(J) + \Psi_{iso,tis}(\I_1,\I_4), \quad tis \in \{apo,ten\}.
 \end{equation}
-where $\kappa_{apo}$ and $\kappa_{tendon}$ are the bulk moduli for aponeurosis and tendon, respectively. In turn, $\kappa_{muscle}$ can be taken either as a single constant, or as a combination of the homogenized versions \eqref{eq:def_kappa_ecm_cell} and \eqref{eq:def_kappa_bm_fat}, that is
+Similar to muscle tissue, the volumetric part is given by
 \begin{equation}
-    \kappa_{muscle} = (1-\alpha) \left[ \beta \kappa_{ecm} + (1-\beta) \kappa_{cell} \right] + \alpha \kappa_{fat}.
+    \Psi_{vol,tis} = \dfrac{\kappa_{tis}}{4} \left( J^2 - 2\ln J - 1 \right), \quad tis \in \{apo,ten\},
 \end{equation}
+where $\kappa_{apo}$ and $\kappa_{tendon}$ are the bulk moduli for aponeurosis and tendon, respectively. On the other hand, the isochoric component is given by:
+\begin{equation}
+    \Psi_{iso,tis} = \Psi_{tis,fibre}(\I_4) + \Psi_{tis,bm}(\I_4), \quad tis \in \{apo,ten\},
+\end{equation}
+as tendon and aponeurosis are also transversally-isotropic materials.
 
-\subsection{Tendon and aponeurosis}
+Assuming that $\Psi_{tis,fibre}$ satisfies:
+\begin{equation}
+    2 \I_4 \pder{\Psi_{tis,fibre}}{\I_4} = \sigma_{0,tis} \sigma_{tis}(\bar{\lambda})
+\end{equation}
+for a given stress-stretch relationship $\sigma_{tis}$, we obtain the following stress tensors:
+\begin{align}
+    \bar{\*S}_{tis,fibre} &= \dfrac{1}{\bar{\lambda}^2} \sigma_{0,tis} \sigma_{tis}(\bar{\lambda}) \, \*a_0 \otimes \*a_0, \\
+    \bar{\btau}_{tis,fibre} &= \dfrac{1}{\bar{\lambda}^2} \sigma_{0,tis} \sigma_{tis}(\bar{\lambda}) \, \bar{\*a} \otimes \bar{\*a}.
+\end{align}
+Moreover, assuming that $\Psi_{tis,bm}$ is given by a Yeoh SEF:
+\begin{equation} \label{eq:def_Psi_tis_bm}
+    \Psi_{tis,bm} = s_{tis} \sigma_{0,tis} \sum_{k=1}^3 c_k (\I_1 - 3)^k,
+\end{equation}
+we obtain the following stress tensors:
+\begin{align}
+    \bar{\*S}_{tis, bm} = 2 s_{tis} \sigma_{0,tis}  \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, \\
+    \bar{\btau}_{tis,bm} = 2 s_{tis} \sigma_{0,tis}  \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
+\end{align}
+Following \cite{Seba} we assume that the constants $c_1$, $c_2$, and $c_3$ are identical for tendon and aponeurosis. These have been fitted in \cite{Seba} from wild turkey gastrocnemii data \cite{Azizi2009} and are listed in Table \ref{tab:constants_ten_apo}.
 
-\begin{itemize}
-    \item SAME PROPERTIES (for tendon and aponeurosis) \cite{BlemkerDelp2005,BolReese2008}
-    \item DIFFERENT PROPERTIES \cite{Hadi}.
-    \item SAME STRUCTURE, PARAMETERS CAN VARY \cite{Seba}
-\end{itemize}
+\begin{table}
+    \centering
+    \begin{tabular}{|c|c|}\hline
+        & Value in $\Psi_{tis}$ \eqref{eq:def_Psi_tis_bm} \\\hline
+        $s_{tis}$ & 1 \\\hline
+        $\sigma_{0,tis}$ & 200,000 \si{Pa} \\\hline
+        $c_1$ & 4.6896264975 \\\hline
+        $c_2$ & -3.45514101975 \\\hline
+        $c_3$ & $4.8492055395 \cdot 10^2$ \\\hline
+    \end{tabular}
+    \caption{Constants in the SEF defining tendon and aponeurosis. \label{tab:constants_ten_apo}}
+\end{table}
+
+%Furthermore, the bulk modulus $\kappa$ takes the form
+%\begin{equation}
+%    \kappa(\*X) = \kappa_{muscle} \bchi_M(\*X) + \kappa_{apo} \bchi_A(\*X) + \kappa_{ten} \bchi_T(\*X),
+%\end{equation}
+%where $\kappa_{apo}$ and $\kappa_{tendon}$ are the bulk moduli for aponeurosis and tendon, respectively. In turn, $\kappa_{muscle}$ can be taken either as a single constant, or as a combination of the homogenized versions \eqref{eq:def_kappa_ecm_cell} and \eqref{eq:def_kappa_bm_fat}, that is
+%\begin{equation}
+%    \kappa_{muscle} = (1-\alpha) \left[ \beta \kappa_{ecm} + (1-\beta) \kappa_{cell} \right] + \alpha \kappa_{fat}.
+%\end{equation}
+
+%\subsection{Tendon and aponeurosis}
+
+%Similar to muscle tissue, tendon and aponeurosis are made of dense fibrous connective tissues. However, 
+
+%\begin{itemize}
+%    \item SAME PROPERTIES (for tendon and aponeurosis) \cite{BlemkerDelp2005,BolReese2008}
+%    \item DIFFERENT PROPERTIES \cite{Hadi}.
+%    \item SAME STRUCTURE, PARAMETERS CAN VARY \cite{Seba}
+%\end{itemize}
 
 \section{Lagrangian formulation of the elastodynamic problem}
 
@@ -2605,6 +2658,8 @@ Before jumping into the linearization of the nonlinear problem \eqref{eq:LF_weak
 \end{remark}
 
 \section{Linearization}
+
+We now derive in detail the linearization of the nonlinear formulation \eqref{eq:LF_weak}. First, we give general details of Newton iteration. Then, we compute each one of the block corresponding to the tangent operator. Finally, we focus on the computation of the fibre contribution to the fourth-order tensor $J\c$ since the expression that is typically not reported in the literature.
 
 \subsection{Newton's method}
 
@@ -2819,7 +2874,7 @@ Let $\mathcal{T}_h$ be an unstructured mesh made of hexahedra $T \in \mathcal{T}
     \*Q_{k+1} &= \left\{ \*W \in \mathcal{C}(\B_0) \ : \ \*W \Big|_T \in \*P_{k+1}(T) \quad \forall \ T \in \mathcal{T}_h \right\} \\
     P_k &= \left\{ q \in L^2(\B_0) \ : \ q \Big|_T \in P_k(T) \quad \forall \ T \in \mathcal{T}_h \right\}.
 \end{align}
-In this way, the triplet displacement-pressure-dilation is approximated using the $\*Q_{k+1} \times P_k \times P_k$ element. For $k=1$, this implies that the displacements are approximated using quadratic 27-node Lagrange $\*Q_2$ elements, while pressures and dilations are approximated with discontinuous elements $P_1$ (based on monomials, 4 degrees of freedom per element). The discretization of the linear systems \eqref{eq:LF_linear_system} as well as the implementation will be the focus of the next chapter.
+In this way, the triplet displacement-pressure-dilation is approximated using the $\*Q_{k+1} \times P_k \times P_k$ element. For $k=1$, this implies that the displacements are approximated using quadratic 27-node Lagrange $\*Q_2$ elements, while pressures and dilations are approximated with discontinuous elements $P_1$ (based on monomials, 4 degrees of freedom per element). We omit details of the discretization of the linear system \eqref{eq:LF_linear_system} as this will be solved using the C++ finite element library \textit{deal.II} \cite{dealii}. This will be the focus of the next chapter.
 
 
 \chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics}
