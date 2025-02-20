@@ -3,3 +3,4 @@ multibody
 Neo-Hookean
 elastodynamic
 Rothe
+Newmark

@@ -1119,15 +1119,17 @@ This explains why one can expect, in this one-dimensional context, that mass eff
 %\medskip
 
 As a prelude to the development of computational tools for the study of dynamic 3D skeletal muscle deformation, we now face the task of finding an appropriate time stepping scheme for this problem. This is an effort to extend the developments of Rahemi \cite{Hadi} and Dominguez \cite{Seba} regarding quasi-static models.  
-To accomplish this, we study the performance of different time stepping schemes, from methods used in engineering finite element analysis to Matlab's built-in solvers. However, instead of applying these methods directly to the muscle problem, we study them in the context of one-dimensional Neo-Hookean deformation. This provides us with a simple (yet representative) model to efficiently test different numerical algorithms.
+To accomplish this, we study the performance of different time stepping schemes, from methods used in engineering finite element analysis to Matlab's built-in solvers. 
+%However, instead of applying these methods directly to the muscle problem, we study them in the context of one-dimensional Neo-Hookean deformation. This provides us with a simple (yet representative) model to efficiently test different numerical algorithms.
+{\color{blue}However, because the complexity of the full 3D nonlinear model obscures the main details of the numerical algorithms in use, we therefore focus on applying these methods to a simpler (yet representative) model of one-dimensional Neo-Hookean deformation.}
 
-First, we discuss time stepping methods that are commonly used in dynamic analysis of structures, as well as their advantages and disadvantages. Next, we state the model problem and present some of these methods in two different contexts, depending on which variable in the continuous problem is discretized first: time or space. This is a particularly important consideration for nonlinear problems with (potentially) nonsmooth boundary conditions. Then, we present convergence studies for a linear problem and perform experiments of Neo-Hookean deformation. In addition to classic time stepping methods used in engineering, we also study an implicit-explicit (IMEX) method and also Matlab's built-in solvers for systems of ODEs. We finish the chapter with a discussion on the obtained results and what this means for the development of a 3D \textit{dynamic} finite element code for skeletal muscle tissue.
+First, we discuss time stepping methods that are commonly used in dynamic analysis of structures, as well as their advantages and disadvantages. Next, we state a model problem in 1D and present some of these methods in two different contexts, depending on which variable in the continuous problem is discretized first: time or space. This is a particularly important consideration for nonlinear problems with (potentially) nonsmooth boundary conditions. Then, we present convergence studies for a linear problem. We then perform numerical experiments of Neo-Hookean deformation in order to compare. In addition to classic time stepping methods used in engineering, we also study an implicit-explicit (IMEX) method and several of Matlab's built-in solvers for systems of ODEs. We finish the chapter with a discussion on the obtained results and what this means for the development of a 3D \textit{dynamic} finite element code for skeletal muscle tissue.
 
 \section{Background}
 
 We start with two discussions that will, hopefully, help the reader understand our choices and results for this chapter: what type of time stepping should we choose and what variable (space or time) should be discretized first.
 
-\subsection{Time stepping schemes in elastodynamics}
+\subsection{Time stepping schemes in engineering elastodynamics}
 
 The discretization of elastodynamic models is a well established research area in engineering. Tried-and-tested techniques are widely available in modern, commonly used finite element analysis software, such as Ansys Mechanical, Ansys LS-DYNA, COMSOL, and Abaqus. In particular, for linear elastodynamics, well-known time stepping schemes include Newmark-$\beta$ schemes \cite{Newmark}, Wilson-$\theta$ schemes \cite{Wilson}, HHT-$\alpha$ schemes \cite{HHTalpha}, WBZ-$\alpha$ schemes \cite{WBZ}, HP-$\theta_1$ methods \cite{HPtheta}, and more recently, structure-dependent schemes (i.e. numerical methods whose parameters depend on the material properties of the structure) such as those by Chang \cite{ChangSD}. In general, studies in mechanical engineering will claim that a good time stepping scheme for the linear problem must have the following characteristics (see, e.g. \cite{HughesBook, KadapaDettmerPeric2017, RossiEtAl2014}):
 \begin{enumerate}
@@ -1149,7 +1151,11 @@ The discretization of elastodynamic models is a well established research area i
     \label{fig:overshoot}
 \end{figure}
 
-While numerical methods such as Newmark's or HHT-$\alpha$ do verify characteristics 1-6 above in the context of linear problems, it may not be the case for nonlinear problems. Indeed, at each time step, the nonlinear problem is linearized using strategies such as Newton's method. Thus, if iterative solvers are used to solve the (discretized) linear problem, then multiple linear systems are solved at each Newton iteration, and multiple Newton iterations are performed at each time step. Therefore, second-order accuracy might not be achieved, or if it does, the numerical methods might still exhibit overshooting and oscillations beyond the high-frequency regime \cite{ErlicherBonaventuraBursi2002}.
+While numerical methods such as Newmark's or HHT-$\alpha$ do verify characteristics 1-6 above in the context of linear problems, they may not for nonlinear problems. {\color{blue}Consider the nonlinear second order ODE:
+\[
+    \ddot{y} = \varphi(y,\dot{y}) \quad \text{in } (0,\infty),
+\]
+where $\varphi:\R \times \R \to \R$ is smooth function. If an implicit method is used to discretize this equation, then at each time step, the nonlinear problem must be linearized (using strategies such as Newton's method). Furthermore, if iterative solvers are used to solve the (discretized) linear problem, then multiple linear systems are solved at each Newton iteration, and multiple Newton iterations are needed for each time step.} Therefore, second-order accuracy might not be achieved, or if it does, the numerical methods might still exhibit overshooting and oscillations beyond the high-frequency regime \cite{ErlicherBonaventuraBursi2002}.
 
 %In general, numerical methods for nonlinear elastodynamics continues to be an active research area (see, e.g. \cite{ChenEtAl2017Fabrication,JanzBetschFranke2019,LiEtAl2020LargeDefornationDynamics,PellecchiaCesarano2021Hysteretic} and the references therein).
 
@@ -1157,9 +1163,9 @@ While numerical methods such as Newmark's or HHT-$\alpha$ do verify characterist
 
 When it comes to numerical methods for spatio-temporal problems, at least two approaches arise depending on the order in which the variables (space and time) are discretized.
 
-One alternative is to discretize the time variable first while keeping the space variable continuous. This is referred to as \textit{Rothe's method}. For second order parabolic and hyperbolic systems (the latter being the case for elastodynamics), this means that, at each time step, we are bound to solve an elliptic PDE in the space variable. For nonlinear PDEs, the linearization can be performed at a continuous level using, for instance, G\^{a}teaux derivatives. One of the advantages of this method is that, in the context of finite element methods, updates to the mesh can easily be perform since they do not alter the variational formulation of the elliptic problem. However, one major disadvantage is that it is harder to test different time stepping strategies since they involve modifying the structure of the variational formulation itself, which induces significant modifications to the computational solvers.
+One alternative is to discretize the time variable first while keeping the space variable continuous. This is referred to as \textit{Rothe's method} \cite{Rothe1930}. For second order parabolic and hyperbolic systems (the latter being the case for elastodynamics), this means that, at each time step, we are bound to solve an elliptic PDE in the space variable. For nonlinear PDEs, the linearization can be performed at a continuous level using, for instance, G\^{a}teaux derivatives. One of the advantages of this method is that, in the context of finite element methods, updates to the mesh can easily be performed since they do not alter the variational formulation of the elliptic problem. However, one major disadvantage is that it is harder to test different time stepping strategies since they involve modifying the structure of the variational formulation itself, which may induce significant modifications to the computational solvers. {\color{blue}We will see these differences throughout Sections \ref{sec:a_firt_order_time_stepping_scheme} to \ref{sec:hht_alpha_method}.}
 
-A different approach is to discretize the space variable first, then the time variable. This is known as the \textit{method of lines (MOL)} and it is how Newmark-type methods are introduced in the engineering literature \cite{HughesBook}. In this case, the parabolic or hyperbolic PDE is transformed into a system of ODEs. This is one of the major advantages of the MOL since it is relatively easy to test multiple time stepping schemes implemented as ODE solvers. However, this also means that the spatial mesh is fixed at all times, which is not amenable to a posteriori mesh refinements (especially at each time step).
+A different approach is to discretize the space variable first, then the time variable. This leads to the \textit{method of lines (MOL)} \cite{LeVequeBook} and it is how Newmark-type methods are introduced in the engineering literature \cite{HughesBook}. In this case, the parabolic or hyperbolic PDE is transformed into a system of ODEs. This is one of the major advantages of the MOL since it is relatively easy to test multiple time stepping schemes implemented as ODE solvers. However, this also means that the spatial mesh is fixed at all times, which is not amenable to a posteriori mesh refinements (especially at each time step).
 
 %\subsection{Refactor or rewrite the code?}
 
@@ -1187,9 +1193,9 @@ Consider a one-dimensional solid (which we may refer to as a ``rod'') of linear 
 \end{subequations}
 Here, $\rho_0 = \rho_{0,L} / A_0$ is a volumetric density and $P = P(\lambda)$ is a constitutive equation for the stress of the material depending on the stretch $\lambda := u_x + 1$. The equation above is very similar to \eqref{eq:hill_pde_1} but with a stress $P$ instead of a force $F$ to match the dimensions of the left-hand side of \eqref{eq:elasticity_1d_1}. 
 
-\section{A first order time stepping scheme}
+\section{A first order time stepping scheme} \label{sec:a_firt_order_time_stepping_scheme}
 
-Let us first consider a first order scheme inspired by previous works on skeletal muscle modelling (e.g. \cite{Seba,Paper1_WakelingEtAl2020}). To keep the focus on the time discretization, all methods will feature a spatial discretization based on second-order Lagrange finite elements.
+Let us consider a first order scheme inspired by previous works on skeletal muscle modelling (e.g. \cite{Seba,Paper1_WakelingEtAl2020}). To keep the focus on the time discretization, all methods will feature a spatial discretization based on second-order Lagrange finite elements.
 
 \subsection{Rothe's method and finite element formulation} \label{sec:rothe_first_order}
 
@@ -1201,54 +1207,118 @@ First, we convert the PDE \eqref{eq:elasticity_1d_1} into a system of first orde
         P(\lambda^{n+1})_x,
     \end{gather}
 \end{subequations}
-where $\lambda^{n+1} = \partial_x u^{n+1} + 1$. Combining these two equations into a single one for $u^{n+1}$ yields:
+where the stretch $\lambda^{n+1} = \partial_x u^{n+1} + 1$. Combining these two equations into a single one for $u^{n+1}$ yields:
 \begin{equation} \label{eq:rothe_first_order_combined}
 	\rho_0 u^{n+1} - \Delta t^2 P(\lambda^{n+1})_x = \rho_0 (u^n + \Delta t v^n), \quad n \geq 0.
 \end{equation}
-Then, we take steps to discretize the space variable as specified at the beginning of this section. Multiplying \eqref{eq:rothe_first_order_combined} by a test function $w \in H_0^1(\Omega)$ and integrating by part we obtain the nonlinear variational formulation: find $u^{n+1} \in  H^1(\Omega)$ such that $u^{n+1}(0) = 0$, $u^{n+1}(L) = g(t^{n+1})$, and
+Then, we take steps to discretize the spatial variable as specified at the beginning of this section. Multiplying \eqref{eq:rothe_first_order_combined} by a test function $w \in H_0^1(\Omega)$ and integrating by part we obtain the nonlinear variational formulation: find $u^{n+1} \in  H^1(\Omega)$ such that $u^{n+1}(0) = 0$, $u^{n+1}(L) = g(t^{n+1})$, and
 \begin{equation} \label{eq:rothe_first_order_VF}
 	R(u^{n+1}, w) = 0 \quad \forall \ w \in H_0^1(\Omega),
 \end{equation}
 where $R:H^1(\Omega) \times H_0^1(\Omega) \to \R$ is the functional defined by
 \begin{equation}
-    R(u^{n+1},w) = \rho_0 \int_0^L u^{n+1} w + \Delta t^2 \int_0^L P(\lambda^{n+1}) w_x - \rho_0 \int_0^L (u^n + \Delta t v^n) w.
+    R(u^{n+1},w) := \rho_0 \int_0^L u^{n+1} w + \Delta t^2 \int_0^L P(\lambda^{n+1}) w_x - \rho_0 \int_0^L (u^n + \Delta t v^n) w.
 \end{equation}
 
 \subsubsection*{Linearization of the semi-discrete problem}
 
-We linearize the nonlinear problem \eqref{eq:rothe_first_order_VF} using Newton's method. The $k$-th iteration thus reads: find increments $du_k^{n+1}$ such that
+We solve the nonlinear problem \eqref{eq:rothe_first_order_VF} using Newton's method. Suppose $u^n \approx u(x, t^n)$. Given $u_0^{n+1} = u^n$, the $k$-th iteration reads: find increments $\delta u_k^{n+1}$ such that
 \begin{equation} \label{eq:rothe_first_order_lin_1}
-    \mathcal{D}R[u_k^{n+1}](du_k^{n+1}, w) = - R(u_k^{n+1}, w) \quad \forall \ w \in H_0^1(\Omega),
+    \mathcal{D}R[u_k^{n+1}](\delta u_k^{n+1}, w) = - R(u_k^{n+1}, w) \quad \forall \ w \in H_0^1(\Omega),
 \end{equation}
 where $\mathcal{D}R$ is the Gâteaux derivative of $R$ and can be computed as:
 \begin{equation}
-    \mathcal{D}R[u](du,w) = \lim_{\epsilon \to 0} \dfrac{d}{d\epsilon} R(u + \epsilon du, w).
+    \mathcal{D}R[u](\delta u,w) = \lim_{\epsilon \to 0} \dfrac{d}{d\epsilon} R(u + \epsilon \delta u, w).
 \end{equation}
-Therefore, the linear problem \eqref{eq:rothe_first_order_lin_1} becomes: find Newton increments $du_k^{n+1} \in H^1(\Omega)$ such that $du_0^{n+1} = 0$ on $x=0$, $du_0^{n+1} = g(t^{n+1}) - g(t^{n})$ on $x=L$, $du_k^{n+1} = 0$ on $x=0,L$ for k > 0, and:
+Therefore, the linear problem \eqref{eq:rothe_first_order_lin_1} becomes: find Newton increments $\delta u_k^{n+1} \in H^1(\Omega)$ such that $du_0^{n+1} = 0$ on $x=0$, $du_0^{n+1} = g(t^{n+1}) - g(t^{n})$ on $x=L$, $\delta u_k^{n+1} = 0$ on $x=0,L$ for k > 0, and:
 \begin{multline} \label{eq:rothe_first_order_lin_2}
-	\rho_0 \int_0^L du_k^{n+1} \, w + \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(du_k^{n+1})}{x} \der{w}{x} = \\
+	\rho_0 \int_0^L \delta u_k^{n+1} \, w + \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(\delta u_k^{n+1})}{x} \der{w}{x} = \\
 	-\rho_0 \int_0^L u_k^{n+1} w - \Delta t^2 \int_0^L P(\lambda_k^{n+1}) \der{w}{x} + \rho_0 \int_0^L (u^n+\Delta t v^n) w,
 \end{multline}
-for any $w \in H_0^1(\Omega)$, where $\lambda_k^{n+1} = \partial_x u_k^{n+1} + 1$. The linear problem \eqref{eq:rothe_first_order_lin_2} is solved for each $k \geq 0$ and the displacement is updated as $u_{k+1}^{n+1} = u_k^{n+1} + du_k^{n+1}$ until the following convergence criterion is satisfied:
+for any $w \in H_0^1(\Omega)$, where the stretch for the current Newton iteration is $\lambda_k^{n+1} = \partial_x u_k^{n+1} + 1$. {\color{blue}Note that, unlike the nonlinear formulation \eqref{eq:rothe_first_order_VF}, for $k\geq 1$, the linear formulation \eqref{eq:rothe_first_order_lin_2} is symmetric (i.e., test and trial spaces are the same).}
+
+The linear problem \eqref{eq:rothe_first_order_lin_2} is solved for each $k \geq 0$ and the displacement is updated as $u_{k+1}^{n+1} = u_k^{n+1} + \delta u_k^{n+1}$ until the following convergence criterion is satisfied:
 \begin{equation} \label{eq:convergence_crit_1d}
-    \| du_k^{n+1} \| \leq tol_u \quad \text{and} \quad \| R(u_k^{n+1}) \| \leq tol_R,
+    \| \delta u_k^{n+1} \| \leq tol_u \quad \text{and} \quad \| R(u_k^{n+1}) \| \leq tol_R,
 \end{equation}
-where $\|\cdot\|$ is a discrete norm (e.g. the Euclidean norm) arising from the discretized versions (see below) of the Newton update $du_k^{n+1}$ and the right-hand side of \eqref{eq:rothe_first_order_lin_1}.
+where $\|\cdot\|$ is a user-defined discrete norm (e.g. the Euclidean norm) arising from the discretized versions (see below) of the Newton update $\delta u_k^{n+1}$ and the right-hand side of \eqref{eq:rothe_first_order_lin_1}.
 
 \subsubsection*{Finite element formulation}
 
-For the linear problem \eqref{eq:rothe_first_order_lin_2}, we consider the following Galerkin scheme: find Newton increments $du_{h,k}^{n+1} \in V_h$ such that 
+{\color{blue}In this subsection, we present the details of a finite element method (FEM) approach to deal with the spatial discretization}. For the linear problem \eqref{eq:rothe_first_order_lin_2}, we consider the following Galerkin scheme for the Newton increment $\delta u_k^{n+1}$: given $u_{h,k}^{n+1}$, find $\delta u_{h,k}^{n+1} \in V_h$ such that 
 \begin{multline} \label{eq:rothe_first_order_lin_3}
-	\rho_0 \int_0^L du_{h,k}^{n+1} \, w_h + \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_{h,k}^{n+1}) \der{(du_{h,k}^{n+1})}{x} \der{w_h}{x} = \\
+	\rho_0 \int_0^L \delta u_{h,k}^{n+1} \, w_h + \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_{h,k}^{n+1}) \der{(\delta u_{h,k}^{n+1})}{x} \der{w_h}{x} = \\
 	-\rho_0 \int_0^L u_{h,k}^{n+1} w - \Delta t^2 \int_0^L P(\lambda_{h,k}^{n+1}) \der{w_h}{x} + \rho_0 \int_0^L (u_h^n+\Delta t v_h^n) w_h,
 \end{multline}
 for any $w_h \in V_h$. Here, $V_h$ is the space of second order Lagrange finite elements:
 \begin{equation} \label{eq:fespace_1d}
     V_h = \left\{ v_h \in \mathcal{C}(\overline{\Omega}) \ : \ v_h \big|_T \in \mathbb{P}_2(T) \quad \forall \ T \in \mathcal{T}_h \right\},
 \end{equation}
-where $\mathcal{C}(\overline{\Omega})$ is the space of continuous functions over $\overline{\Omega} = [0,L]$, $\mathbb{P}_2(T)$ is the space of quadratic polynomials over a segment $T \subset [0,L]$, and $\mathcal{T}_h$ is a triangulation of the interval $[0,L]$. Therefore, if $\{x_0,x_1,\dots,x_{N+1}\}$ is a discretization of the interval $[0,L]$ with $x_0 = 0$ and $x_{N+1}=L$, then, $\mathcal{T}_h = \left\{ [x_i,x_{i+1}] \right\}_{i=0}^N$.
+where $\mathcal{C}(\overline{\Omega})$ is the space of continuous functions over $\overline{\Omega} = [0,L]$, $\mathbb{P}_2(T)$ is the space of quadratic polynomials over a segment $T \subset [0,L]$, and $\mathcal{T}_h$ is a triangulation of the interval $[0,L]$. Therefore, if $\{x_0,x_1,\dots,x_{N+1}\}$ is a discretization of the interval $[0,L]$ with $x_0 = 0$ and $x_{N+1}=L$, then, $\mathcal{T}_h = \left\{ [x_i,x_{i+1}] \right\}_{i=0}^N$ (see Figure \ref{fig:1d_mesh}).
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        % Define parameters
+        \def\N{8}  % Number of intervals (9 nodes)
+        \def\L{10} % Total length
+        \def\dx{\L/\N} % Element length
+    
+        % Draw the axis
+        \draw[thick] (0,0) -- (\L,0);
+    
+        % Draw nodes manually
+        \filldraw (0,0) circle (2pt);
+        \filldraw (\dx,0) circle (2pt);
+        \filldraw (2*\dx,0) circle (2pt);
+        %\filldraw (3*\dx,0) circle (2pt);
+        \filldraw (4*\dx,0) circle (2pt);
+        \filldraw (5*\dx,0) circle (2pt);
+        %\filldraw (6*\dx,0) circle (2pt);
+        \filldraw (7*\dx,0) circle (2pt);
+        \filldraw (\L,0) circle (2pt);
+
+        \node[above left] at (-0.5, 0.5) {\huge $\mathcal{T}_h$};
+        
+        % Label first and last nodes separately
+        \node[below] at (0, 0) {$0 = x_0$};
+        \node[below] at (\L, 0) {$x_{N+1} = L$};
+        
+        % Label other nodes manually
+        \node[below] at (\dx, 0) {$x_1$};
+        \node[below] at (2*\dx, 0) {$x_2$};
+        %\node[below] at (3*\dx, 0) {$x_3$};
+        \node[below] at (4*\dx, 0) {$x_i$};
+        \node[below] at (5*\dx, 0) {$x_{i+1}$};
+        %\node[below] at (6*\dx, 0) {$x_6$};
+        \node[below] at (7*\dx, 0) {$x_N$};
+        
+        % Draw elements manually
+        \draw[thick] (0,0) -- (\dx,0);
+        \draw[thick] (\dx,0) -- (2*\dx,0);
+        \draw[thick] (2*\dx,0) -- (3*\dx,0);
+        \draw[thick] (3*\dx,0) -- (4*\dx,0);
+        \draw[thick] (4*\dx,0) -- (5*\dx,0);
+        \draw[thick] (5*\dx,0) -- (6*\dx,0);
+        \draw[thick] (6*\dx,0) -- (7*\dx,0);
+        \draw[thick] (7*\dx,0) -- (\L,0);
+        
+        % Label elements manually
+        %\node[above] at (0.5*\dx, 0) {$e_0$};
+        %\node[above] at (1.5*\dx, 0) {$e_1$};
+        %\node[above] at (2.5*\dx, 0) {$e_2$};
+        %\node[above] at (3.5*\dx, 0) {$e_3$};
+        \node[above] at (4.5*\dx, 0) {$T$};
+        %\node[above] at (5.5*\dx, 0) {$e_5$};
+        %\node[above] at (6.5*\dx, 0) {$e_6$};
+        %\node[above] at (7.5*\dx, 0) {$e_7$};
+    \end{tikzpicture}
+    \caption{Mesh for the interval $[0,L]$.\label{fig:1d_mesh}}
+\end{figure}
 
 \subsubsection*{Notation for the local problems}
+
+{\color{blue}The purpose of this subsection is to help establish both notation and details of the FEM applied to a local problem. This will be useful when comparing time stepping schemes.}
 
 First, let $T \in \mathcal{T}_h$ be an arbitrary interval of the triangulation $\mathcal{T}_h$ with endpoints $x_i$ and $x_{i+1}$, that is, $T = [x_i,x_{i+1}]$. Then, consider the linear transformation $\mathcal{F}:\widehat{T} \to T$ that maps elements from the ``reference'' interval $\widehat{T}=[0,1]$ to an arbitrary interval $T$:
 \begin{equation}
@@ -1259,11 +1329,13 @@ where $B := x_{i+1}-x_i$, $b := x_i$. Therefore, given a function $u:T \to \R$, 
     \widehat{u} = u \circ \mathcal{F},
 \]
 from which we obtain the following identities that will help us move from an arbitrary interval $T$ to the reference interval $\widehat{T}$:
-\begin{gather}
-    \label{eq:du_hat_dx_hat_identity}\der{\widehat{u}}{\widehat{x}} = B \der{u}{x}, \\
-    \int_T u \ dx  = B \int_{\widehat{T}} \widehat{u} \ d\widehat{x}, \\
-    \int_T \der{u}{x} \der{w}{x} \ dx = B^{-1} \int_{\widehat{T}} \der{\widehat{u}}{\widehat{x}} \der{\widehat{w}}{\widehat{x}} \ d\widehat{x}.
-\end{gather}
+\begin{subequations}
+    \begin{gather}
+        \label{eq:du_hat_dx_hat_identity}\der{\widehat{u}}{\widehat{x}} = B \der{u}{x}, \\
+        \int_T u \ dx  = B \int_{\widehat{T}} \widehat{u} \ d\widehat{x}, \\
+        \int_T \der{u}{x} \der{w}{x} \ dx = B^{-1} \int_{\widehat{T}} \der{\widehat{u}}{\widehat{x}} \der{\widehat{w}}{\widehat{x}} \ d\widehat{x}.
+    \end{gather}
+\end{subequations}
 
 Furthermore, any element in $u \in \mathbb{P}_2(T)$ can be written as:
 \begin{equation} \label{eq:fe_expansion_T}
@@ -1317,13 +1389,13 @@ with an analogous expression for the derivative of $u$ using the identity \eqref
 
 Restricted to an element $T = [x_i,x_{i+1}] \in \mathcal{T}_h$, we can write \eqref{eq:rothe_first_order_lin_3} as:
 \begin{multline} \label{eq:rothe_first_order_lin_4}
-	\rho_0 \int_T du_{h,k}^{n+1} \, w_h + \Delta t^2 \int_T \der{P}{\lambda}(\lambda_{h,k}^{n+1}) \der{(du_{h,k}^{n+1})}{x} \der{w_h}{x} = \\
+	\rho_0 \int_T \delta u_{h,k}^{n+1} \, w_h + \Delta t^2 \int_T \der{P}{\lambda}(\lambda_{h,k}^{n+1}) \der{(\delta u_{h,k}^{n+1})}{x} \der{w_h}{x} = \\
 	-\rho_0 \int_T u_{h,k}^{n+1} w - \Delta t^2 \int_T P(\lambda_{h,k}^{n+1}) \der{w_h}{x} + \rho_0 \int_T (u_h^n+\Delta t v_h^n) w_h,
 \end{multline}
 where each term can be fully computed following the ideas introduced above (we drop the $h$ subscript for better readability). First, the terms on the left-hand side of \eqref{eq:rothe_first_order_lin_4} (recall that $B=x_{i+1}-x_i$):
 \begin{align}
     \rho_0 \int_T du_{k}^{n+1} \, w 
-    \notag &= \rho_0 B \int_{\widehat{T}} \widehat{du_k^{n+1}} \widehat{w}  \\
+    \notag &= \rho_0 B \int_{\widehat{T}} \widehat{\delta u_k^{n+1}} \widehat{w}  \\
     \notag &= \rho_0 B \int_{\widehat{T}} \ [\widehat{\*P}][\*d\*u_k^{n+1}] [\widehat{\*P}][\*w] \\
     \notag &= [\*w]^\top \left( \rho_0 B \int_{\widehat{T}} \ [\widehat{\*P}]^\top [\widehat{\*P}] \right) [\*d\*u_k^{n+1}] \\
     &=: [\*w]^\top \*M_T  \, [\*d\*u_k^{n+1}],
@@ -1365,8 +1437,7 @@ These are contributions to the load vector $\*F$ which can be computed as
     \*F = \assembly_{T \in \mathcal{T}_h} \*F^{(1)}_T + \*F^{(2)}_T + \*F^{(3)}_T.
 \end{equation}
 
-In conclusion, the fully discrete system that arises from the Galerkin formulation 
-\eqref{eq:rothe_first_order_lin_3} is:
+In conclusion, if we use Rothe's method, the fully discrete system that arises from the Galerkin formulation \eqref{eq:rothe_first_order_lin_3} for the increment $\delta u_k^{n+1}$ is:
 \begin{equation} \label{eq:rothe_first_order_linear}
     (\*M + \Delta t^2 \*K) \*d\*u_k^{n+1} = \*F,
 \end{equation}
@@ -1374,15 +1445,15 @@ with $\*M$, $\*K$, and $\*F$ as in \eqref{eq:rothe_first_order_M_K} and \eqref{e
 
 \subsection{Method of lines} \label{sec:mol_first_order}
 
-In this case, we first discretize the problem in \textit{space}. To begin with, we construct a weak formulation for \eqref{eq:elasticity_1d_1} by multiplying the PDE by a test function $w \in H_0^1(\Omega)$ and integrate by parts in space:
+In this case, we first discretize the problem in \textit{space}. We construct a weak formulation for \eqref{eq:elasticity_1d_1} by multiplying the PDE by a test function $w \in H_0^1(\Omega)$ and integrate by parts in space. {\color{blue}This yields the problem: for each $t > 0$, find $u(\cdot, t) \in H^1(\Omega)$ such that $u(0,t) = 0$, $u(L,t) = g(t)$, and
 \begin{equation}
-	\rho_0 \int_0^L u_{tt} w + \int_0^L P(\lambda) w_x = 0.
+	\rho_0 \int_0^L u_{tt} w + \int_0^L P(\lambda) w_x = 0 \quad \forall \ w \in H_0^1(\Omega).
 \end{equation} 
-Then, the Galerkin scheme reads: find $u_h \in V_h$ such that
+Then, the Galerkin scheme reads: for each $t>0$, find $u_h(\cdot, t) \in V_h$ such that $u_h(0,t) = 0$, $u_h(L,t) = g(t)$, and
 \begin{equation} \label{eq:mol_first_order_galerkin}
-	\rho_0 \int_0^L u_{h,tt} w_h + \int_0^L P(\lambda_h) w_{h,x} = 0 \quad \forall \, w_h \in V_h.
+	\rho_0 \int_0^L u_{h,tt} w_h + \int_0^L P(\lambda_h) w_{h,x} = 0 \quad \forall \, w_h \in V_{h,0},
 \end{equation} 
-As before, we consider $V_h$ given by \eqref{eq:fespace_1d} and a discretization $\mathcal{T}_h$ of the interval $[0,L]$, i.e. $\mathcal{T}_h = \{ [x_i,x_{i+1}] \}_{i=0}^N$. In this case, for $T \in \mathcal{T}_h$, we can write
+where $V_{h,0} = V_h \cap H_0^1(\Omega)$. }As before, we consider $V_h$ given by \eqref{eq:fespace_1d} and a discretization $\mathcal{T}_h$ of the interval $[0,L]$, i.e. $\mathcal{T}_h = \{ [x_i,x_{i+1}] \}_{i=0}^N$. In this case, for $T \in \mathcal{T}_h$, we can write
 \begin{equation}
     u_h(x,t)\Big|_T = \sum_{i=1}^3 p_i(x)u_i(t),
 \end{equation}
@@ -1423,7 +1494,7 @@ The equation above is a nonlinear system of equations that can be rewritten as:
  \begin{equation}
      \pder{\*R}{\*U^{n+1}}(\*U_k^{n+1}) \Delta \*U_{k}^{n+1} = -\*R(\*U_k^{n+1}).
  \end{equation}
- Therefore, the Newton iteration for the nonlinear problem \eqref{eq:mol_first_order_nonlinear} reads: find $\Delta \*U_{k}^{n+1}$ such that:
+ Therefore, the Newton iteration for the nonlinear problem \eqref{eq:mol_first_order_nonlinear} reads: find the increment vector $\Delta \*U_{k}^{n+1}$ such that:
  \begin{equation} \label{eq:mol_first_order_linear}
      \left[ \*M + \Delta t^2 \pder{\*K}{\*U}(\*U_k^{n+1}) \right] \Delta \*U_{k}^{n+1} = - \*M \*U_k^{n+1} - \Delta t^2 \*K(\*U_k^{n+1}) + \*M(\*U^n + \Delta t \*V^n).
  \end{equation}
@@ -1433,16 +1504,55 @@ Then, we can update the displacements $\*U_{k+1}^{n+1} = \*U_k^{n+1} + \Delta \*
 \end{equation}
 In this case, the fully discrete linear system of equations \eqref{eq:mol_first_order_linear} completely coincides with \eqref{eq:rothe_first_order_linear}. However, the structure of the MOL allows for more vectorized operations, which can eventually reduce the computational time of solvers and reduce roundoff errors.
 
-\section{Newmark schemes}
+{\color{blue}\begin{remark}[Implementation of boundary condtions]
+    Let us rewrite the system of equations \eqref{eq:mol_first_order_linear} as:
+    \begin{equation} \label{eq:mol_bc_1}
+        \bm{\mathcal{A}}_k^{n+1} \Delta \*U_{k}^{n+1} = \bm{\Upsilon}_k^{n+1},
+    \end{equation}
+    where
+    \begin{subequations}
+        \begin{align}
+            \bm{\mathcal{A}}_k^{n+1} &:= \*M + \Delta t^2 \pder{\*K}{\*U}(\*U_k^{n+1}) \in \R^{2N+2 \times 2N+2}, \\
+            \bm{\Upsilon}_k^{n+1} &:= - \*M \*U_k^{n+1} - \Delta t^2 \*K(\*U_k^{n+1}) + \*M(\*U^n + \Delta t \*V^n) \in \R^{2N+2 \times 1}.
+        \end{align}    
+    \end{subequations}
+    Furthermore, let us reorder the nodes in the mesh so that the linear system \eqref{eq:mol_bc_1} can be written as:
+    \begin{equation}
+        \begin{bmatrix}
+            \bm{\mathcal{A}}_{k,11}^{n+1} & \bm{\mathcal{A}}_{k,12}^{n+1} \\
+            \bm{\mathcal{A}}_{k,21}^{n+1} & \bm{\mathcal{A}}_{k,22}^{n+1}
+        \end{bmatrix}
+        \begin{pmatrix}
+            \Delta \*U_{k,I}^{n+1} \\ \Delta \*U_{k,D}^{n+1}
+        \end{pmatrix} = 
+        \begin{pmatrix}
+            \bm{\Upsilon}_{k,I}^{n+1} \\ \bm{\Upsilon}_{k,D}^{n+1}.
+        \end{pmatrix}
+    \end{equation}
+    Here, $\Delta \*U_{k,I}^{n+1} \in \R^2N \times 1$ represents the increment at interior nodes (i.e. at nodes $x_i$, $i=1,\dots,2N$), while $\bm{\Upsilon}_{k,D}^{n+1} \in \R^2$ represents the increment at Dirichlet points (i.e. at $x_0 = 0$ and $x_{2N+1} = L$). Since the increment at Dirichlet points is known at all Newton iterations and it is given by:
+    \begin{equation}
+        \Delta \*U_{0,D}^{n+1} = \begin{pmatrix}
+            0 \\ g(t^{n+1}) - g(t^n)
+        \end{pmatrix} \quad \text{and} \quad \Delta \*U_{k,D}^{n+1} = \begin{pmatrix}
+            0 \\ 0
+        \end{pmatrix} \quad \text{for } k \geq 1,
+    \end{equation}
+    it suffices to solve:
+    \begin{equation}
+        \bm{\mathcal{A}}_{k,11}^{n+1} \Delta \*U_{k,I}^{n+1} = \bm{\Upsilon}_{k,I}^{n+1} - \bm{\mathcal{A}}_{k,12}^{n+1} \bm{\Upsilon}_{k,D}^{n+1}.
+    \end{equation}
+\end{remark}}
 
-To introduce Newmark's method, let us consider the initial value problem:
+\section{Newmark schemes} \label{sec:newmark_schemes}
+
+To introduce Newmark's method \cite{Newmark}, we follow the presentation by Raviart \& Thomas \cite{raviartthomas}. Let us consider the initial value problem:
 \begin{subequations} \label{eq:generic_2nd_order_ODE}
 \begin{gather}
     y'' = \varphi(t,y,y'), \quad 0 \leq t \leq T \\
     y(0) = y_0, \quad y'(0) = z_0,
 \end{gather}
 \end{subequations}
-where $\varphi:[0,T] \times \R \times \R \to \R$ is a continuous function and $y_0,z_0 \in \R$. Introducing a time step size $\Delta t = T/N$ and time steps $t_n = n \Delta t$, $n=0,\dots,N$, we seek approximations $y_n \approx y(t_n)$ and $z_n \approx y'(t_n)$. For any smooth enough function $y = y(t)$, we have
+where $\varphi:[0,T] \times \R \times \R \to \R$ is a continuous function and $y_0,z_0 \in \R$. We also introduce a time step size $\Delta t = T/N$ and time steps $t_n = n \Delta t$, $n=0,\dots,N$. For any smooth enough function $y = y(t)$, we have
 \begin{subequations}
     \begin{align}
         &y(t_{n+1}) = y(t_n) + \Delta t y'(t_n) + \dfrac{\Delta t^2}{2} \left[ (1-2\beta)y''(t_n) + 2\beta y''(t_{n+1}) \right] + \mathcal{O}(\Delta t^3), \\
@@ -1463,14 +1573,14 @@ where $\beta,\gamma \in \R$. Hence, if $y$ satisfies \eqref{eq:generic_2nd_order
         \end{multlined}
     \end{align}
 \end{subequations}
-Therefore, Newmark's method consists on finding pairs $(y_n,z_n)$ such that
+Newmark's method consists on finding pairs $(y_n,z_n)$ such that
 \begin{subequations} \label{eq:newmark}
     \begin{align}
         &y_{n+1} = y_n + \Delta t z_n + \dfrac{\Delta t^2}{2} \left[ (1-2\beta)\varphi_{n+1} + 2\beta \varphi_n \right], \\
         &z_{n+1} = z_n + \Delta t \left[(1-\gamma) \varphi_n + \gamma \varphi_{n+1} \right],
     \end{align}
 \end{subequations}
-where $\varphi_n = \varphi(t_n, y_n, z_n)$. In terms of accuracy, the scheme is first order if $\gamma \neq 1/2$ and second order if $\gamma = 1/2$. Furthermore, the scheme is unconditionally stable if $1/2 \leq \gamma \leq 2\beta$ (cf. \cite{HughesBook,raviartthomas}). In particular, we will consider $\beta=1/4$ and $\gamma=1/2$, which corresponds to the \textit{average acceleration} method\footnote{Some other well-known members of Newmark family of schemes are the \textit{linear acceleration} method ($\beta=1/6$, $\gamma=1/2$), the \textit{Fox-Goodwin (royal road)} method ($\beta=1/12$, $\gamma=1/2$), and the \textit{central differences} method ($\beta=0$, $\gamma=1/2$) \cite{HughesBook}}.
+where $y_n \approx y(t_n)$, $z_n \approx y'(t_n)$, and $\varphi_n = \varphi(t_n, y_n, z_n)$. In terms of accuracy, the scheme is first order if $\gamma \neq 1/2$ and second order if $\gamma = 1/2$. Furthermore, the scheme is unconditionally stable if $1/2 \leq \gamma \leq 2\beta$ (cf. \cite{HughesBook,raviartthomas}). In particular, we will consider $\beta=1/4$ and $\gamma=1/2$, which corresponds to the \textit{average acceleration} method\footnote{Some other well-known members of Newmark family of schemes are the \textit{linear acceleration} method ($\beta=1/6$, $\gamma=1/2$), the \textit{Fox-Goodwin (royal road)} method ($\beta=1/12$, $\gamma=1/2$), and the \textit{central differences} method ($\beta=0$, $\gamma=1/2$) \cite{HughesBook}}.
 
 \subsection{Newmark in the context of Rothe's method} \label{sec:rothe_newmark}
 
@@ -1479,10 +1589,10 @@ Let us define the velocity $v = u_t$ and the acceleration $a = u_{tt}$, then dis
     \begin{align}
         \label{eq:newmark_2}&u^{n+1} = u^n + \Delta t v^n + \frac{\Delta t^2}{2} \left[ (1-2\beta) a^n + 2 \beta a^{n+1} \right], \\
         \label{eq:newmark_1}&v^{n+1} = v^n + \Delta t \left[ (1-\gamma) a^n + \gamma a^{n+1} \right], \\
-	    \label{eq:newmark_3}& \rho_0 a^{n+1} = P(\lambda^{n+1})_x.
+	    \label{eq:newmark_3}& \rho_0 a^{n+1} = P(\lambda^{n+1})_x,
     \end{align}
 \end{subequations}
-Next, we define the following ``predictors'' which only require information from the previous time step:
+where the stretch $\lambda^{n+1} = \partial_x u^{n+1} + 1$. Next, we define the following ``predictors'' which only require information from the previous time step:
 \begin{subequations} \label{eq:rothe_newmark_predictors}
     \begin{align}
 	    & \widetilde{u^{n+1}} = u^n + \Delta t v^n + \frac{\Delta t^2}{2} (1-2\beta) a^n, \\
@@ -1501,9 +1611,9 @@ Multiplying \eqref{eq:rothe_newmark_1} by a test function $w \in H_0^1(\Omega)$ 
 \begin{equation}
     \rho_0 \int_0^L u^{n+1}w + \beta \Delta t^2 \int_0^L P(\lambda^{n+1}) \der{w}{x} = \rho_0 \int_0^L \widetilde{u^{n+1}}w.
 \end{equation}
-Proceding as before, the Newton increment can be found by solving the problem: find $du_k^{n+1}$ such that
+Proceeding as before, the Newton increment $\delta u_k^{n+1}$ can be found by solving the problem: find $\delta u_k^{n+1}$ such that
 \begin{multline} 
-	\rho_0 \int_0^L du_k^{n+1} \, w + \beta \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(du_k^{n+1})}{x} \der{w}{x} = \\
+	\rho_0 \int_0^L \delta u_k^{n+1} \, w + \beta \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(\delta u_k^{n+1})}{x} \der{w}{x} = \\
 	-\rho_0 \int_0^L u_k^{n+1} w - \beta \Delta t^2 \int_0^L P(\lambda_k^{n+1})  \der{w}{x} + \rho_0 \int_0^L \widetilde{u^{n+1}} w.
 \end{multline}
 
@@ -1548,9 +1658,9 @@ Equation \eqref{eq:mol_newmark_disp_1} is a nonlinear system of equations whose 
 	\left[ \*M + \beta \Delta t^2 \pder{\*K}{\*U}(\*U_k^{n+1}) \right] \Delta \*U_{k+1}^{n+1} = -\*M \*U_k^{n+1} - \beta \Delta t^2 \*K(\*U_k^{n+1}) + \*M \widetilde{\*U^{n+1}}.
 \end{equation}
 
-\section{HHT-$\alpha$ method} 
+\section{HHT-$\alpha$ method} \label{sec:hht_alpha_method}
 
-To remove the spurious oscillations that Newmark's method could cause, Hilbert, Hughes \& Taylor \cite{HHTalpha} proposed to introduce a lagging term in Newmark's equation \eqref{eq:mol_newmark_3}, which is controlled by a parameter $\alpha$:
+To remove the spurious oscillations that Newmark's method could cause, Hilbert, Hughes \& Taylor \cite{HHTalpha} proposed to introduce a lagging term in Newmark's equation \eqref{eq:mol_newmark_3}, which is controlled by a parameter $\alpha \leq 0$:
 \begin{subequations} \label{eq:mol_hht}
     \begin{align}
         &\*U^{n+1} = \*U^n + \Delta t \*V^n + \frac{\Delta t}{2} \left[ (1-2\beta) \*A^n + 2\beta \*A^{n+1} \right], \\
@@ -1566,7 +1676,7 @@ and more importantly, $-1/3 \leq \alpha \leq 0$. The parameter $\alpha$ controls
 
 \subsection{HHT-$\alpha$ in the context of Rothe's method} \label{sec:rothe_hht}
 
-Similar to \eqref{eq:mol_hht}, the HHT-$\alpha$ method in Rothe's framework reads:
+Similar to \eqref{eq:mol_hht}, the HHT-$\alpha$ method in Rothe's framework for the PDE \eqref{eq:elasticity_1d_1} reads:
 \begin{subequations} \label{eq:rothe_hht}
     \begin{align}
         &u^{n+1} = u^n + \Delta t v^n + \frac{\Delta t}{2} \left[ (1-2\beta) a^n + 2\beta a^{n+1} \right] \\
@@ -1582,9 +1692,9 @@ Therefore, solving for $u^{n+1}$ first and using the same predictors as in \eqre
 	    & v^{n+1} = v^n + \Delta t \left[ (1-\gamma) a^n + \gamma a^{n+1} \right].
     \end{align}
 \end{subequations}
-In particular, the linearization of the equation for $u^{n+1}$ reads: find $du_k^{n+1}$ such that:
+In particular, the linearization of the equation for $u^{n+1}$ reads: find increments $\delta u_k^{n+1}$ such that:
 \begin{multline} 
-	\rho_0 \int_0^L du_k^{n+1} \, w + (1+\alpha)\beta \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(du_k^{n+1})}{x} \der{w}{x} = \\
+	\rho_0 \int_0^L \delta u_k^{n+1} \, w + (1+\alpha)\beta \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(\delta u_k^{n+1})}{x} \der{w}{x} = \\
 	-\rho_0 \int_0^L u_k^{n+1} w - (1+\alpha)\beta \Delta t^2 \int_0^L P(\lambda_k^{n+1})  \der{w}{x} + \alpha \beta \Delta t^2 \int_0^L P(\lambda^n) \der{w}{x} + \rho_0 \int_0^L \widetilde{u^{n+1}} w.
 \end{multline}
 
@@ -1606,7 +1716,7 @@ Furthermore, the Newton increments $\Delta \*U^{n+1}_{k+1}$ can be computed as:
     = -\*M \*U_k^{n+1} - (1+\alpha)\beta \Delta t^2 \*K(\*U_k^{n+1}) + \alpha \beta \Delta t^2 \*K(\*U^n) + \*M \widetilde{\*U^{n+1}}.
 \end{multline}
 
-\section{Convergence studies}
+\section{Convergence studies: linear elasticity} \label{sec:neohookean_convergence_studies}
 
 Since we will be interested in the different effects cause by the time discretization, as well as by the choice of Rothe's method vs. method of lines, let us first verify that each of our algorithms is converging in the way it is expected when applied to a linear problem with smooth boundary conditions. For simplicity, we consider the following names for these algorithms:
 \begin{itemize}
@@ -1618,7 +1728,7 @@ Since we will be interested in the different effects cause by the time discretiz
     \item \textit{MOL-HHT-$\alpha$}, for the scheme introduced in Section \ref{sec:mol_hht}.
 \end{itemize}
 
-We first define the errors in time and space respectively by
+We define the errors in time and space respectively by
 \begin{equation}
     e_t = \max_{0 \leq i \leq N+1} |u_h(x_i,T) - u(x_i,T)|, \quad e_x = \| u_h(\cdot,T) - u(\cdot,T)\|_{L^2(\Omega)},
 \end{equation}
@@ -1642,7 +1752,8 @@ where $E$, $\kappa$, and $\nu$ are the Young's modulus, bulk modulus, and Poisso
 \end{subequations}
 where $T>0$ and $\Omega = (0,L)$. Therefore, with the problem being linear, we expect to see convergence in time of order $r_t=1$ for the first order time stepping scheme, and order $r_t=2$ for the Newmark and HHT-$\alpha$ schemes. Moreover, for all three time stepping schemes, we expect convergence in space of order $r_x = 3$ \cite{ErnGuermondBook}. 
 
-Let us consider $\kappa = 1 \ \text{GPa}$, $\nu = 0.499$, $\rho_0 = 1060 \ \text{kg} \, \text{m}^{-3}$, $L = 500 \ \text{mm}$, $T = 500 \text{ms}$, and a boundary condition $g(t) = 0.1t^3$. In this case, while the exact solution to \eqref{eq:elasticity_linear} could be computed using Fourier series, we cannot reliably use this expression as any truncation of this series will lead to high oscillations at the ends of the interval (Gibbs phenomenon). Therefore, we decide to compute an ``exact'' solution by taking a sufficiently small $\Delta t$ or $\Delta x$. We emphasize that both the exact solution and its approximations will be computed using the same solver (i.e. an \textit{intrasolver} study). We avoid intersolver comparisons due to the fact that the chosen discretization in space is not the most robust for these parameters, as it can potentially cause the solver to ``lock'', i.e. there will be a point where errors will stop decreasing regardless of how small $\Delta x$ is taken \cite{BabushkaSuri1992}.
+Let us consider $\kappa = 1 \ \text{GPa}$, $\nu = 0.499$, $\rho_0 = 1060 \ \text{kg} \, \text{m}^{-3}$, $L = 500 \ \text{mm}$, $T = 500 \text{ms}$, and a boundary condition $g(t) = 0.1t^3$. {\color{blue}The particular choice of these parameters is meant to resemble those found in skeletal muscle. In particular, the Poisson's ratio being close to 0.5 represents the quasi-incompressibility of skeletal muscle \cite{BaskinPaolini}.}
+In this case, while the exact solution to \eqref{eq:elasticity_linear} could be computed using Fourier series, we cannot reliably use this expression as any truncation of this series will lead to high oscillations at the ends of the interval (Gibbs phenomenon). Therefore, we decide to compute an ``exact'' solution by taking a sufficiently small $\Delta t$ or $\Delta x$. We emphasize that both the exact solution and its approximations will be computed using the same solver (i.e. an \textit{intrasolver} study). {\color{blue}We avoid intersolver comparisons due to the choice of material, as it can potentially cause the solver to ``lock'', i.e. there will be a point where errors will stop decreasing regardless of how small $\Delta x$ is taken \cite{BabushkaSuri1992}.}
 
 With this in mind, we first, fix the space mesh size to $\Delta x = L/8 = 62.5 \ \text{mm}$ and decrease the time step size from $10 \ \text{ms}$ to $0.1 \ \text{ms}$. In this case, for an exact solution computed with $\Delta t = 0.01 \ \text{ms}$, we see from the third column in Table \ref{tab:convergence_linear_elasticty_1d} that Rothe-First order and MOL-First order achieve a rate of convergence of 1, while the rest of the methods achieve a rate of convergence of 2, as expected. Next, we fix the time step size to $\Delta t = 10 \ \text{ms}$ and decrease the space mesh size from 125 mm to 7.8125 mm (or equivalently, increase the number of elements in the interval, from 4 to 64). In this case, for an exact solution computed with $\Delta x = 1.953125 \ \text{mm}$ (i.e. 256 elements), we observe from the sixth column in Table \ref{tab:convergence_linear_elasticty_1d} that all methods converge with a rate equal to 3, as expected.
 
@@ -1698,7 +1809,7 @@ With this in mind, we first, fix the space mesh size to $\Delta x = L/8 = 62.5 \
 
 \section{Neo-Hookean experiments, overshooting, and velocity approximations}
 
-Consider for the 1D elasticity model \eqref{eq:elasticity_1d} a stress $P = P(\lambda)$  given by a Neo-Hookean relationship:
+We now turn to a nonlinear problem. Consider, for the 1D elasticity model \eqref{eq:elasticity_1d}, a stress $P = P(\lambda)$  given by a Neo-Hookean relationship:
 \begin{equation} \label{eq:neohookean_stress_1d}
     P(\lambda) = \mathcal{L}_\lambda \lambda + \dfrac{\mathcal{L}_\lambda \log \lambda - \mathcal{L}_\mu}{\lambda},
 \end{equation}
@@ -1706,7 +1817,9 @@ where similar to \eqref{eq:force_neohookean}, $\mathcal{L}_\lambda$ and $\mathca
 \begin{equation}
     \mathcal{L}_{\lambda} = \dfrac{\kappa\nu}{(1-\nu)(1-2\nu)}, \quad \mathcal{L}_{\mu} = \dfrac{\kappa}{2(1+\nu)},
 \end{equation}
-$\kappa$ is the bulk modulus, and $\nu$ the Poisson ratio. Furthermore, consider a rod with $\rho_0 = 1060$ \si{kg.m^{-3}}, $\kappa = 1$ \si{GPa}, $\nu = 0.4$, $L = 100$ \si{mm}, and a simulation end time $T = 2$ s. Our experiment consists in lengthening the rod from an initial length $L$ to a length $(1+A)L$, where $A=0.1$ (i.e. 10\% strain), using three different strain profiles:
+$\kappa$ is the bulk modulus, and $\nu$ the Poisson ratio. Furthermore, consider a rod with $\rho_0 = 1060$ \si{kg.m^{-3}}, $\kappa = 1$ \si{GPa}, $\nu = 0.4$, $L = 100$ \si{mm}, and a simulation end time $T = 2$ s. {\color{blue}Note that we have chosen $\rho_0$ and $\kappa$ as in Section \ref{sec:neohookean_convergence_studies}, but we have reduced the value of $\nu$ to obtain more interpretable results.}
+
+Our experiment consists in lengthening the rod from an initial length $L$ to a length $(1+A)L$, where $A=0.1$ (i.e. 10\% strain), using three different strain profiles:
 \begin{enumerate}
     \item a function which transitions smoothly from $\varepsilon_1(0) = 0$ to $\varepsilon_1(T) = A$ with zero initial and end strain rate (i.e. $\dot{\varepsilon}_1(0) = \dot{\varepsilon}_1(T) = 0$), as well as a maximum strain rate of $\varepsilon_0 = 0.2$ \si{s^{-1}}:
     \begin{equation} \label{eq:smooth_pull}
@@ -1841,38 +1954,12 @@ experiments, we consider the sinusoidal pull \eqref{eq:sin_pull} and no time ste
 We show in Table \ref{tab:mol_matlab_solvers} a summary of the performance of 
 each Matlab solver. As expected, most of the non-stiff
 solvers did not work (they would achieve $\lambda = \partial_x u + 1 \leq 0$ at
-some iteration), with the exception being \texttt{ode113}. From Matlab's 
-website:
-\begin{itemize}
-	\item \texttt{ode113} is a variable-step, variable-order (VSVO) 
-	Adams-Bashforth-Moulton PECE (Predict-Evaluate-Correct-Evaluate) solver of orders 1 to 13. 
-	The highest order used appears to be 12, however, 
-	a formula of order 13 is used to form the error estimate 
-	and the function does local extrapolation to advance 
-	the integration at order 13.
-	\item \texttt{ode113} may be more efficient than ode45 at stringent 
-	tolerances or if the ODE function is particularly expensive 
-	to evaluate. \texttt{ode113} is a multistep solver -- it normally 
-	needs the solutions at several preceding time points to 
-	compute the current solution
-\end{itemize}
+some iteration), with the exception being \texttt{ode113}. This is a variable-step, variable-order (VSVO) Adams-Bashforth-Moulton PECE (Predict-Evaluate-Correct-Evaluate) solver that uses orders up to 12 but applies a 13th-order formula for error estimation and local extrapolation. As a multistep solver, it relies on solutions from several previous time points to compute the current step. It can be more efficient than \texttt{ode45} for stringent tolerances or when evaluating the ODE function is particularly costly \cite{ShampineReichelt1997}.
 
-The solver \texttt{ode23tb} gave the best results. Not only it took
-the shortest time to compute a solution but also allowed for the largest time step of all Matlab solvers. However,
-the relatively crude tolerance chosen to run these experiments might have
-played a fundamental role. In fact, when \texttt{RelTol} was reduced to $10^{-4}$ 
-and \texttt{AbsTol} to $10^{-6}$, 
-the CPU time of \texttt{ode23tb} went from 37.5\% of ode15s to 492\% using an
-average time step of $3.68 \cdot 10^{-6}$ s. From Matlab's website:
-\begin{itemize}
-	\item \texttt{ode23tb} is an implementation of TR-BDF2, an implicit 
-	Runge-Kutta formula with a trapezoidal rule (TR) step as its 
-	first stage and a backward differentiation formula 
-	of order two (BDF2) as its second stage. By construction, 
-	the same iteration matrix is used in evaluating both stages.
-\end{itemize}
+{\color{blue}The solver \texttt{ode23tb} gave the best results. Not only it took
+the shortest time to compute a solution but also allowed for the largest time step of all Matlab solvers. However, the relatively crude tolerance chosen to run these experiments might have played a fundamental role. According to \cite{ShampineReichelt1997}, \texttt{ode23tb} is an implicit Runge-Kutta solver based on the TR-BDF2 formula, combining a trapezoidal rule step with a second-stage backward differentiation formula. It reuses the same iteration matrix for both stages, improving efficiency. Like \texttt{ode23s} and \texttt{ode23t}, it can be more efficient than \texttt{ode15s} for problems with crude tolerances.}
 
-We show, in particular, the velocities and the time step sizes for the solvers that finished their computation (according to Table \ref{tab:mol_matlab_solvers}) in Figure \ref{fig:sin_pull_matlab}. Here, we observe that only \texttt{ode23s} and \texttt{ode23tb} computed velocities somewhat similar to those in Figure \ref{fig:sin_pull_vel}, but overshooting was still a problem in these solvers. Moreover, the time step size chosen by these solvers was in line with the one considered for Figure \ref{fig:sin_pull_vel}.
+We show, in particular, the velocities and the time step sizes for the solvers that finished their computation (according to Table \ref{tab:mol_matlab_solvers}) in Figure \ref{fig:sin_pull_matlab}. We observe that only \texttt{ode23s} and \texttt{ode23tb} computed velocities somewhat similar to those in Figure \ref{fig:sin_pull_vel}, but overshooting was still a problem in these solvers. Moreover, the time step size chosen by these solvers was in line with the one considered for Figure \ref{fig:sin_pull_vel}.
 
 \begin{table}
 	\centering
@@ -1907,13 +1994,13 @@ If studying Neo-Hookean dynamics was our ultimate goal, the conclusion would be 
 
 Furthermore, from the experiments performed with the IMEX scheme \eqref{eq:TS-mol-imex}, as well as with Matlab's built in solvers, we expect that problems of this flavour will require rather small time step sizes. This does not contradict the unconditional stability of the fully implicit schemes presented here. While larger time step sizes are allowed for a linear problem, taking one that is too large in a nonlinear problem can lead to a loss of convergence in the nonlinear solver. 
 
-At this juncture, choosing which method to use becomes a software engineering decision. On the one hand, choosing the Rothe-First order method would allow us to reuse some of the computational developments by Dominguez \cite{Seba} and implement them in a fully dynamic code. Thus, that code will need only needs to be \textit{refactored} for our purposes. On the other hand, moving forward with a MOL approach would require us to almost completely \textit{rewrite} the code developed in \cite{Seba}. Therefore, we decide to discretize the 3D dynamic model using Rothe-First order method \eqref{eq:rothe_first_order}.
+At this juncture, choosing which method to use becomes a software engineering decision. On the one hand, choosing the Rothe-First order method would allow us to reuse some of the computational developments by Dominguez \cite{Seba} and implement them in a fully dynamic code. Thus, that code would only need to be \textit{refactored} for our purposes. Moreover, this choice would allow for adaptive refinement to be added in the future. On the other hand, moving forward with a MOL approach would require us to almost completely \textit{rewrite} the code developed in \cite{Seba}. Therefore, we decide to discretize the 3D dynamic model using Rothe-First order method \eqref{eq:rothe_first_order}. 
+{\color{blue}The choice of a first-order over a second-order method is also justified by the fact that one way to reduce the spurious oscillations in Newmark's methods is to take $\gamma > 1/2$, at the expense of losing second-order convergence \cite[Remark X.X]{raviartthomas}.}
 
 \section{Conclusion}
 
 We studied the performance of several time stepping schemes for one-dimensional nonlinear elasticity, and in particular, for Neo-Hookean deformation. The first set of methods (first order method, Newmark's method, and the HHT-$\alpha$ method, both in Rothe's and MOL frameworks) gave mixed results for nonsmooth boundary conditions. Only the Rothe-First order, MOL-First order, and MOL-HHT-$\alpha$ methods dealt successfully with overshooting. Next, we tested an IMEX scheme which performed poorly compared to the previous methods. In fact, this method only ran with a very small time step size. Finally, we tested some of Matlab's built-in solvers to assess the time step size they require to return a solution with rather large tolerances. We found that almost all the solvers designed for non-stiff problems, as well as some stiff ones, did not finish their computation. Indeed, only the \texttt{ode113} and \texttt{ode23tb} computed results comparable to those from the MOL-Newmark method (i.e. without dissipation of high-frequency oscillations).
-
-
+{\color{blue}These suggest a first-order implicit method is a good time stepping scheme candidate for the dynamic version of the full 3D model of skeletal muscle deformation.}
 
 \part{Three-dimensional elastodynamics}
 
