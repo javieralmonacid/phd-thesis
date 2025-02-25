@@ -172,7 +172,7 @@
 }
 %------------------------------------------------
 
-\numberwithin{equation}{chapter}
+\numberwithin{equation}{section}
 \numberwithin{figure}{chapter}
 \numberwithin{table}{chapter}
 
@@ -335,7 +335,7 @@ First, we mathematically describe the ordinary differential equations (ODEs) and
 
 One-dimensional models of skeletal muscle are effective in capturing the overall dynamics of skeletal muscle. Their relative simplicity allows physiologists to perform cheap forward dynamics simulations on a range of subjects, muscles, and tasks.
 
-Consider, for instance, the protocol developed by Chen \cite{EvanThesis} to record data from a human subject during locomotion tasks. Here, 24 LED motion-capture markers are secured to the skin over the pelvis and lower extremities of each participant to capture kinematic and kinetic data. Furthermore, bipolar Ag/AgCl surface electromyography (EMG) electrodes are positioned over the bellies of 10 different muscles to capture EMG data. After this setup is complete, subjects asked to perform 4 different tasks (walking and running on a treadmill, hopping, and sit-to-stand from a chair) with appropriate breaks in between. Data is recorded for about 30 seconds per task and each task is repeated twice. This means that if data is collected for 20 subjects, up to $20 \times 10 \times 8 = 1600$ different simulations could be performed. Thus, accurate and efficient models and numerical algorithms are required to analyze the data in a feasible timeframe.
+Consider, for instance, the protocol developed by Chen \cite{EvanThesis} to record data from a human subject during locomotion tasks. Here, 24 LED motion-capture markers were secured to the skin over the pelvis and lower extremities of each participant to capture kinematic and kinetic data. Furthermore, bipolar Ag/AgCl surface electromyography (EMG) electrodes were positioned over the bellies of 10 different muscles to capture EMG data. After this setup is complete, the subjects were asked to perform 4 different tasks (walking and running on a treadmill, hopping, and sit-to-stand from a chair) with appropriate breaks in between. The data was recorded for about 30 seconds per task and each task was repeated twice. Assuming that data was collected for 20 subjects, this means that up to $20 \times 10 \times 8 = 1600$ different simulations could be performed. Thus, accurate and efficient models and numerical algorithms are required to analyze the data in a feasible timeframe.
 
 %In this project, we implement a set of MATLAB routines for a multi-body model of the muscle-tendon unit (MTU) developed by Chen in \cite{EvanThesis}, which has its origins on the work by G\"{u}nther et al. \cite{Gunther2012}, Ross \& Wakeling \cite{RossWakeling2016Multibody}, and Ross et al. \cite{Ross2018}. Moreover, we study the inertial (mass) effects in a particular subset of forward dynamics simulations using previously collected data \cite{EvanThesis,Dick2016}. These effects are typically neglected in the literature (e.g. in the popular biomechanics software OpenSim \cite{Delp2007OpenSim}), but several studies have consistently shown that there are certain scenarios where inertia is not negligible \cite{EvanThesis,RossWakeling2016Multibody}. First, we mathematically describe the ordinary differential equations (ODEs) describing these MTU models. Next, we describe the data and parameters in use for this study. Then, we describe the computational implementation of the solvers required for this study, which will compute important quantities, such as lengths and velocities for muscle and tendon, as well of muscle force. Finally, we describe the inertial effects observed in the simulations and compare these to the output of a typical model that does not take into account the mass of the muscle.
 
@@ -356,17 +356,21 @@ Let us develop a mathematical model of a dynamically contracting one-dimensional
 
 We define the \textit{muscle stretch} $\lambda_M$, the \textit{muscle strain} $\varepsilon_M$, and the \textit{muscle strain rate} $\depsilon_M$ as
 \begin{equation} \label{eq:def_stretch_strain_rate_muscle}
-    \lambda_M := \dfrac{L_M}{l_{mus}^{opt}}, \qquad \varepsilon_M := \lambda_M - 1, \qquad \depsilon_M = \dfrac{1}{\depsilon_0} \der{\lambda_M}{t} = \dfrac{1}{l_{mus}^{opt} \, \depsilon_0} \der{L_M}{t},
+    \lambda_M := \dfrac{L_M}{l_M^{opt}}, \qquad \varepsilon_M := \lambda_M - 1, \qquad \depsilon_M = \dfrac{1}{\depsilon_0} \der{\lambda_M}{t} = \dfrac{1}{l_M^{opt} \, \depsilon_0} \der{L_M}{t},
 \end{equation}
-where $l_{mus}^{opt}$ is the \textit{optimal muscle length} and $\depsilon_0$ is the maximum unloaded shortening strain rate. Similarly, we can define the \textit{tendon stretch} $\lambda_T$ and \textit{tendon strain} $\varepsilon_T$ as
+where $l_M^{opt}$ is the \textit{optimal muscle length} and $\depsilon_0$ is the maximum unloaded shortening strain rate. Similarly, we can define the \textit{tendon stretch} $\lambda_T$ and \textit{tendon strain} $\varepsilon_T$ as
 \begin{equation}
-    \lambda_T := \dfrac{L_T}{l^{opt}_{ten}}, \qquad \varepsilon_T := \lambda_T - 1.
+    \lambda_T := \dfrac{L_T}{l_T^{opt}}, \qquad \varepsilon_T := \lambda_T - 1.
 \end{equation} 
-The \textit{optimal tendon length} $l_{ten}^{opt}$ can be computed from the \textit{optimal MTU length} $l_{MTU}^{ten}$ as  $l_{ten}^{opt} = l_{MTU}^{opt} - l_{mus}^{opt}$. For now, the reader can consider these quantities as given, however, they will be discussed more in detail in Section \ref{sec:optimal_muscle_length}.
-
-
+The \textit{optimal tendon length} $l_T^{opt}$ can be computed from the \textit{optimal MTU length} $l_{MTU}^{ten}$ as  $l_T^{opt} = l_{MTU}^{opt} - l_M^{opt}$. For now, the reader can consider these quantities as given, however, they will be discussed more in detail in Section \ref{sec:optimal_muscle_length}.
 
 \subsection{Hill's muscle model}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{plot_FL_FV.eps}
+    \caption{Force-length (FL) and force-velocity (FV) relationships that are part of Hill's muscle model \eqref{eq:Hill_force}. \label{fig:plot_FL_FV}}
+\end{figure}
 
 In a simple model, such as the one shown in Figure \ref{fig:muscle_models_1D}A, muscle can be thought as a one-dimensional spring containing a contractile element (CE) and a parallel elastic element (PEE). The first one is related to the force produced by actin-myosin interactions during activation, whereas the latter is related to passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres that form the muscle fibre. The muscle force $F_M$ in this case is given by Hill's equation \cite{Zajac1989},
 \begin{equation} \label{eq:Hill_force}
@@ -374,11 +378,11 @@ In a simple model, such as the one shown in Figure \ref{fig:muscle_models_1D}A, 
 \end{equation}
 In this expression, known as the standard \textit{Hill's muscle model}:
 \begin{enumerate}
-    \item The maximum isometric force, $F_0$, is the maximum force that a muscle can produce during an isometric contraction (that is, a \textit{fixed}-length contraction). This force is achieved when the length of the muscle $L_M$ is exactly the optimal muscle length $l_{mus}^{opt}$. Therefore, it can be computed as:
+    \item The maximum isometric force, $F_0$, is the maximum force that a muscle can produce during an isometric contraction (that is, a \textit{fixed}-length contraction). This force is achieved when the length of the muscle $L_M$ is exactly the optimal muscle length $l_M^{opt}$. Therefore, assuming no pennation, it can be computed as:
     \begin{equation}
-        F_0 = \sigma_0 \cdot PCSA_0 = \sigma_0 \cdot \dfrac{V_{0,mus}}{l_{mus}^{opt}},
+        F_0 = \sigma_0 \cdot PCSA_0 = \sigma_0 \cdot \dfrac{V_{0,M}}{l_M^{opt}},
     \end{equation}
-    where $\sigma_0$ is the maximum isometric stress of muscle tissue, $PCSA_0$ is the optimal physiological cross-sectional area (PCSA), and $V_{0,mus}$ is the muscle volume.
+    where $\sigma_0$ is the maximum isometric stress of muscle tissue, $PCSA_0$ is the optimal physiological cross-sectional area (PCSA), and $V_{0,M}$ is the muscle volume.
     \item The time-dependent activation function, $a = a(t)$, characterizes the influx of $\mathrm{Ca}_2^+$ ions that trigger the formation of cross-bridges between actins and myosins within sarcomeres. This function can be computed given an excitation $u(t)$ using Zajac's equation \cite{Zajac1989}:
     \begin{equation} \label{eq:zajac}
         \dfrac{da}{dt} + \dfrac{a(t)}{\tau_{act}} \left( \beta + (1-\beta)u(t) \right) = \dfrac{u(t)}{\tau_{act}}.
@@ -387,20 +391,20 @@ In this expression, known as the standard \textit{Hill's muscle model}:
     \item The function $\widehat{F}_P = \widehat{F}_P(\lambda_M)$ is known as the passive FL relationship. It is related to the PEE and describes the force produced by passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres.
 \end{enumerate} 
 
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[square/.style={regular polygon,regular polygon sides=4}]
-        \node[inner sep=0pt] at (0,0)
-            {\hspace{-3.5em}\includegraphics[width=1.18\textwidth]{force-curves-1D.png}};
-        \node at (1.8,-1) [square,draw] {\large \phantom{A}};
-        \draw[->] (2.2, -1) -- (3.8,-0.8);
-    \end{tikzpicture}
-    \caption{Force-relationships in use.}
-    \label{fig:force_curves_1D}
-\end{figure}
+%\begin{figure}
+%    \centering
+%    \begin{tikzpicture}[square/.style={regular polygon,regular polygon sides=4}]
+%        \node[inner sep=0pt] at (0,0)
+%            {\hspace{-3.5em}\includegraphics[width=1.18\textwidth]{force-curves-1D.png}};
+%        \node at (1.8,-1) [square,draw] {\large \phantom{A}};
+%        \draw[->] (2.2, -1) -- (3.8,-0.8);
+%    \end{tikzpicture}
+%    \caption{Force-relationships in use.}
+%    \label{fig:force_curves_1D}
+%\end{figure}
 
 The force relationships $\widehat{F}_A$, $\widehat{F}_V$, and $\widehat{F}_P$ are typically fit from experimental data obtained through tensile experiments, and therefore do not have a standard expression. For this particular set of experiments, we use least-squares fits of the B\'{e}zier curves used by Ross et al. \cite{RossWakeling2016Multibody}. This allows us to evaluate the force directly given a stretch $\lambda_M$ without the need for solving a nonlinear equation, as is the case for B\'{e}zier curves (albeit with a minor loss of accuracy since the B\'{e}zier curves are already fit from experimental data). 
-We portray these curves in Figure \ref{fig:force_curves_1D} and give their exact definitions in Appendix \ref{app:force_relationships}.
+We show these curves in Figure \ref{fig:plot_FL_FV} and give their exact definitions in Appendix \ref{app:force_relationships}.
 
 \begin{figure}
     \centering
@@ -424,7 +428,9 @@ We portray these curves in Figure \ref{fig:force_curves_1D} and give their exact
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced.eps}};
         \node at (-2.31, 0.1) {\tiny $m_1$};
+        \node at (-2.85, 1.44) {\tiny $-$};
         \node at (-0.56, 0.1) {\tiny $m_2$};
+        \node at (-1.15, 1.44) {\tiny $-$};
         \node at (1.94, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
         \node at (-3.2, 0.5) {\tiny CE$_1$};
         \node at (-3.2, -0.5) {\tiny PEE$_1$};
@@ -442,12 +448,24 @@ We portray these curves in Figure \ref{fig:force_curves_1D} and give their exact
         \node at (-0.9, 1.45) {\footnotesize $\vec{F}_2$};
         \node at (-0.3, 1.45) {\footnotesize $\vec{F}_3$};
         \node at (1.65, 1.45) {\footnotesize $\vec{F}_N$};
+        \node at (1.38, 1.44) {\tiny $-$};
         \node at (2.25, 1.45) {\footnotesize $\vec{F}_T$};
         \node at (0.1,0.14) {\footnotesize $\dots$};
         \node at (-0.1,-1.0) {\footnotesize $\dots$};
     \end{tikzpicture}
     \caption{(A) A simple Hill-type model of the MTU (muscle region in pink, tendon region in grey) using massless springs. Depicted here are the (active) contractile element (CE), the passive elastic element (PEE), and the series elastic element (SEE) representing the tendon. (B) A multi-body model of the MTU that does not neglect the mass of the muscle, which is equally distributed throughout the muscle segment.}
     \label{fig:muscle_models_1D}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[square/.style={regular polygon,regular polygon sides=4}]
+        \node[inner sep=0pt] at (0,0)
+            {\includegraphics[width=\textwidth]{plot_FT.eps}};
+        \node at (-2.7,-1.6) [square,draw] {\huge \phantom{A}};
+        \draw[->] (-2.17, -1.6) -- (1.3,-1.4);
+    \end{tikzpicture}
+    \caption{Tendon FL relationship (left) with its toe region shown in detail (right). \label{fig:plot_FT}}
 \end{figure}
 
 %\begin{circuitikz}
@@ -481,7 +499,7 @@ We portray these curves in Figure \ref{fig:force_curves_1D} and give their exact
 
 \subsection{Massless and mass-enhanced models of the MTU}
 
-For the model in Figure \ref{fig:muscle_models_1D}A, the muscle force $F_M \equiv F_{Hill}$ is balanced by the tendon force $F_T$ at all times, that is
+For the model in Figure \ref{fig:muscle_models_1D}A, the muscle force $F_M \equiv F_{Hill}$ is balanced by the tendon force $F_T$ (shown in Figure \ref{fig:plot_FT}) at all times, that is:
 \begin{equation} \label{eq:massless_model}
     F_M(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
 \end{equation}
@@ -496,15 +514,15 @@ In an attempt to answer the previous question, based on the work by G\"{u}nther 
         m_N \ddot{u}_N &= F_T(\lambda_T) - F_N(\lambda_N, \depsilon_N).
     \end{align}
 \end{subequations}
-Here, $m_1 = m_2 = \dots = m_N = m_{mus}/N$, where the mass of the muscle $m_{mus}$ depends on its (initial) volume $V_{0,mus}$ through the (initial) density of muscle tissue $\rho_0$, which is constant across mammalian species \cite{MendezKeys1960}:
+Here, $m_1 = m_2 = \dots = m_N = m_{mus}/N$, where the mass of the muscle $m_{mus}$ depends on its (initial) volume $V_{0,M}$ through the (initial) density of muscle tissue $\rho_0$, which is assumed to be constant across mammalian species \cite{MendezKeys1960}:
 \begin{equation}
-    \rho_0 = \dfrac{m_{mus}}{V_{0,mus}} = 1,060 \ \dfrac{\text{kg}}{\text{m}^3}.
+    \rho_0 = \dfrac{m_{mus}}{V_{0,M}} = 1,060 \ \dfrac{\text{kg}}{\text{m}^3}.
 \end{equation}
-Moreover, the muscle volume $V_{0,mus}$ is estimated using a formula depending on the subject's height $H$ and mass $W$ \cite{Hansfield2014}:
+Moreover, the muscle volume $V_{0,M}$ is estimated using a formula depending on the subject's height $H$ and mass $W$ \cite{Hansfield2014}:
 \begin{equation}
-    V_{0,mus} = V_0 \cdot \chi_{mus}, \quad V_0 = (47WH + 1285) \cdot 10^{-6},
+    V_{0,M} = V_0 \cdot \chi_M, \quad V_0 = (47WH + 1285) \cdot 10^{-6},
 \end{equation}
-where $\chi_{mus}$ is the fraction of individual muscle relative to the volume of one lower leg $V_0$ (see Table \ref{tab:1d-parameters}).
+where $\chi_M$ is the fraction of individual muscle relative to the volume of one lower leg $V_0$ (see Table \ref{tab:1d-parameters}).
 
 In turn, $u_i$ denotes the displacement of the $i$-th segment, that is,
 \begin{equation}
@@ -512,7 +530,7 @@ In turn, $u_i$ denotes the displacement of the $i$-th segment, that is,
 \end{equation}
 where $x_i$ is the position of the $i$-th segment and $x_i^0$ denotes its initial position. Furthermore, $\lambda_i$ and $\depsilon_i$ denote the segment stretch and strain rate of the $i$-th segment, respectively
 \[
-\lambda_i = \dfrac{l_i}{l_s^{opt}} = \dfrac{l_i}{l_{mus}^{opt}/N}, \quad \depsilon_i = \dfrac{\dot{\lambda_i}}{\depsilon_0}, \quad i = 1,\dots,N.
+\lambda_i = \dfrac{l_i}{l_s^{opt}} = \dfrac{l_i}{l_M^{opt}/N}, \quad \depsilon_i = \dfrac{\dot{\lambda_i}}{\depsilon_0}, \quad i = 1,\dots,N.
 \]
 These stretches and strain rates can be written in terms of the displacements $u_i$ as:
 \begin{equation}
@@ -522,9 +540,9 @@ and
 \begin{equation}
     \depsilon_1 = \dfrac{\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \depsilon_2 = \dfrac{\dot{u}_2-\dot{u}_1}{l_s^{opt} \depsilon_0}, \quad \dots \quad, \depsilon_N = \dfrac{\dot{u}_N - \dot{x}_{N-1}}{l_s^{opt} \depsilon_0},
 \end{equation}
-with $l_s^0 := L_M(0)/N$ is the initial length of each segment and $l_s^{opt} = l_{mus}^{opt}/N$. In particular, the muscle length can be computed directly from the position of the last mass, i.e. $L_M = x_N$.
+with $l_s^0 := L_M(0)/N$ is the initial length of each segment and $l_s^{opt} = l_M^{opt}/N$. In particular, the muscle length can be computed directly from the position of the last mass, i.e. $L_M = x_N$.
 
-To complete the description of the massless and mass-enhanced models (equations \eqref{eq:massless_model} and \eqref{eq:massenhanced_model}, respectively), we have to provide the optimal muscle length $l_{mus}^{opt}$, as well as the initial muscle length $L_M(0)$. The latter is sufficient to provide initial conditions for the system \eqref{eq:massenhanced_model} (assuming that the system of $N$ bodies is initially at rest, i.e. $\dot{u}_i(0) = 0$). Because we will be working with experimentally-obtained data and force relationships that are particular to this study, $l_{mus}^{opt}$ and $L_M(0)$ can only be \textit{estimated} from the literature, so the true value must be computed to ensure simulations start from static equilibrium. This topic will be discussed in the next section.
+To complete the description of the massless and mass-enhanced models (equations \eqref{eq:massless_model} and \eqref{eq:massenhanced_model}, respectively), we have to provide the optimal muscle length $l_M^{opt}$, as well as the initial muscle length $L_M(0)$. The latter is sufficient to provide initial conditions for the system \eqref{eq:massenhanced_model} (assuming that the system of $N$ bodies is initially at rest, i.e. $\dot{u}_i(0) = 0$). Because we will be working with experimentally-obtained data and force relationships that are particular to this study, $l_M^{opt}$ and $L_M(0)$ can only be \textit{estimated} from the literature, so an optimized value must be computed to ensure simulations start from static equilibrium. This topic will be discussed in the next section.
 
 \begin{table}
     \centering
@@ -534,8 +552,8 @@ To complete the description of the massless and mass-enhanced models (equations 
         $\depsilon_0$ & Muscle maximum unloaded shortening strain rate & \makecell[l]{5 s$^{-1}$ (walking, running) \\ 10 s$^{-1}$ (cycling)} & \cite{WakeingLee2012} \\\hline
         $\tau_{act}$ & Time constant for activation & \makecell[l]{0.045 s (walking, running) \\ 0.025 s (cycling)} & \cite{Dick2017} \\\hline
         $\beta$ & Ratio of $\tau_{act}$ to deactivation time constant & 0.6 &\cite{Dick2017} \\\hline
-        $\chi_{mus}$ & Volume fraction of muscle with respect to that of one lower leg & \makecell[l]{MG: 0.0362 \\ VM: 0.0606 \\ ST: 0.026} & \cite{Hansfield2014} \\\hline
-        $r_{mus}$ & Muscle-to-MTU length ratio & \makecell[l]{MG: 0.54 \\ VM: 0.84 \\ ST: 0.70 } & \cite{Kovacz2020,OBrien2010}\\\hline
+        $\chi_M$ & Volume fraction of muscle with respect to that of one lower leg & \makecell[l]{MG: 0.0362 \\ VM: 0.0606 \\ ST: 0.026} & \cite{Hansfield2014} \\\hline
+        $r_M$ & Muscle-to-MTU length ratio & \makecell[l]{MG: 0.54 \\ VM: 0.84 \\ ST: 0.70 } & \cite{Kovacz2020,OBrien2010}\\\hline
         $l_{MTU}^{opt}$ & Optimal MTU length & \makecell[l]{Subject 1 (walking, running):\\ \hspace{1em} MG: 0.3910 m \\ \hspace{1em} VM: 0.2770 m \\ \hspace{1em} ST: 0.4122 m \\ Subject 2 (cycling):\\ \hspace{1em} MG: 0.3952 m \\ \hspace{1em} VM: 0.2171 m \\ \hspace{1em} ST: 0.4381 m} & \cite{EvanThesis} \\\hline
     \end{tabular}
     \caption{List of parameters for the mass-enhanced and massless models. The muscles listed in the table are the \textit{medial gastrocnemius} (MG), \textit{semitendinosus} (ST), and \textit{vastus medialis} (VM).}
@@ -544,25 +562,25 @@ To complete the description of the massless and mass-enhanced models (equations 
 
 \subsection{Optimal muscle and tendon length} \label{sec:optimal_muscle_length}
 
-The optimal muscle length, $l_{mus}^{opt}$, is the length at which myofilament overlap is optimal\footnote{This happens at sarcomere lengths of about 2.6-2.8 $\mu$m in human muscle and 2.0-2.2 $\mu$m in frog muscle \cite{FridenLieber1998}.} and force production is maximal \cite{FridenLieber1998}, that is, when $F_M = F_0$ at $L_M = l_{mus}^{opt}$. When the MTU is fixed at this length (that is, $L = l_{MTU}^{opt}$), muscle and tendon forces balance:
-$F_M(1) = F_0 = F_T(1)$. This means that the definition of $l_{mus}^{opt}$ depends on the FL relationship, which is particular to the muscle in study. Therefore, any quantity obtained from the literature can only be considered an \textit{estimate}. Denote the estimated optimal muscle and tendon lengths respectively by $\widetilde{l_{mus}^{opt}}$ and $\widetilde{l_{mus}^{opt}}$, which are given by:
+The optimal muscle length, $l_M^{opt}$, is the length at which myofilament overlap is optimal\footnote{This happens at sarcomere lengths of about 2.6-2.8 $\mu$m in human muscle and 2.0-2.2 $\mu$m in frog muscle \cite{FridenLieber1998}.} and force production is maximal \cite{FridenLieber1998}, that is, when $F_M = F_0$ at $L_M = l_M^{opt}$. When the MTU is fixed at this length (that is, $L = l_{MTU}^{opt}$), muscle and tendon forces balance:
+$F_M(1) = F_0 = F_T(1)$. This means that the definition of $l_M^{opt}$ depends on the FL relationship, which is particular to the muscle in study. Therefore, any quantity obtained from the literature can only be considered an \textit{estimate}. Denote the estimated optimal muscle and tendon lengths respectively by $\widetilde{l_M^{opt}}$ and $\widetilde{l_M^{opt}}$, which are given by:
 \begin{equation}
-	\widetilde{l_{mus}^{opt}} := l_{MTU}^{opt} r_{mus}, \qquad \widetilde{l_{ten}^{opt}} := l_{MTU}^{opt}(1-r_{mus}).
+	\widetilde{l_M^{opt}} := l_{MTU}^{opt} r_M, \qquad \widetilde{l_T^{opt}} := l_{MTU}^{opt}(1-r_M).
 \end{equation}
-Here, $l_{MTU}^{opt}$ is the optimal MTU length (given) and $r_{mus}$ is the muscle-to-MTU-length ratio (see Table \ref{tab:1d-parameters}). Furthermore, assume that this estimate as a deviation $\Delta l_{mus}^{opt}$ from the true value $l_{mus}^{opt}$, i.e.
+Here, $l_{MTU}^{opt}$ is the optimal MTU length (given) and $r_M$ is the muscle-to-MTU-length ratio (see Table \ref{tab:1d-parameters}). Furthermore, assume that this estimate as a deviation $\Delta l_M^{opt}$ from the true value $l_M^{opt}$, i.e.
 \begin{equation}
-    l_{mus}^{opt} = \widetilde{l_{mus}^{opt}} + \Delta l^{opt}_{mus}, \qquad l_{ten}^{opt} = \widetilde{l_{ten}^{opt}} - \Delta l^{opt}_{mus}.
+    l_M^{opt} = \widetilde{l_M^{opt}} + \Delta l_M^{opt}, \qquad l_T^{opt} = \widetilde{l_T^{opt}} - \Delta l_M^{opt}.
 \end{equation}
-Since muscle and tendon force balance at optimal MTU length, and assuming that the muscle is inactive ($a=0$) and $F_T = F_0 \widehat{F}_T$, the true values $l_{mus}^{opt}$ and $l_{ten}^{opt}$ can be obtained by solving the following equation for the error $\Delta l_{mus}^{opt}$:
+Since muscle and tendon force balance at optimal MTU length, and assuming that the muscle is inactive ($a=0$) and $F_T = F_0 \widehat{F}_T$, the true values $l_M^{opt}$ and $l_T^{opt}$ can be obtained by solving the following equation for the error $\Delta l_M^{opt}$:
 \begin{equation} \label{eq:calibration_1}
-    \widehat{F}_P\left( \dfrac{\widetilde{l_{mus}^{opt}}}{\widetilde{l_{mus}^{opt}} + \Delta l^{opt}} \right) = \widehat{F}_T \left( \dfrac{\widetilde{l_{ten}^{opt}}}{\widetilde{l_{ten}^{opt}} - \Delta l^{opt}} \right).
+    \widehat{F}_P\left( \dfrac{\widetilde{l_M^{opt}}}{\widetilde{l_M^{opt}} + \Delta l^{opt}} \right) = \widehat{F}_T \left( \dfrac{\widetilde{l_T^{opt}}}{\widetilde{l_T^{opt}} - \Delta l^{opt}} \right).
 \end{equation}
 
 \subsection{Initial muscle length}
 
 Similar to the computation of optimal muscle and tendon lengths, to ensure the simulation begins from static equilibrium, we assume that the given initial MTU length $L(0)$ only provides estimates for the initial muscle and tendon lengths, that is:
 \begin{equation}
-    \widetilde{L_M(0)} = L(0) \cdot r_{mus}, \quad \widetilde{L_T(0)} = L(0) \cdot (1-r_{mus}).
+    \widetilde{L_M(0)} = L(0) \cdot r_M, \quad \widetilde{L_T(0)} = L(0) \cdot (1-r_M).
 \end{equation}
 Furthermore, we assume that the true values for $L_M(0)$ and $L_T(0)$ are off by a factor of $\Delta L_M(0)$, that is, 
 \begin{equation}
@@ -570,9 +588,9 @@ Furthermore, we assume that the true values for $L_M(0)$ and $L_T(0)$ are off by
 \end{equation}
 Then, we can find the value of this correction by solving the equation
 \begin{equation} \label{eq:calibration_2}
-    F_P \left( \dfrac{\widetilde{L_M(0)} - \Delta L_M(0)}{l_{mus}^{opt}}\right) = F_T \left( \dfrac{\widetilde{L_T(0)} + \Delta L_M(0)}{l_{ten}^{opt}}\right).
+    F_P \left( \dfrac{\widetilde{L_M(0)} - \Delta L_M(0)}{l_M^{opt}}\right) = F_T \left( \dfrac{\widetilde{L_T(0)} + \Delta L_M(0)}{l_T^{opt}}\right).
 \end{equation}
-The corrections $\Delta l_{mus}^{opt}$ and $\Delta L_M(0)$ are typically small and represent the correct setup of the locomotion experiment at the time of data collection.
+The corrections $\Delta l_M^{opt}$ and $\Delta L_M(0)$ are typically small and represent the correct setup of the locomotion experiment at the time of data collection.
 
 \subsection{Scaling}
 
@@ -588,7 +606,7 @@ However, it is known that larger (thus heavier) muscles will yield more inertial
     \label{fig:traces_act_mtu_length}
 \end{figure}
 
-We consider two subjects of equal mass (68 kg) and height (1.67 m) who were asked to perform a set of locomotion tasks: walking and running at their own pace \cite{EvanThesis}, and cycling at a cadence of 80 rpm and a crank load of 26 Nm \cite{Dick2016}. Moreover, we consider the muscle excitation $\widehat{u}(t)$ and MTU length $L(t)$ from three different muscles: medial gastrocnemius (MG), vastus medialis (VM), and semitendinosus (ST). Thus, nine different muscle-task combinations can be formed. An example of this data is shown in Figure \ref{fig:traces_act_mtu_length} for the ST during running. All data was recorded for a time span of 25 seconds. For more precise details on the experiment setup and data collection, we refer the reader to \cite{EvanThesis}.
+We consider two subjects of equal mass (68 kg) and height (1.67 m) who were asked to perform a set of locomotion tasks: walking and running at their own pace \cite{EvanThesis}, and cycling at a cadence of 80 \si{s^{-1}} and a crank load of 26 N\hspace{0.1em}m \cite{Dick2016}. Moreover, we consider the muscle excitation $\widehat{u}(t)$ and MTU length $L(t)$ from three different muscles: medial gastrocnemius (MG), vastus medialis (VM), and semitendinosus (ST). Thus, nine different muscle-task combinations can be formed. An example of these data are shown in Figure \ref{fig:traces_act_mtu_length} for the ST during running. All data were recorded for a time span of 25 seconds. For more precise details on the experiment setup and data collection, we refer the reader to \cite{EvanThesis}.
 
 %\begin{enumerate}
 %    \item matlab solvers in use, tolerances
@@ -597,7 +615,12 @@ We consider two subjects of equal mass (68 kg) and height (1.67 m) who were aske
 
 \section{Computational implementation}
 
-Solvers for the massless \eqref{eq:massless_model} and mass-enhanced model \eqref{eq:massenhanced_model}, as well as for the Zajac ODE \eqref{eq:zajac} and the calibration steps \eqref{eq:calibration_1} and \eqref{eq:calibration_2} have been implemented in \matlab using built-in routines. See Table \ref{tab:matlab_solvers} for a list of these solvers and the default parameters that have been used. Moreover, the complete set of codes written for this study is available at \url{www.github.com/javieralmonacid/multibody-muscle-1d}. The ODE solvers are \textit{adaptive}, meaning that the time step size is controlled by absolute and relative tolerance requirements \cite{ShampineReichelt1997}. First, \texttt{ode45} is a single-step solver based on an explicit Runge-Kutta (4,5) formula (the Dormand-Prince pair \cite{DormandPrince1980}). It is typically used for non-stiff ODEs, such as Zajac's ODE \eqref{eq:zajac}. Next, \texttt{ode15s} is a variable-order, variable-step solver based on differentiation formulas of order 1 to 5 \cite{ShampineReichelt1997}. It is a multistep solver used for solving stiff ODEs, such as the mass-enhanced model \eqref{eq:massenhanced_model}. Finally, \texttt{ode15i} is similar to \texttt{ode15s}, but it is designed to solve fully implicit differential equations \cite{Shampine2002}, such as the massless model \eqref{eq:massless_model}.
+Solvers for the massless \eqref{eq:massless_model} and mass-enhanced model \eqref{eq:massenhanced_model}, as well as for the Zajac ODE \eqref{eq:zajac} and the calibration steps \eqref{eq:calibration_1} and \eqref{eq:calibration_2} were implemented in \matlab using built-in routines. See Table \ref{tab:matlab_solvers} for a list of these solvers and the default parameters that were used. In particular, the ODE solvers are \textit{adaptive}, meaning that the time step size is controlled by absolute and relative tolerance requirements \cite{ShampineReichelt1997}. First, \texttt{ode45} is a single-step solver based on an explicit Runge-Kutta (4,5) formula (the Dormand-Prince pair \cite{DormandPrince1980}). It is typically used for non-stiff ODEs, such as Zajac's ODE \eqref{eq:zajac}. Next, \texttt{ode15s} is a variable-order, variable-step solver based on differentiation formulas of order 1 to 5 \cite{ShampineReichelt1997}. It is a multistep solver used for solving stiff ODEs, such as the mass-enhanced model \eqref{eq:massenhanced_model}. Finally, \texttt{ode15i} is similar to \texttt{ode15s}, but it is designed to solve fully implicit differential equations \cite{Shampine2002}, such as the massless model \eqref{eq:massless_model}.
+
+The complete set of codes written for this study is available at:
+\begin{center}
+    \url{www.github.com/javieralmonacid/multibody-muscle-1d}.
+\end{center} 
 
 \begin{table}
     \centering
@@ -678,7 +701,7 @@ Computationally speaking, even though the dynamics of the MTU are, in general, s
         VM & 2.07 & 3.29 & 3.70 \\\hline
         ST & 2.54 & 0.90 & 5.10 \\\hline
     \end{tabular}
-    \caption{Computation times (in hours) for each muscle-task combination at scales 1 and 10 for the full 25 seconds of available data.}
+    \caption{Computation times (in hours) for each muscle-task combination at scales 1 and 10 for the full 25 seconds of available data using the mass-enhanced model.}
     \label{tab:multibody_computational_time}
 \end{table}
 
@@ -686,7 +709,7 @@ Computationally speaking, even though the dynamics of the MTU are, in general, s
 
 In view of the previous results, we decide to have a closer look at the behaviour of the ST muscle during running. In particular, we show traces of excitation, activation, muscle length, tendon length, muscle strain rate, and normalized muscle force for $s=1$ and $s=10$ in Figure \ref{fig:multibody_traces_ST_running}. Here, the excitation is given from the experimental data, the activation is computed based on this excitation using \eqref{eq:zajac}, and the rest of the variables are computed by the solver. In particular, the muscle force is equal to the computed tendon force, since we are assuming that the tendon transmits the entirety of the force generated by muscle. 
 
-These results show that the tendon acts as a strut when $s=1$, but it is no longer the case for $s=10$. Indeed, tendon strains of up to 20\% are observed, and they produce sharp variations of strain rate (and ultimately force) that the massless model cannot capture. Another important feature is that, when $s=10$, we observe a development of impulsive forces when transitioning from $\depsilon_M < 0$ to $\depsilon_M > 0$. This is something that has not been described previously (cf. \cite{EvanThesis,Ross2018}) because the dynamics in these works are much smoother. We also note that the results in Figure \ref{fig:multibody_traces_ST_running} were computed using $N=64$ masses (see Table \ref{tab:matlab_solvers}) because the simulation was not fully resolved when $N=16$ masses were used. 
+These results show that the tendon acts as a strut when $s=1$, but it is no longer the case for $s=10$. Indeed, tendon strains of up to -20\% are observed, and they produce sharp variations of strain rate (and ultimately force) that the massless model cannot capture. Another important feature is that, when $s=10$, we observe a development of impulsive forces when transitioning from $\depsilon_M < 0$ to $\depsilon_M > 0$. This is something that has not been described previously (cf. \cite{EvanThesis,Ross2018}) because the dynamics in these works are much smoother. We also note that the results in Figure \ref{fig:multibody_traces_ST_running} were computed using $N=64$ masses (see Table \ref{tab:matlab_solvers}) because the simulation was not fully resolved when $N=16$ masses were used. 
 
 \begin{figure} 
     \centering
@@ -697,7 +720,9 @@ These results show that the tendon acts as a strut when $s=1$, but it is no long
 
 \subsection{Influence of the number of masses in the computation}
 
-The phenomenon in the previous subsection is a strong indication that, in certain scenarios, the number of masses in the model might need to be modified from the standard $N=16$ suggested by Ross et al. \cite{Ross2018-1D}. To view this in more detail, we performed a homogenization study by varying the number of masses from 0 (i.e., a simulation using the massless model) to 128 masses. We portray these results in Figure \ref{fig:multibody-homog-study}. Here, we observe how it is only when using $N=128$ masses that we do not observe any unphysical oscillations. However, simulating 18 seconds of data took about 42 hours of computational time and a significant amount of memory, so this is not a feasible approach for studying multiple muscle-task combinations. This also suggests that the problem could be better approached using a one-dimensional \textit{continuum} model (see next chapter), that is, a model derived from an infinitely large number of masses (i.e. $N \to \infty$).
+The phenomenon in the previous subsection is a strong indication that, in certain scenarios, the number of masses in the model might need to be modified from the standard $N=16$ suggested by Ross et al. \cite{Ross2018-1D}. To view this in more detail, we performed a homogenization study by varying the number of masses from 0 (i.e., a simulation using the massless model) to 128 masses. We portray these results in Figure \ref{fig:multibody-homog-study}. Here, we observe how it is only when using $N=128$ masses that we do not observe any unphysical oscillations. However, simulating 18 seconds of data took about 42 hours of computational time and a significant amount of memory, so this is not a feasible approach for studying multiple muscle-task combinations. 
+
+{\color{blue}In general, we observed that the number of masses needed to fully resolve the traces depended on the scale, task, and muscle in study. This effect can be seen from Figure \ref{fig:multibody_predicted_forces_1_10}B. In particular, for scale $s=10$, the traces for the VM-running and ST-running combination show some spurious oscillations that are not present in the traces for the MG. This also suggests that the problem could be better approached using a one-dimensional \textit{continuum} model (see next chapter), that is, a model derived from an infinitely large number of masses (i.e. $N \to \infty$). This would open the door to the development of efficient numerical solvers using techniques such as the finite element method.}
 
 \begin{figure}
     \centering
@@ -1048,7 +1073,7 @@ with the stretches $\lambda_i$ and strain rates $\depsilon_i$ as in \eqref{eq:de
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{03_forces_with_bm.png}
+    \includegraphics[width=0.75\textwidth]{03_forces_with_bm.png}
     \caption{Forces in the stabilized model \eqref{eq:odes_hill_stabilized}. When the base material component (yellow) is added to the active (blue) and passive (red) forces, the total force (black) is a monotonically increasing function.}
     \label{fig:forces_stabilized}
 \end{figure}
@@ -1121,7 +1146,7 @@ This explains why one can expect, in this one-dimensional context, that mass eff
 As a prelude to the development of computational tools for the study of dynamic 3D skeletal muscle deformation, we now face the task of finding an appropriate time stepping scheme for this problem. This is an effort to extend the developments of Rahemi \cite{Hadi} and Dominguez \cite{Seba} regarding quasi-static models.  
 To accomplish this, we study the performance of different time stepping schemes, from methods used in engineering finite element analysis to Matlab's built-in solvers. 
 %However, instead of applying these methods directly to the muscle problem, we study them in the context of one-dimensional Neo-Hookean deformation. This provides us with a simple (yet representative) model to efficiently test different numerical algorithms.
-{\color{blue}However, because the complexity of the full 3D nonlinear model obscures the main details of the numerical algorithms in use, we therefore focus on applying these methods to a simpler (yet representative) model of one-dimensional Neo-Hookean deformation.}
+However, because the complexity of the full 3D nonlinear model obscures the main details of the numerical algorithms in use, we therefore focus on applying these methods to a simpler (yet representative) model of one-dimensional Neo-Hookean deformation.
 
 First, we discuss time stepping methods that are commonly used in dynamic analysis of structures, as well as their advantages and disadvantages. Next, we state a model problem in 1D and present some of these methods in two different contexts, depending on which variable in the continuous problem is discretized first: time or space. This is a particularly important consideration for nonlinear problems with (potentially) nonsmooth boundary conditions. Then, we present convergence studies for a linear problem. We then perform numerical experiments of Neo-Hookean deformation in order to compare. In addition to classic time stepping methods used in engineering, we also study an implicit-explicit (IMEX) method and several of Matlab's built-in solvers for systems of ODEs. We finish the chapter with a discussion on the obtained results and what this means for the development of a 3D \textit{dynamic} finite element code for skeletal muscle tissue.
 
@@ -1151,11 +1176,11 @@ The discretization of elastodynamic models is a well established research area i
     \label{fig:overshoot}
 \end{figure}
 
-While numerical methods such as Newmark's or HHT-$\alpha$ do verify characteristics 1-6 above in the context of linear problems, they may not for nonlinear problems. {\color{blue}Consider the nonlinear second order ODE:
+While numerical methods such as Newmark's or HHT-$\alpha$ do verify characteristics 1-6 above in the context of linear problems, they may not for nonlinear problems. Consider the nonlinear second order ODE:
 \[
     \ddot{y} = \varphi(y,\dot{y}) \quad \text{in } (0,\infty),
 \]
-where $\varphi:\R \times \R \to \R$ is smooth function. If an implicit method is used to discretize this equation, then at each time step, the nonlinear problem must be linearized (using strategies such as Newton's method). Furthermore, if iterative solvers are used to solve the (discretized) linear problem, then multiple linear systems are solved at each Newton iteration, and multiple Newton iterations are needed for each time step.} Therefore, second-order accuracy might not be achieved, or if it does, the numerical methods might still exhibit overshooting and oscillations beyond the high-frequency regime \cite{ErlicherBonaventuraBursi2002}.
+where $\varphi:\R \times \R \to \R$ is smooth function. If an implicit method is used to discretize this equation, then at each time step, the nonlinear problem must be linearized (using strategies such as Newton's method). Furthermore, if iterative solvers are used to solve the (discretized) linear problem, then multiple linear systems are solved at each Newton iteration, and multiple Newton iterations are needed for each time step. Therefore, second-order accuracy might not be achieved, or if it does, the numerical methods might still exhibit overshooting and oscillations beyond the high-frequency regime \cite{ErlicherBonaventuraBursi2002}.
 
 %In general, numerical methods for nonlinear elastodynamics continues to be an active research area (see, e.g. \cite{ChenEtAl2017Fabrication,JanzBetschFranke2019,LiEtAl2020LargeDefornationDynamics,PellecchiaCesarano2021Hysteretic} and the references therein).
 
@@ -1163,7 +1188,7 @@ where $\varphi:\R \times \R \to \R$ is smooth function. If an implicit method is
 
 When it comes to numerical methods for spatio-temporal problems, at least two approaches arise depending on the order in which the variables (space and time) are discretized.
 
-One alternative is to discretize the time variable first while keeping the space variable continuous. This is referred to as \textit{Rothe's method} \cite{Rothe1930}. For second order parabolic and hyperbolic systems (the latter being the case for elastodynamics), this means that, at each time step, we are bound to solve an elliptic PDE in the space variable. For nonlinear PDEs, the linearization can be performed at a continuous level using, for instance, G\^{a}teaux derivatives. One of the advantages of this method is that, in the context of finite element methods, updates to the mesh can easily be performed since they do not alter the variational formulation of the elliptic problem. However, one major disadvantage is that it is harder to test different time stepping strategies since they involve modifying the structure of the variational formulation itself, which may induce significant modifications to the computational solvers. {\color{blue}We will see these differences throughout Sections \ref{sec:a_firt_order_time_stepping_scheme} to \ref{sec:hht_alpha_method}.}
+One alternative is to discretize the time variable first while keeping the space variable continuous. This is referred to as \textit{Rothe's method} \cite{Rothe1930}. For second order parabolic and hyperbolic systems (the latter being the case for elastodynamics), this means that, at each time step, we are bound to solve an elliptic PDE in the space variable. For nonlinear PDEs, the linearization can be performed at a continuous level using, for instance, G\^{a}teaux derivatives. One of the advantages of this method is that, in the context of finite element methods, updates to the mesh can easily be performed since they do not alter the variational formulation of the elliptic problem. However, one major disadvantage is that it is harder to test different time stepping strategies since they involve modifying the structure of the variational formulation itself, which may induce significant modifications to the computational solvers. We will see these differences throughout Sections \ref{sec:a_firt_order_time_stepping_scheme} to \ref{sec:hht_alpha_method}.
 
 A different approach is to discretize the space variable first, then the time variable. This leads to the \textit{method of lines (MOL)} \cite{LeVequeBook} and it is how Newmark-type methods are introduced in the engineering literature \cite{HughesBook}. In this case, the parabolic or hyperbolic PDE is transformed into a system of ODEs. This is one of the major advantages of the MOL since it is relatively easy to test multiple time stepping schemes implemented as ODE solvers. However, this also means that the spatial mesh is fixed at all times, which is not amenable to a posteriori mesh refinements (especially at each time step).
 
@@ -1235,7 +1260,7 @@ Therefore, the linear problem \eqref{eq:rothe_first_order_lin_1} becomes: find N
 	\rho_0 \int_0^L \delta u_k^{n+1} \, w + \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_k^{n+1}) \der{(\delta u_k^{n+1})}{x} \der{w}{x} = \\
 	-\rho_0 \int_0^L u_k^{n+1} w - \Delta t^2 \int_0^L P(\lambda_k^{n+1}) \der{w}{x} + \rho_0 \int_0^L (u^n+\Delta t v^n) w,
 \end{multline}
-for any $w \in H_0^1(\Omega)$, where the stretch for the current Newton iteration is $\lambda_k^{n+1} = \partial_x u_k^{n+1} + 1$. {\color{blue}Note that, unlike the nonlinear formulation \eqref{eq:rothe_first_order_VF}, for $k\geq 1$, the linear formulation \eqref{eq:rothe_first_order_lin_2} is symmetric (i.e., test and trial spaces are the same).}
+for any $w \in H_0^1(\Omega)$, where the stretch for the current Newton iteration is $\lambda_k^{n+1} = \partial_x u_k^{n+1} + 1$. Note that, unlike the nonlinear formulation \eqref{eq:rothe_first_order_VF}, for $k\geq 1$, the linear formulation \eqref{eq:rothe_first_order_lin_2} is symmetric (i.e., test and trial spaces are the same).
 
 The linear problem \eqref{eq:rothe_first_order_lin_2} is solved for each $k \geq 0$ and the displacement is updated as $u_{k+1}^{n+1} = u_k^{n+1} + \delta u_k^{n+1}$ until the following convergence criterion is satisfied:
 \begin{equation} \label{eq:convergence_crit_1d}
@@ -1245,7 +1270,7 @@ where $\|\cdot\|$ is a user-defined discrete norm (e.g. the Euclidean norm) aris
 
 \subsubsection*{Finite element formulation}
 
-{\color{blue}In this subsection, we present the details of a finite element method (FEM) approach to deal with the spatial discretization}. For the linear problem \eqref{eq:rothe_first_order_lin_2}, we consider the following Galerkin scheme for the Newton increment $\delta u_k^{n+1}$: given $u_{h,k}^{n+1}$, find $\delta u_{h,k}^{n+1} \in V_h$ such that 
+In this subsection, we present the details of a finite element method (FEM) approach to deal with the spatial discretization. For the linear problem \eqref{eq:rothe_first_order_lin_2}, we consider the following Galerkin scheme for the Newton increment $\delta u_k^{n+1}$: given $u_{h,k}^{n+1}$, find $\delta u_{h,k}^{n+1} \in V_h$ such that 
 \begin{multline} \label{eq:rothe_first_order_lin_3}
 	\rho_0 \int_0^L \delta u_{h,k}^{n+1} \, w_h + \Delta t^2 \int_0^L \der{P}{\lambda}(\lambda_{h,k}^{n+1}) \der{(\delta u_{h,k}^{n+1})}{x} \der{w_h}{x} = \\
 	-\rho_0 \int_0^L u_{h,k}^{n+1} w - \Delta t^2 \int_0^L P(\lambda_{h,k}^{n+1}) \der{w_h}{x} + \rho_0 \int_0^L (u_h^n+\Delta t v_h^n) w_h,
@@ -1318,7 +1343,7 @@ where $\mathcal{C}(\overline{\Omega})$ is the space of continuous functions over
 
 \subsubsection*{Notation for the local problems}
 
-{\color{blue}The purpose of this subsection is to help establish both notation and details of the FEM applied to a local problem. This will be useful when comparing time stepping schemes.}
+The purpose of this subsection is to help establish both notation and details of the FEM applied to a local problem. This will be useful when comparing time stepping schemes.
 
 First, let $T \in \mathcal{T}_h$ be an arbitrary interval of the triangulation $\mathcal{T}_h$ with endpoints $x_i$ and $x_{i+1}$, that is, $T = [x_i,x_{i+1}]$. Then, consider the linear transformation $\mathcal{F}:\widehat{T} \to T$ that maps elements from the ``reference'' interval $\widehat{T}=[0,1]$ to an arbitrary interval $T$:
 \begin{equation}
@@ -1445,7 +1470,7 @@ with $\*M$, $\*K$, and $\*F$ as in \eqref{eq:rothe_first_order_M_K} and \eqref{e
 
 \subsection{Method of lines} \label{sec:mol_first_order}
 
-In this case, we first discretize the problem in \textit{space}. We construct a weak formulation for \eqref{eq:elasticity_1d_1} by multiplying the PDE by a test function $w \in H_0^1(\Omega)$ and integrate by parts in space. {\color{blue}This yields the problem: for each $t > 0$, find $u(\cdot, t) \in H^1(\Omega)$ such that $u(0,t) = 0$, $u(L,t) = g(t)$, and
+In this case, we first discretize the problem in \textit{space}. We construct a weak formulation for \eqref{eq:elasticity_1d_1} by multiplying the PDE by a test function $w \in H_0^1(\Omega)$ and integrate by parts in space. This yields the problem: for each $t > 0$, find $u(\cdot, t) \in H^1(\Omega)$ such that $u(0,t) = 0$, $u(L,t) = g(t)$, and
 \begin{equation}
 	\rho_0 \int_0^L u_{tt} w + \int_0^L P(\lambda) w_x = 0 \quad \forall \ w \in H_0^1(\Omega).
 \end{equation} 
@@ -1453,7 +1478,7 @@ Then, the Galerkin scheme reads: for each $t>0$, find $u_h(\cdot, t) \in V_h$ su
 \begin{equation} \label{eq:mol_first_order_galerkin}
 	\rho_0 \int_0^L u_{h,tt} w_h + \int_0^L P(\lambda_h) w_{h,x} = 0 \quad \forall \, w_h \in V_{h,0},
 \end{equation} 
-where $V_{h,0} = V_h \cap H_0^1(\Omega)$. }As before, we consider $V_h$ given by \eqref{eq:fespace_1d} and a discretization $\mathcal{T}_h$ of the interval $[0,L]$, i.e. $\mathcal{T}_h = \{ [x_i,x_{i+1}] \}_{i=0}^N$. In this case, for $T \in \mathcal{T}_h$, we can write
+where $V_{h,0} = V_h \cap H_0^1(\Omega)$. As before, we consider $V_h$ given by \eqref{eq:fespace_1d} and a discretization $\mathcal{T}_h$ of the interval $[0,L]$, i.e. $\mathcal{T}_h = \{ [x_i,x_{i+1}] \}_{i=0}^N$. In this case, for $T \in \mathcal{T}_h$, we can write
 \begin{equation}
     u_h(x,t)\Big|_T = \sum_{i=1}^3 p_i(x)u_i(t),
 \end{equation}
@@ -1504,7 +1529,7 @@ Then, we can update the displacements $\*U_{k+1}^{n+1} = \*U_k^{n+1} + \Delta \*
 \end{equation}
 In this case, the fully discrete linear system of equations \eqref{eq:mol_first_order_linear} completely coincides with \eqref{eq:rothe_first_order_linear}. However, the structure of the MOL allows for more vectorized operations, which can eventually reduce the computational time of solvers and reduce roundoff errors.
 
-{\color{blue}\begin{remark}[Implementation of boundary condtions]
+\begin{remark}[Implementation of boundary condtions]
     Let us rewrite the system of equations \eqref{eq:mol_first_order_linear} as:
     \begin{equation} \label{eq:mol_bc_1}
         \bm{\mathcal{A}}_k^{n+1} \Delta \*U_{k}^{n+1} = \bm{\Upsilon}_k^{n+1},
@@ -1541,7 +1566,7 @@ In this case, the fully discrete linear system of equations \eqref{eq:mol_first_
     \begin{equation}
         \bm{\mathcal{A}}_{k,11}^{n+1} \Delta \*U_{k,I}^{n+1} = \bm{\Upsilon}_{k,I}^{n+1} - \bm{\mathcal{A}}_{k,12}^{n+1} \bm{\Upsilon}_{k,D}^{n+1}.
     \end{equation}
-\end{remark}}
+\end{remark}
 
 \section{Newmark schemes} \label{sec:newmark_schemes}
 
@@ -1752,8 +1777,8 @@ where $E$, $\kappa$, and $\nu$ are the Young's modulus, bulk modulus, and Poisso
 \end{subequations}
 where $T>0$ and $\Omega = (0,L)$. Therefore, with the problem being linear, we expect to see convergence in time of order $r_t=1$ for the first order time stepping scheme, and order $r_t=2$ for the Newmark and HHT-$\alpha$ schemes. Moreover, for all three time stepping schemes, we expect convergence in space of order $r_x = 3$ \cite{ErnGuermondBook}. 
 
-Let us consider $\kappa = 1 \ \text{GPa}$, $\nu = 0.499$, $\rho_0 = 1060 \ \text{kg} \, \text{m}^{-3}$, $L = 500 \ \text{mm}$, $T = 500 \text{ms}$, and a boundary condition $g(t) = 0.1t^3$. {\color{blue}The particular choice of these parameters is meant to resemble those found in skeletal muscle. In particular, the Poisson's ratio being close to 0.5 represents the quasi-incompressibility of skeletal muscle \cite{BaskinPaolini}.}
-In this case, while the exact solution to \eqref{eq:elasticity_linear} could be computed using Fourier series, we cannot reliably use this expression as any truncation of this series will lead to high oscillations at the ends of the interval (Gibbs phenomenon). Therefore, we decide to compute an ``exact'' solution by taking a sufficiently small $\Delta t$ or $\Delta x$. We emphasize that both the exact solution and its approximations will be computed using the same solver (i.e. an \textit{intrasolver} study). {\color{blue}We avoid intersolver comparisons due to the choice of material, as it can potentially cause the solver to ``lock'', i.e. there will be a point where errors will stop decreasing regardless of how small $\Delta x$ is taken \cite{BabushkaSuri1992}.}
+Let us consider $\kappa = 1 \ \text{GPa}$, $\nu = 0.499$, $\rho_0 = 1060 \ \text{kg} \, \text{m}^{-3}$, $L = 500 \ \text{mm}$, $T = 500 \text{ms}$, and a boundary condition $g(t) = 0.1t^3$. The particular choice of these parameters is meant to resemble those found in skeletal muscle. In particular, the Poisson's ratio being close to 0.5 represents the quasi-incompressibility of skeletal muscle \cite{BaskinPaolini}.
+In this case, while the exact solution to \eqref{eq:elasticity_linear} could be computed using Fourier series, we cannot reliably use this expression as any truncation of this series will lead to high oscillations at the ends of the interval (Gibbs phenomenon). Therefore, we decide to compute an ``exact'' solution by taking a sufficiently small $\Delta t$ or $\Delta x$. We emphasize that both the exact solution and its approximations will be computed using the same solver (i.e. an \textit{intrasolver} study). We avoid intersolver comparisons due to the choice of material, as it can potentially cause the solver to ``lock'', i.e. there will be a point where errors will stop decreasing regardless of how small $\Delta x$ is taken \cite{BabushkaSuri1992}.
 
 With this in mind, we first, fix the space mesh size to $\Delta x = L/8 = 62.5 \ \text{mm}$ and decrease the time step size from $10 \ \text{ms}$ to $0.1 \ \text{ms}$. In this case, for an exact solution computed with $\Delta t = 0.01 \ \text{ms}$, we see from the third column in Table \ref{tab:convergence_linear_elasticty_1d} that Rothe-First order and MOL-First order achieve a rate of convergence of 1, while the rest of the methods achieve a rate of convergence of 2, as expected. Next, we fix the time step size to $\Delta t = 10 \ \text{ms}$ and decrease the space mesh size from 125 mm to 7.8125 mm (or equivalently, increase the number of elements in the interval, from 4 to 64). In this case, for an exact solution computed with $\Delta x = 1.953125 \ \text{mm}$ (i.e. 256 elements), we observe from the sixth column in Table \ref{tab:convergence_linear_elasticty_1d} that all methods converge with a rate equal to 3, as expected.
 
@@ -1817,7 +1842,7 @@ where similar to \eqref{eq:force_neohookean}, $\mathcal{L}_\lambda$ and $\mathca
 \begin{equation}
     \mathcal{L}_{\lambda} = \dfrac{\kappa\nu}{(1-\nu)(1-2\nu)}, \quad \mathcal{L}_{\mu} = \dfrac{\kappa}{2(1+\nu)},
 \end{equation}
-$\kappa$ is the bulk modulus, and $\nu$ the Poisson ratio. Furthermore, consider a rod with $\rho_0 = 1060$ \si{kg.m^{-3}}, $\kappa = 1$ \si{GPa}, $\nu = 0.4$, $L = 100$ \si{mm}, and a simulation end time $T = 2$ s. {\color{blue}Note that we have chosen $\rho_0$ and $\kappa$ as in Section \ref{sec:neohookean_convergence_studies}, but we have reduced the value of $\nu$ to obtain more interpretable results.}
+$\kappa$ is the bulk modulus, and $\nu$ the Poisson ratio. Furthermore, consider a rod with $\rho_0 = 1060$ \si{kg.m^{-3}}, $\kappa = 1$ \si{GPa}, $\nu = 0.4$, $L = 100$ \si{mm}, and a simulation end time $T = 2$ s. Note that we have chosen $\rho_0$ and $\kappa$ as in Section \ref{sec:neohookean_convergence_studies}, but we have reduced the value of $\nu$ to obtain more interpretable results.
 
 Our experiment consists in lengthening the rod from an initial length $L$ to a length $(1+A)L$, where $A=0.1$ (i.e. 10\% strain), using three different strain profiles:
 \begin{enumerate}
@@ -1956,8 +1981,8 @@ each Matlab solver. As expected, most of the non-stiff
 solvers did not work (they would achieve $\lambda = \partial_x u + 1 \leq 0$ at
 some iteration), with the exception being \texttt{ode113}. This is a variable-step, variable-order (VSVO) Adams-Bashforth-Moulton PECE (Predict-Evaluate-Correct-Evaluate) solver that uses orders up to 12 but applies a 13th-order formula for error estimation and local extrapolation. As a multistep solver, it relies on solutions from several previous time points to compute the current step. It can be more efficient than \texttt{ode45} for stringent tolerances or when evaluating the ODE function is particularly costly \cite{ShampineReichelt1997}.
 
-{\color{blue}The solver \texttt{ode23tb} gave the best results. Not only it took
-the shortest time to compute a solution but also allowed for the largest time step of all Matlab solvers. However, the relatively crude tolerance chosen to run these experiments might have played a fundamental role. According to \cite{ShampineReichelt1997}, \texttt{ode23tb} is an implicit Runge-Kutta solver based on the TR-BDF2 formula, combining a trapezoidal rule step with a second-stage backward differentiation formula. It reuses the same iteration matrix for both stages, improving efficiency. Like \texttt{ode23s} and \texttt{ode23t}, it can be more efficient than \texttt{ode15s} for problems with crude tolerances.}
+The solver \texttt{ode23tb} gave the best results. Not only it took
+the shortest time to compute a solution but also allowed for the largest time step of all Matlab solvers. However, the relatively crude tolerance chosen to run these experiments might have played a fundamental role. According to \cite{ShampineReichelt1997}, \texttt{ode23tb} is an implicit Runge-Kutta solver based on the TR-BDF2 formula, combining a trapezoidal rule step with a second-stage backward differentiation formula. It reuses the same iteration matrix for both stages, improving efficiency. Like \texttt{ode23s} and \texttt{ode23t}, it can be more efficient than \texttt{ode15s} for problems with crude tolerances.
 
 We show, in particular, the velocities and the time step sizes for the solvers that finished their computation (according to Table \ref{tab:mol_matlab_solvers}) in Figure \ref{fig:sin_pull_matlab}. We observe that only \texttt{ode23s} and \texttt{ode23tb} computed velocities somewhat similar to those in Figure \ref{fig:sin_pull_vel}, but overshooting was still a problem in these solvers. Moreover, the time step size chosen by these solvers was in line with the one considered for Figure \ref{fig:sin_pull_vel}.
 
@@ -1995,12 +2020,12 @@ If studying Neo-Hookean dynamics was our ultimate goal, the conclusion would be 
 Furthermore, from the experiments performed with the IMEX scheme \eqref{eq:TS-mol-imex}, as well as with Matlab's built in solvers, we expect that problems of this flavour will require rather small time step sizes. This does not contradict the unconditional stability of the fully implicit schemes presented here. While larger time step sizes are allowed for a linear problem, taking one that is too large in a nonlinear problem can lead to a loss of convergence in the nonlinear solver. 
 
 At this juncture, choosing which method to use becomes a software engineering decision. On the one hand, choosing the Rothe-First order method would allow us to reuse some of the computational developments by Dominguez \cite{Seba} and implement them in a fully dynamic code. Thus, that code would only need to be \textit{refactored} for our purposes. Moreover, this choice would allow for adaptive refinement to be added in the future. On the other hand, moving forward with a MOL approach would require us to almost completely \textit{rewrite} the code developed in \cite{Seba}. Therefore, we decide to discretize the 3D dynamic model using Rothe-First order method \eqref{eq:rothe_first_order}. 
-{\color{blue}The choice of a first-order over a second-order method is also justified by the fact that one way to reduce the spurious oscillations in Newmark's methods is to take $\gamma > 1/2$, at the expense of losing second-order convergence \cite[Remark X.X]{raviartthomas}.}
+The choice of a first-order over a second-order method is also justified by the fact that an alternative way to reduce the spurious oscillations in methods such as Newmark's is precisely to take $\gamma > 1/2$, at the expense of losing second-order convergence \cite[Section 8.6]{raviartthomas}.
 
 \section{Conclusion}
 
 We studied the performance of several time stepping schemes for one-dimensional nonlinear elasticity, and in particular, for Neo-Hookean deformation. The first set of methods (first order method, Newmark's method, and the HHT-$\alpha$ method, both in Rothe's and MOL frameworks) gave mixed results for nonsmooth boundary conditions. Only the Rothe-First order, MOL-First order, and MOL-HHT-$\alpha$ methods dealt successfully with overshooting. Next, we tested an IMEX scheme which performed poorly compared to the previous methods. In fact, this method only ran with a very small time step size. Finally, we tested some of Matlab's built-in solvers to assess the time step size they require to return a solution with rather large tolerances. We found that almost all the solvers designed for non-stiff problems, as well as some stiff ones, did not finish their computation. Indeed, only the \texttt{ode113} and \texttt{ode23tb} computed results comparable to those from the MOL-Newmark method (i.e. without dissipation of high-frequency oscillations).
-{\color{blue}These suggest a first-order implicit method is a good time stepping scheme candidate for the dynamic version of the full 3D model of skeletal muscle deformation.}
+These suggest a first-order implicit method is a good time stepping scheme candidate for the dynamic version of the full 3D model of skeletal muscle deformation.
 
 \part{Three-dimensional elastodynamics}
 
@@ -2415,6 +2440,19 @@ In the next sections, we describe the SEF for each one of the components, as wel
 
 \subsection{Muscle fibres}
 
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[square/.style={regular polygon,regular polygon sides=4}]
+                \node[inner sep=0pt] at (0,0)
+                    {\includegraphics[width=0.85\textwidth]{plot_FLV_stress.eps}};
+                %\node at (1.8,-1) [square,draw] {\large \phantom{A}};
+                %\draw[->] (2.2, -1) -- (3.8,-0.8);
+                \node[rotate=-35] at (-4.5,-3) {\small Fibre Strain Rate $\depsilon$};
+                \node[rotate=8] at (2.4,-3.9) {\small Fibre Stretch $\lambda$};
+            \end{tikzpicture}
+    \caption{Hill's model depicted as a manifold in which the fibre stretch $\lambda$ and the fibre strain rate $\depsilon$ can vary simultaneously according to \eqref{eq:def_hill_stress_sigma}. We also show the curves $\sigma_{Hill}(\lambda,0)/\sigma_0$ (red) and $\sigma_{Hill}(0,\depsilon)/\sigma_0$ (black), which correspond to the total force-length (FL) and force-velocity (FV) relationships in Figure \ref{fig:plot_FL_FV}. \label{fig:plot_FLV}}
+\end{figure}
+
 {\color{red}We assume that $\Psi_{fibre}$ is given implicitly by the equation:}
 \begin{equation} \label{eq:ode_fibre_sef}
     2 \I_4 \pder{\Psi_{fibre}}{\I_4} = \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}),
@@ -2423,7 +2461,19 @@ where $\sigma_{Hill}$ is Hill's muscle model written in terms of the maximum iso
 \begin{equation} \label{eq:def_hill_stress_sigma}
     \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}) = \sigma_{0,mus} \left( a(\*X,t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right).
 \end{equation}
-{\color{blue}In this expression, the active stress-stretch relationship $\sigma_A$, the stress-strain rate relationship $\widehat{\sigma}_V$, and the passive stress-stretch relationship $\widehat{\sigma}_P$ can be taken exactly as the active force-length $F_V$, force-velocity $F_V$, and passive force-length $F_P$ relationships in \eqref{eq:Hill_force}, respectively (all these quantities are dimensionless, see Appendix \ref{app:force_relationships}). Furthermore, we now allow the activation function to also vary in space.}
+{\color{blue}In this expression, the active stress-stretch relationship $\sigma_A$, the stress-strain rate relationship $\widehat{\sigma}_V$, and the passive stress-stretch relationship $\widehat{\sigma}_P$ can be taken exactly as the active force-length $F_V$, force-velocity $F_V$, and passive force-length $F_P$ relationships in \eqref{eq:Hill_force}, respectively (all these quantities are dimensionless, see Appendix \ref{app:force_relationships}). Furthermore, we now allow the activation function to also vary in space. For the special case when $a \equiv 1$, we portray this two-dimensional manifold in Figure \ref{fig:plot_FLV}.}
+
+%\begin{figure}
+%    \centering
+%    \begin{tikzpicture}[square/.style={regular polygon,regular polygon sides=4}]
+%        \node[inner sep=0pt] at (0,0)
+%            {\hspace{-3.5em}\includegraphics[width=1.18\textwidth]{force-curves-1D.png}};
+%        \node at (1.8,-1) [square,draw] {\large \phantom{A}};
+%        \draw[->] (2.2, -1) -- (3.8,-0.8);
+%    \end{tikzpicture}
+%    \caption{Force-relationships in use.}
+%    \label{fig:force_curves_1D}
+%\end{figure}
 
 Using Equation \eqref{eq:def_S_bar}, the corresponding fictitious PK2 stress $\bar{\*S}_{fibre}$ can be computed as:
 \begin{equation}
@@ -2749,6 +2799,7 @@ Before jumping into the linearization of the nonlinear problem \eqref{eq:LF_weak
         \widetilde{R}(\*U^{n+1},p^{n+1},D^{n+1} ; \delta\*U, \delta p, \delta D) = 0,
     \end{equation}
     for any $\delta\*U \in \*H_0^1(\B_0)$, $\delta p \in L^2(\B_0)$, and $\delta D \in L^2(\B_0)$, where
+    \vspace*{-0.5em}
     \begin{align} \label{eq:def_R_EF}
         \notag \widetilde{R}(\*U^{n+1},&p^{n+1},D^{n+1} ; \delta\*U, \delta p, \delta D) := \\
         \notag &\Delta t^{-2} \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta \*U + \int_{\B_0} \btau(\*U^{n+1},\*V^n, p^{n+1}, D^{n+1}) : \nabla^S_0(\delta\*U) \, \*F(\*U^{n+1})^{-1} \\
@@ -2905,7 +2956,7 @@ At this juncture, we emphasize that these expressions are meant to be evaluated 
 \begin{align}
     \notag \pder{\sigma_{Hill}(\I_4^{n+1})}{\I_4^{n+1}} &= \pder{\sigma_{Hill}(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \pder{\bar{\lambda}^{n+1}_k}{\I_4^{n+1}} +  \pder{\sigma_{Hill}(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k)}{\bar{\depsilon}^{n+1}_k} \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} \pder{\bar{\lambda}^{n+1}_k}{\I_4^{n+1}} \\
     \notag &= \sigma_{0,mus} \left[ a^{n+1} \der{\widehat{\sigma}_L(\bar{\lambda}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \widehat{\sigma}_V(\bar{\depsilon}^{n+1}_k) + \der{\widehat{\sigma}_P(\bar{\lambda}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \right] \dfrac{1}{2\bar{\lambda}^{n+1}_k} \\
-    &\hspace{9em}+ \sigma_{0,mus} a^{n+1} \widehat{\sigma}_L(\bar{\lambda}^{n+1}_k) \der{\sigma_{V}(\bar{\depsilon}^{n+1}_k)}{\bar{\depsilon}^{n+1}_k} \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} \dfrac{1}{2\bar{\lambda}^{n+1}_k}.
+    &\hspace{8em}+ \sigma_{0,mus} a^{n+1} \widehat{\sigma}_L(\bar{\lambda}^{n+1}_k) \der{\sigma_{V}(\bar{\depsilon}^{n+1}_k)}{\bar{\depsilon}^{n+1}_k} \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} \dfrac{1}{2\bar{\lambda}^{n+1}_k}.
 \end{align}
 
 In particular, following the definition of the modified strain rate $\bar{\depsilon}$ in \eqref{eq:def_strain_rate_bar}$_2$ we consider:
@@ -2931,11 +2982,10 @@ Therefore, the full expression for $J^{4/3} \bar{\C}_{fibre}^{n+1}$ reads:
 \end{equation}
 where
 \begin{align}
-    \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) = &- \dfrac{2}{\left( \bar{\lambda}^{n+1}_k \right)^4} \, \sigma_{0,mus} a^{n+1} \widehat{\sigma}_L(\bar{\lambda}^{n+1}_k) \widehat{\sigma}_V(\bar{\depsilon}^{n+1}_k) \\
+    \notag \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) = &- \dfrac{2}{\left( \bar{\lambda}^{n+1}_k \right)^4} \, \sigma_{0,mus} a^{n+1} \widehat{\sigma}_L(\bar{\lambda}^{n+1}_k) \widehat{\sigma}_V(\bar{\depsilon}^{n+1}_k) \\
     \notag &+ \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} a^{n+1} \der{\widehat{\sigma}_L}{\bar{\lambda}} \left( \bar{\lambda}^{n+1}_k \right) \widehat{\sigma}_V(\bar{\depsilon}^{n+1}_k) \\
     \notag &+ \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} a^{n+1} \widehat{\sigma}_L(\bar{\lambda}^{n+1}_k) \der{\widehat{\sigma}_V}{\bar{\depsilon}} \left( \bar{\depsilon}^{n+1}_k \right) \dfrac{1}{\depsilon_0 \Delta t} \\
-    \notag &- \dfrac{2}{\left( \bar{\lambda}^{n+1}_k \right)^4} \, \sigma_{0,mus} \widehat{\sigma}_P(\bar{\lambda}^{n+1}_k) \\
-    &+ \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} \der{\widehat{\sigma}_P}{\bar{\lambda}} \left( \bar{\lambda}^{n+1}_k  \right)
+    &- \dfrac{2}{\left( \bar{\lambda}^{n+1}_k \right)^4} \, \sigma_{0,mus} \widehat{\sigma}_P(\bar{\lambda}^{n+1}_k) + \dfrac{1}{\left( \bar{\lambda}^{n+1}_k \right)^3} \, \sigma_{0,mus} \der{\widehat{\sigma}_P}{\bar{\lambda}} \left( \bar{\lambda}^{n+1}_k  \right)
 \end{align}
 In this way,
 \begin{equation}

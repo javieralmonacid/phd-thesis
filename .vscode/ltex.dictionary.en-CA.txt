@@ -4,3 +4,5 @@ Neo-Hookean
 elastodynamic
 Rothe
 Newmark
+pennation
+Galerkin
