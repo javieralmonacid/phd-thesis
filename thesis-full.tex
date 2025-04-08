@@ -2031,28 +2031,35 @@ These suggest a first-order implicit method is a good time stepping scheme candi
 
 \chapter{A Lagrangian framework for a model of skeletal muscle tissue} \label{ch:lagrangian_formulation}
 
-In this Chapter, we focus on the development of the theoretical background for a 3D solver of dynamic skeletal muscle deformation, which we shall call \textit{Flexodeal}. Some parts of this Chapter have been published in:
+In this Chapter, we focus on the development of the theoretical background for a 3D finite element code base for dynamic skeletal muscle deformation, which we shall call \textit{Flexodeal}. Some parts of this Chapter have been published in:
 
 \medskip
 \noindent \bibentry{AlmonacidEtAl2022_SIAP_Paper}
 \medskip
 
-First, we introduce some concepts of continuum mechanics that are required to understand problems of large deformation of transversely isotropic materials. Then, we describe a series of models for the different components of the muscle-tendon unit (MTU) that have been previously introduced. Next, we rewrite the dynamic model introduced by Dominguez \cite{Seba} in a different frame of reference to obtain a more compact formulation with fully computable terms. Finally, we discretize the continuous problem using a first-order fully-implicit time stepping scheme and introduce a new nonlinear formulation, to then provide details on its linearization. 
+Compared to a quasi-static framework, the elastodynamics of striated tissues require careful consideration of the velocity variable, and in particular, of the along-fibre strain rate, both from an analytical and numerical standpoint. The treatment of this variable is crucial in developing a robust numerical scheme for fully dynamic, fully active muscle deformation.
 
+First, we introduce some concepts of continuum mechanics that are required to understand problems of large deformation of transversely isotropic materials. Then, we describe a series of models for the different components of the muscle-tendon unit (MTU) that been introduced in works such as those by Rahemi et al. \cite{RahemiNigamWakeling2015}, Wakeling et al. \cite{Paper1_WakelingEtAl2020}, Konno et al. \cite{KonnoNigamWakeling2021_ECM}, and others. Next, we rewrite the dynamic model introduced by Dominguez \cite{Seba} in a different frame of reference to obtain a more compact formulation with fully computable terms. Finally, we discretize the continuous problem using a first-order fully-implicit time stepping scheme and introduce a new nonlinear formulation, providing the linearization needed as part of a Newton iteration.
 
 \section{Elements of continuum mechanics}
 
-This section provides a review of concepts in continuum mechanics that will be used throughout this work. Most of the content has been extracted from \cite{BonetGillWood2021Book,HolzapfelBook}.
+{\color{blue}This section provides a review of concepts in continuum mechanics that will be used throughout this Chapter. The contents are based on the books by Bonet et al. \cite{BonetGillWood2021Book} and Holzapfel \cite{HolzapfelBook}, with some additional, newly-derived expressions to improve our understanding of the along-fibre dynamics}
 
 \subsection{Kinematics} \label{sec:kinematics}
 
-Let $\B_0 \subset \R^3$ denote the \textit{reference} configuration of a deformable body with a smooth boundary $\partial \B_0$. For each time $t > 0$, we consider an invertible motion $\bphi(\cdot, t):\B_0 \to \R^3$ that maps \textit{material} coordinates $\*X \in \B_0$ into \textit{spatial} coordinates $\*x := \bphi(\*X, \cdot)$, that is,
+\begin{figure}
+    \centering
+    \includegraphics[width=0.50\textwidth]{placeholder-img.jpg}
+    \caption{TBD \label{fig:potato_B0_Bt}}
+\end{figure}
+
+Let $\B_0 \subset \R^3$ denote the \textit{reference} configuration of a deformable body with a smooth boundary $\partial \B_0$. For each time $t > 0$, we consider an invertible motion $\bphi(\cdot, t):\B_0 \to \R^3$ that maps \textit{material} coordinates $\*X \in \B_0$ into \textit{spatial} coordinates $\*x \in \B_t$ (see Figure \ref{fig:potato_B0_Bt}), as follows:
 \begin{equation}
 \*x = \bphi(\*X,t), \quad \*X = \bphi^{-1}(\*x,t).
 \end{equation}
-Then, we denote the set on which the spatial coordinates live as $\B_t := \bm{\varphi}(\B_0, t)$, which we call the \textit{current} configuration of the body with reference configuration $\B_0$. Note that, at time $t=0$, we have the consistency condition $\*x = \*X$.
+Note that, at time $t=0$, we have the consistency condition $\*x = \*X$. The set $\B_t$ is referred to as the \textit{current} configuration of the body with reference configuration $\B_0$.
 
-We assume that the boundary $\partial \B_0$ is divided as $\partial \B_0 = \Gamma_{D,0} \cup \Gamma_{N,0}$, with $\Gamma_{N,0} \cap \Gamma_{D,0} = \emptyset$. The first part, $\Gamma_{D,0}$, corresponds to the part of the boundary for which displacements are set (e.g. a clamped face or a face that moves with a prescribed displacement). We refer to this part of the boundary as the ``Dirichlet'' boundary. In turn, $\Gamma_{N,0}$, is the part of the boundary where tractions are set (e.g. faces with a predefined traction or traction-free faces). We refer to this part of the boundary as the ``Neumann'' boundary. Thus, it is natural to think that the motion $\bphi$ extends to the boundary of $\B_0$ and maps the Dirichlet and Neumann parts in the reference configuration to the current configuration (at time $t>0$) as $\Gamma_{D,t} := \bphi(\Gamma_{D,0}, t)$ and $\Gamma_{N,t} := \bphi(\Gamma_{N,0}, t)$.
+We also assume that the boundary $\partial \B_0$ is divided as $\partial \B_0 = \Gamma_{D,0} \cup \Gamma_{N,0}$, with $\Gamma_{N,0} \cap \Gamma_{D,0} = \emptyset$. The first part, $\Gamma_{D,0}$, corresponds to the part of the boundary for which displacements are set (e.g. a clamped face or a face that moves with a prescribed displacement). We refer to this part of the boundary as the ``Dirichlet'' boundary. In turn, $\Gamma_{N,0}$, is the part of the boundary where tractions are set (e.g. faces with a predefined traction or traction-free faces). We refer to this part of the boundary as the ``Neumann'' boundary. Thus, it is natural to think that the motion $\bphi$ extends to the boundary of $\B_0$ and maps the Dirichlet and Neumann parts in the reference configuration to the current configuration (at time $t>0$) as $\Gamma_{D,t} := \bphi(\Gamma_{D,0}, t)$ and $\Gamma_{N,t} := \bphi(\Gamma_{N,0}, t)$ (see Figure \ref{fig:potato_B0_Bt}).
 
 We now define the \textit{material} and \textit{spatial displacements fields} $\*U$ and $\*u$ respectively as
 \begin{equation}\label{eq:displacements}
@@ -2078,23 +2085,31 @@ Therefore, it is consistent to define the material velocity using expression  \e
 
 \subsection{Material and spatial derivatives}
 
-Because material coordinates $\*X$ and spatial coordinates $\*x$ are related through the motion $\bphi$, we can take derivatives of displacement and velocity fields with respect to any of these two variables. We call a smooth scalar field $\mathcal{F} = \mathcal{F}(\cdot,t)$ a \textit{material field} if it depends on material coordinates. Similarly, we call a smooth scalar field $f(\cdot,t)$ a \textit{spatial field} if it depends on spatial coordinates. Whenever possible, we will write material and spatial fields using uppercase and lowercase letters respectively.
+Because material coordinates $\*X \in \B_0$ and spatial coordinates $\*x \in \B_t$ are related through the motion $\bphi$, we can take derivatives of displacement and velocity fields with respect to any of these two variables. We call a smooth scalar field $\mathcal{F} = \mathcal{F}(\cdot,t):\B_0 \to \R$ a \textit{material field} if it depends on material coordinates. Similarly, we call a smooth scalar field $f(\cdot,t):\B_t \to \R$ a \textit{spatial field} if it depends on spatial coordinates. Whenever possible, we will write material and spatial fields using uppercase and lowercase letters respectively.
 
-First, the \textit{material time derivative of a material field} is given by
+The \textit{material time derivative of a material field} is defined by
 \begin{equation}
 \dot{\F}(\*X,t) \equiv \Dder{\F(\*X,t)}{t} := \pder{\F(\*X,t)}{t} \bigg|_{\*X},
 \end{equation}
 that is, the partial derivative of $\F$ with respect to $t$ while holding $\*X$ constant (as usual). In particular, $\*V = \dot{\*U}$ and we may define the \textit{material acceleration field} as $\*A := \dot{\*V} = \ddot{\*U}$.
 
-Next, we denote the \textit{material gradient} of a scalar field $\F(\*X,t)$ and the \textit{material divergence} of a material vector field $\FF(\*X,t)$ respectively as\footnote{The Einstein summation convention will be used throughout this Chapter.}:
-\begin{equation}
-\nabla_0 \F(\*X,t) := \pder{\F(\*X,t)}{\*X}, \quad \Divs{\FF(\*X,t)} := \pder{\F_i(\*X,t)}{X_i}.
+Furthermore, we denote the \textit{material gradient} of a scalar field $\F(\*X,t)$ and the \textit{material divergence} of a material vector field $\FF(\*X,t):\B_0 \to \R^3$ respectively as:
+\begin{equation} \label{eq:def_Div}
+\nabla_0 \F(\*X,t) := \pder{\F(\*X,t)}{\*X}, \quad \Divs{\FF(\*X,t)} := \pder{\F_A(\*X,t)}{X_A}.
 \end{equation}
 
-Similarly, we denote the \textit{spatial time derivative of a spatial field} $f(\*x,t)$ by $\pder{f(\*x,t)}{t}$. We also define its \textit{spatial gradient} and the \textit{spatial divergence} of a vector field $\*f(\*x,t)$ by:
-\begin{equation}
-\nabla f(\*x,t) := \pder{f(\*x,t)}{\*x}, \quad \divs{\*f(\*x,t)} := \pder{f_i(\*x,t)}{x_i}.
+We denote the \textit{spatial time derivative of a spatial field} $f(\*x,t)$ by $\pder{f(\*x,t)}{t}$. We also define its \textit{spatial gradient} and the \textit{spatial divergence} of a vector field $\*f(\*x,t):\B_t \to \R^3$ by:
+\begin{equation} \label{eq:def_div}
+\nabla f(\*x,t) := \pder{f(\*x,t)}{\*x}, \quad \divs{\*f(\*x,t)} := \pder{f_a(\*x,t)}{x_a}.
 \end{equation}
+
+\begin{remark}[Subscript notation] \label{re:subscript_notation}
+    In the previous expressions, and throughout the reminder of this document, we use the Einstein summation convention to express tensor operations in terms of its components. In particular, the divergence expressions in \eqref{eq:def_Div}\textsubscript{2} and \eqref{eq:def_div}\textsubscript{2} should be understood as:
+    \[
+        \Divs{\FF} = \sum_{A = 1}^3 \pder{\F_A}{X_A}, \quad \divs{\*f} = \sum_{a=1}^3 \pder{f_a}{x_a}.
+    \]
+    Whenever possible, we will use uppercase subscripts to denote the components of a material quantity, and lowercase subscripts for a spatial quantity.
+\end{remark}
 
 With these definitions in mind, we can now write an expression for the \textit{material derivative of a spatial field} $f(\*x,t)$. To do this, we first map $f$ to the material description using the motion $\bphi$, then we take the material time derivative of this field, and then map back the result to the spatial description. Formally, we can write this as:
 \begin{equation} \label{eq:material_derivative_def}
@@ -2106,39 +2121,49 @@ Using the chain rule in Equation \eqref{eq:material_derivative_def}, we obtain t
 \end{equation}
 In the case of a vector field $\*f(\*x,t)$, the previous expression takes the form
 \begin{equation} \label{eq:material_derivative_vector}
-\dot{\*f}(\*x,t) \equiv \Dder{\*f(\*x,t)}{t} = \pder{\*f(\*x,t)}{t} + \big(\nabla \*f(\*x,t) \big) \, \*v(\*x,t) = \pder{f_i}{t}+\pder{f_i}{x_j}v_j.
+\dot{\*f}(\*x,t) \equiv \Dder{\*f(\*x,t)}{t} = \pder{\*f(\*x,t)}{t} + \big(\nabla \*f(\*x,t) \big) \, \*v(\*x,t) = \pder{f_a}{t}+\pder{f_a}{x_b}v_b.
 \end{equation}
 In both \eqref{eq:material_derivative} and \eqref{eq:material_derivative_vector}, the terms $\nabla f \cdot \*v$ and $(\nabla \*f) \*v$ are usually referred to as \textit{convective} terms because they appear multiplied by the spatial velocity $\*v(\*x,t)$.
 
 \subsection{Deformation gradient}
 
-The primary measure of deformation in nonlinear continuum mechanics is given by the \textit{deformation gradient tensor} $\*F$, which is defined as
+The primary measure of deformation in nonlinear continuum mechanics is given by the \textit{deformation gradient tensor} $\*F$ (with components $F_{aA}$, $1\leq a,A \leq 3$), which is defined as
 \begin{equation} \label{eq:def_F}
-\*F(\*X,t) := \pder{\bphi(\*X,t)}{\*X} = \nabla_0 \*x(\*X,t), \quad \*F^{-1}(\*x,t) = \pder{\bphi^{-1}(\*x,t)}{\*x} = \nabla \*X(\*x,t).
+\*F(\*X,t) := \pder{\bphi(\*X,t)}{\*X} = \nabla_0 \*x(\*X,t), \quad \text{i.e.} \quad F_{aA} := \pder{x_a}{X_A},
 \end{equation}
-Moreover, we define the volume ratio $J$ as
+with its inverse given by
+\begin{equation}
+    \*F^{-1}(\*x,t) = \pder{\bphi^{-1}(\*x,t)}{\*x} = \nabla \*X(\*x,t), \quad \text{i.e.} \quad F^{-1}_{Aa} := \pder{X_A}{x_a}.
+\end{equation}
+Moreover, we define the volume ratio $J$ as:
 \begin{equation}
 J(\*X,t) := \det \*F(\*X,t).
 \end{equation}
 Note that as long as the motion $\bphi$ is invertible, $\det \*F \neq 0$. Also, because volume elements cannot have negative volumes, we cannot have $\det \*F < 0$. Hence, we will always have $\det \*F > 0$. 
 
-Sometimes we refer to the volume ratio $J$ as the \textit{Jacobian determinant} because it provides a way to map infinitesimal elements in the reference configuration to the current configuration. Indeed, given infinitesimal elements $dV$, $dS$ in the interior and boundary of the reference configuration $\B^0$ respectively; and $dv$, $ds$ in the interior and boundary of the current configuration $\B_t$, we have 
+Sometimes we refer to the volume ratio $J$ as the \textit{Jacobian determinant} because it provides a way to map infinitesimal elements in the reference configuration to the current configuration. Indeed, given infinitesimal elements $dV$, $dS$ in the interior and boundary of the reference configuration $\B_0$ respectively; and $dv$, $ds$ in the interior and boundary of the current configuration $\B_t$, we have 
 \begin{equation} \label{eq:differentials}
 dv = J(\*X,t) \, dV, \quad \*n \, ds = J \*F^{-T} \*N \, dS, 
 \end{equation}
-where $\*n$, $\*N$ denote the normal vectors on the surface of the current and reference configurations, respectively. The last equality in this equation is the well-known \textit{Nanson's formula}.
+where $\*n$, $\*N$ denote the normal vectors on the surface of the current and reference configurations, respectively (see Figure \ref{fig:potato_dv_ds}). The last equality in this equation is the well-known \textit{Nanson's formula}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{placeholder-img.jpg}
+    \caption{Transformation of volume and surface elements.\label{fig:potato_dv_ds}}
+\end{figure}
 
 Instead of referring to the deformation gradient by its definition \eqref{eq:def_F}, we will often use its expression in terms of the displacement gradient, i.e.,
 \begin{equation} \label{eq:real_def_of_F}
 \*F(\*X,t) = \*I + \nabla_0 \*U(\*X,t) , \quad \*F^{-1}(\*x,t) = \*I - \nabla \*u(\*x,t),
 \end{equation}
-where $\*I$ is the standard second-order identity tensor. In addition, the deformation gradient can be used to establish the following relationships between the material gradient and material divergence, and the spatial gradient and spatial divergence of smooth scalar, vector and tensor fields $\phi$, $\*w$, and $\*A$, respectively:
+where $\*I$ is the standard second-order identity tensor. In addition, the deformation gradient can be used to establish the following relationships between material and spatial gradients and divergences of smooth scalar, vector, and tensor fields $\phi$, $\*w$, and $\*A$:
 \begin{align}
 \nabla \phi &= \*F^{-T} \, \nabla_0 \phi = F^{-1}_{Aa} \pder{\phi}{X_A} \\
 \label{eq:transform_2}\nabla \*w &= \nabla_0 \*w \, \*F^{-1} = \pder{w_a}{X_A} F^{-1}_{Ab}, \\
 \label{eq:transform_3}\divt{\*A} &= \nabla_0 \*A : \*F^{-T} = \pder{A_{ab}}{X_B} F^{-1}_{Bb},
 \end{align}
-where the tensorial divergence is given by $\divt{\*A} := \pder{A_{ab}}{x_b}$.
+where the tensorial divergence is given by $\divt{\*A} := \pder{A_{ab}}{x_b}$ (the notation here follows Remark \ref{re:subscript_notation}).
 
 \subsection{Rates of deformation tensors}
 
@@ -2170,7 +2195,15 @@ is the \textit{rate of rotation tensor} or \textit{vorticity tensor}. %Note that
 
 \subsection{Fundamental strain tensors, fibre stretch, and fibre strain rate}
 
-We define the \textit{left} and \textit{right Cauchy-Green tensors} respectively as
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{placeholder-img.jpg}
+    \caption{Deformation of a line element. \label{fig:potato_line_element}}
+\end{figure}
+
+In elasticity, one of the primary focuses is determining the distribution of strains and stresses throughout the entire body. However, when analyzing skeletal muscle deformation, an additional key aspect is the deformation along the muscle fibres. This along-fibre deformation is critical for understanding muscle function, as it directly influences force transmission, tissue mechanics, and physiological behaviour. 
+
+Consider the \textit{left} and \textit{right Cauchy-Green strain tensors}, defined respectively:
 \begin{equation}
     \*C = \*F^\T \*F \quad \text{or} \quad C_{AB} = F_{aA} F_{aB},
 \end{equation}
@@ -2178,19 +2211,18 @@ and
 \begin{equation}
     \*b = \*F \*F^\T \quad \text{or} \quad b_{ab} = F_{aA} F_{bA}.
 \end{equation}
-They represent strain measures in \textit{material} and \textit{spatial} coordinates, respectively. 
-
-The quantity that characterizes how a material line element changes in length from the reference to the current configuration is the \textit{stretch ratio} (or simply called the \textit{stretch}):
+%They represent strain measures in \textit{material} and \textit{spatial} coordinates, respectively. 
+Let $d\bm{\ell}_0 = d\epsilon \*a_0$ be a line element in the reference configuration $\B_0$ with unit orientation vector $\*a_0$. Furthermore, let $d\bm{\ell} = \lambda d\epsilon \*a$ be the deformed version of $d\bm{\ell}$ in the current configuration $\B_t$ with unit orientation vector $\*a$ (see Figure \ref{fig:potato_line_element}). The quantity $\lambda$, known as the \textit{stretch}, characterizes how a material line element changes in length from the reference to the current configuration:
 \begin{equation} \label{eq:def_lambda}
 \lambda(\*X,t) := |\*F(\*X,t) \*a_0| = \sqrt{\*a_0^\T \*C \*a_0},
 \end{equation}
-where $\*a_0$ is a unit vector describing the initial orientation of the material line element. Given that $\*a_0$ can be imagined as the orientation of a \textit{fibre} passing through $(\*X,t) \in \B_0$, we refer to $\lambda(\*X,t)$ as the \textit{fibre stretch}. 
+Given that $\*a_0$ can be imagined as the orientation of a \textit{fibre} passing through $\*X \in \B_0$, we will refer to $\lambda(\*X,t)$ as the \textit{fibre stretch}. 
 
-We also define the \textit{fibre strain rate} as the time derivative of the fibre stretch, normalized by a factor $\depsilon_0$ representing the maximum strain rate at which the material element can deform:
+Consequently, we define the \textit{fibre strain rate} as the time derivative of the fibre stretch, normalized by a factor $\depsilon_0$, typically representing the maximum strain rate at which a material element is allowed deform:
 \begin{equation} \label{eq:def_epsilon}
-\depsilon(\*X,t) := \dfrac{1}{\depsilon_0} \dot{\lambda}(\*X,t) = \dfrac{1}{\depsilon_0} \dfrac{(\*F(\*X,t)  \*a_0)^\T \, \*d(\*x,t)  \, \*F(\*X,t)  \*a_0}{\lambda(\*X,t)}
+\depsilon(\*X,t) := \dfrac{1}{\depsilon_0} \dot{\lambda}(\*X,t) = \dfrac{1}{\depsilon_0} \dfrac{(\*F(\*X,t)  \*a_0)^\T \, \*d(\*x,t)  \, \*F(\*X,t)  \*a_0}{\lambda(\*X,t)},
 \end{equation}
-where the last equality arises from taking an implicit time derivative in \eqref{eq:def_lambda} and the fact that $\dot{\*C} = 2\*F^\T \*d \*F$ (cf. \cite[Eq. (2.168)]{HolzapfelBook}). 
+where the last equality arises from taking an implicit time derivative in \eqref{eq:def_lambda} and the fact that $\dot{\*C} = 2\*F^\T \*d \*F$ (cf. \cite[Eq. (2.168)]{HolzapfelBook}). The normalization of this quantity is consistent with the definition of the one-dimensional strain rate in \eqref{eq:def_stretch_strain_rate_muscle} and \eqref{eq:def_strain_rates_stability}.
 
 \subsection{Stress tensors}
 
@@ -2208,11 +2240,11 @@ Other stress tensors that will be used in this document are the (spatial) \texti
 \begin{equation}
     \btau = J \bsigma,
 \end{equation}
-and the (material) \textit{second Piola-Kirchhoff stress tensor} (PK2), which can be obtained as a pull back operation on $\btau$, that is:
+and the (material) \textit{second Piola-Kirchhoff stress tensor} (PK2), which can be obtained as a pull-back operation on $\btau$, that is:
 \begin{equation} \label{eq:def_PK2}
     \*S = \*F^{-1} \btau \*F^{-\T}.
 \end{equation}
-Thus, $\*S$ is a symmetric tensor. Moreover, this last equation gives us an important relationship that will be used in this work:
+Thus, $\*S$ is a symmetric tensor. Moreover, this last equation gives us another important relationship that will be used in this work:
 \begin{equation} \label{eq:push_forward_tau}
 \btau = \*F \*S \*F^{\T}.
 \end{equation}
@@ -2248,27 +2280,30 @@ where $\P^\T$ is the transpose of the fourth-order \textit{material projection t
 \end{equation}
 and $\mathbb{I}_{ABCD} := \frac{1}{2} \left( \delta_{AC} \delta_{BD} + \delta_{AB} \delta_{BC} \right)$ is the fourth-order symmetric identity tensor. Here, the transpose of $\P$ is given by $(\P^\top)_{IJKL} = \P_{KLIJ}$.
 
-Moreover, this multiplicative decomposition also yields a \textit{modified fibre stretch} $\bar{\lambda}$:
-\begin{equation} \label{eq:def_lambda_bar}
-\bar{\lambda} := \sqrt{\*a_0^\T \bar{\*C} \*a_0} = J^{-1/3} \lambda,
-\end{equation}
-as well as a \textit{modified fibre strain rate}:
-\begin{equation} \label{eq:def_strain_rate_bar}
-\bar{\depsilon} := \dfrac{1}{\depsilon_0} \dot{\bar{\lambda}} = \dfrac{1}{\depsilon_0} \dfrac{(\bar{\*F}\*a_0)^\T (\p : \*d) (\bar{\*F} \*a_0)}{\bar{\lambda}},
-\end{equation}
-where $\p$ is the fourth-order \textit{spatial projection tensor}:
-\begin{equation} \label{eq:def_projection_spatial}
-\p := \mathbb{I} - \dfrac{1}{3} \*I \otimes \*I.
-\end{equation}
-It is also called the \textit{deviatoric tensor} since, for example,
-\begin{equation}
-    \p : \*d = \*d - \dfrac{1}{3} \, \mathrm{tr}(\*d) \, \*I.
-\end{equation}
+\begin{remark}
+    This multiplicative decomposition yields a \textit{modified fibre stretch} $\bar{\lambda}$:
+    \begin{equation} \label{eq:def_lambda_bar}
+    \bar{\lambda} := \sqrt{\*a_0^\T \bar{\*C} \*a_0} = J^{-1/3} \lambda,
+    \end{equation}
+    as well as a \textit{modified fibre strain rate} $\bar{\depsilon}$, which we define as:
+    \begin{equation} \label{eq:def_strain_rate_bar}
+    \bar{\depsilon} := \dfrac{1}{\depsilon_0} \dot{\bar{\lambda}} = \dfrac{1}{\depsilon_0} \dfrac{(\bar{\*F}\*a_0)^\T (\p : \*d) (\bar{\*F} \*a_0)}{\bar{\lambda}},
+    \end{equation}
+    where $\p$ is the fourth-order \textit{spatial projection tensor}:
+    \begin{equation} \label{eq:def_projection_spatial}
+    \p := \mathbb{I} - \dfrac{1}{3} \*I \otimes \*I.
+    \end{equation}
+    Given that:
+    \begin{equation}
+        \p : \*d = \*d - \dfrac{1}{3} \, \mathrm{tr}(\*d) \, \*I,
+    \end{equation}
+    the tensor $\p$ is also called the ``deviatoric'' tensor.
+\end{remark}
 
 \begin{remark}
-    The original strain rate $\depsilon$ and the modified one $\bar{\depsilon}$ are related by the expression:
+    The original strain rate $\depsilon$ defined in \eqref{eq:def_epsilon} and the modified one $\bar{\depsilon}$ are related by the expression:
     \begin{equation}
-        \depsilon = J^{-1/3} \left[ \bar{\depsilon} + \dfrac{1}{3} \dfrac{\mathrm{tr}(\*d)}{\depsilon_0} \bar{\lambda} \right],
+        \depsilon = J^{1/3} \left[ \bar{\depsilon} + \dfrac{1}{3} \dfrac{\mathrm{tr}(\*d)}{\depsilon_0} \bar{\lambda} \right],
     \end{equation}
     which arises as a byproduct when deriving the expression for $\bar{\depsilon}$ in \eqref{eq:def_strain_rate_bar} using \eqref{eq:def_epsilon} and \eqref{eq:def_lambda_bar}.
 \end{remark}
@@ -2366,9 +2401,9 @@ The volumetric part, $\C_{vol}$, is given by (cf. \cite[Eq. (6.166)]{HolzapfelBo
 \end{equation}
 where
 \begin{equation}
--\left( \*C^{-1} \odot \*C^{-1} \right)_{ABCD} = -\dfrac{1}{2} \left( C_{AC}^{-1} C_{BD}^{-1} + C^{-1}_{AD} C^{-1}_{BC} \right).
+-\left( \*C^{-1} \odot \*C^{-1} \right)_{ABCD} := -\dfrac{1}{2} \left( C_{AC}^{-1} C_{BD}^{-1} + C^{-1}_{AD} C^{-1}_{BC} \right).
 \end{equation}
-In turn, the isochoric part, $\C_{iso}$, can be computed as (cf. \cite[Example 6.8]{HolzapfelBook}):
+The isochoric part, $\C_{iso}$, can be computed as (cf. \cite[Example 6.8]{HolzapfelBook}):
 \begin{equation}
 \C_{iso} = \P \, \bar{\C} \, \P^\T + \dfrac{2}{3} \left(J^{-2/3} \bar{\*S} : \*C \right) \tilde{\P} - \dfrac{2}{3} \left( \*C^{-1} \otimes \*S_{iso} + \*S_{iso} \otimes \*C^{-1} \right),
 \end{equation}
@@ -2401,9 +2436,9 @@ where $\bar{C}_{ABCD}$ is computed according to \eqref{eq:def_C_bar}. Note that 
     (\p \, \bar{\c} \, \p)_{klmn} = p_{klab} \, \bar{c}_{abcd} \, p_{cdmn}.
 \end{equation}
 
-\subsection{SEF for compressible, transversely isotropic materials}
+\subsection{A strain-energy function for compressible, transversely isotropic materials}
 
-In compressible, transversely isotropic materials (i.e., materials that are reinforced by only \text{one} family of fibres and that have a \text{single} preferred direction of deformation), the following general SEF can be established \cite{HolzapfelBook,Weiss1996}:
+In compressible, transversely isotropic materials (i.e., materials that are reinforced by only \text{one} family of fibres and that have a \text{single} preferred direction of deformation), the following general strain-energy function (SEF) can be established \cite{HolzapfelBook,Weiss1996}:
 \begin{equation} \label{eq:decomp_psi_transversely_isotropic}
     \Psi = \Psi(\*C,\*a_0 \otimes \*a_0) = \Psi_{vol}(J) + \Psi_{iso}(\I_1, \I_2, \I_4, \I_5).
 \end{equation}
@@ -2422,7 +2457,7 @@ For general expressions on the stress and elasticity tensors derived from the SE
 
 \section{Constitutive laws for skeletal muscle}
 
-Let us consider skeletal muscle tissue as a fibre-reinforced (i.e. transversely isotropic), composite, nearly incompressible hyperelastic material \cite{Seba, Hadi, Paper1_WakelingEtAl2020}. Furthermore, let us postulate the following SEF for skeletal muscle tissue:
+Let us consider skeletal muscle tissue as a fibre-reinforced (i.e. transversely isotropic), composite, nearly incompressible hyperelastic material \cite{Seba, Hadi, Paper1_WakelingEtAl2020}. Furthermore, let us postulate the following strain-energy function (SEF) for skeletal muscle tissue:
 \begin{equation}
     \Psi_{mus} = \Psi_{vol}(J) + \Psi_{iso}(\I_1, \I_4, \dot{\I}_4).
 \end{equation}
@@ -2430,11 +2465,11 @@ The volumetric part of the SEF $\Psi$ is given by:
 \begin{equation} 
     \Psi_{vol}(J) = \dfrac{\kappa}{4} \left( J^2 - 2\ln J - 1 \right),
 \end{equation}
-where $\kappa$ is the bulk modulus of muscle tissue. In this case, the bulk modulus may appear as a single constant or as a weighted combination of bulk moduli of the different tissue components (such as intramuscular fat, ECM, and cellular material; see below). In turn, the isochoric component of $\Psi$ takes the form:
+where $\kappa$ is the bulk modulus of muscle tissue. The bulk modulus may appear as a single constant or as a weighted combination of bulk moduli of the different tissue components (such as intramuscular fat, ECM, and cellular material; see below). The isochoric component of $\Psi$ takes the form:
 \begin{equation} \label{eq:def_Psi_iso_fibre_bm_fat}
     \Psi_{iso}(\I_1, \I_4, \dot{\I}_4) = (1-\chi_{fat}) \left( \Psi_{fibre}(\I_4, \dot{\I}_4) + \Psi_{bm}(\I_1) \right) + \chi_{fat} \Psi_{fat}(\I_1).
 \end{equation}
-Therefore, we are assuming that the material is made of fibres embedded in a base material, with responses given by $\Psi_{fibre}$ and $\Psi_{bm}$, respectively. Furthermore, their combined response is influenced by the fraction of intramuscular fat $\chi_{fat}$ present in muscle tissue. In turn, $\Psi_{fat}$ represents the response of intramuscular fat (adipose) tissue, which has been homogenized with the fibre and base material components following \cite[Model M4]{RahemiNigamWakeling2015}.
+We are assuming that muscle and other tissues are made of fibres embedded in a base material, with responses given by $\Psi_{fibre}$ and $\Psi_{bm}$, respectively. Furthermore, their combined response is influenced by the fraction of intramuscular fat $\chi_{fat}$ present in muscle tissue. In turn, $\Psi_{fat}$ represents the response of intramuscular fat (adipose) tissue, which has been homogenized with the fibre and base material components following \cite[Model M4]{RahemiNigamWakeling2015}.
 
 In the next sections, we describe the SEF for each one of the components, as well as the stress tensors they induce. We will be particularly interested in the structure of the Kirchhoff stress $\btau_{iso}$, which in turn requires the knowledge of the fictitious Kirchhoff stress $\bar{\btau}$ (see Equation \eqref{eq:def_tau_iso}). We will compute this tensor as a push-forward of $\bar{\*S}$ (defined in \eqref{eq:def_S_bar}) according to the identity \eqref{eq:def_tau_bar}.
 
@@ -2453,7 +2488,7 @@ In the next sections, we describe the SEF for each one of the components, as wel
     \caption{Hill's model depicted as a manifold in which the fibre stretch $\lambda$ and the fibre strain rate $\depsilon$ can vary simultaneously according to \eqref{eq:def_hill_stress_sigma}. We also show the curves $\sigma_{Hill}(\lambda,0)/\sigma_0$ (red) and $\sigma_{Hill}(0,\depsilon)/\sigma_0$ (black), which correspond to the total force-length (FL) and force-velocity (FV) relationships in Figure \ref{fig:plot_FL_FV}. \label{fig:plot_FLV}}
 \end{figure}
 
-{\color{red}We assume that $\Psi_{fibre}$ is given implicitly by the equation:}
+{\color{red}We assume that the SEF $\Psi_{fibre}$ is given implicitly by the equation:}
 \begin{equation} \label{eq:ode_fibre_sef}
     2 \I_4 \pder{\Psi_{fibre}}{\I_4} = \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}),
 \end{equation}
@@ -2506,11 +2541,11 @@ and
     \bar{\btau}_{bm} = s_{bm} \sigma_{0,bm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
 \end{equation}
 
-Alternatively, we could consider the base material as a combination of ECM and cellular material contributions \cite{KonnoNigamWakeling2021_ECM}:
+In the work by Konno et al. \cite{KonnoNigamWakeling2021_ECM}, the base material is considered as a weighted combination of ECM and cellular material contributions to study muscle affected by cerebral palsy. More precisely, the expression for the SEF $\Psi_{bm}$ takes the form:
 \begin{equation}
     \Psi_{bm}(\I_1) = \chi_{ecm} \Psi_{ecm}(\I_1) + (1-\chi_{ecm}) \Psi_{cell}(\I_1),
 \end{equation}
-where $\chi_{ecm} > 0$ is the fraction of ECM content in muscle. Furthermore, the SEFs for ECM and cellular material are given respectively by:
+where $\chi_{ecm} > 0$ is the fraction of ECM content in muscle. The SEFs for ECM and cellular material are given respectively by:
 \begin{equation}\label{eq:def_Psi_ecm}
     \Psi_{ecm}(\I_1) = s_{ecm} \sum_{k=1}^3 c_k (\I_1 - 3)^k,
 \end{equation}
@@ -2657,7 +2692,13 @@ Following \cite{Seba} we assume that the constants $c_k$, $k=1,2,3$, are identic
 
 \section{Lagrangian formulation of the elastodynamic problem}
 
-Let $\B_0 \subset \R^3$ be a region in three-dimensional space representing the undeformed muscle-tendon unit (MTU), potentially containing a combination of muscle, aponeurosis, and tendon, as described in Section \ref{sec:extension_sef_mtu}. The boundary of this body, $\partial \B_0$, can be subdivided into two parts: $\partial \B_0 = \Gamma_{0,D} \cup \Gamma_{0,N}$, with $\Gamma_{0,D} \cap \Gamma_{0,N} = \emptyset$. They represent respectively the Dirichlet and Neumann parts of the boundary in the reference configuration. Let also $\B_t$ denote the deformed MTU at time $t > 0$.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{placeholder-img.jpg}
+    \caption{Continuum representation of the muscle-tendon unit.\label{fig:continuum_mtu}}
+\end{figure}
+
+Let $\B_0 \subset \R^3$ be a region in three-dimensional space representing the undeformed muscle-tendon unit (MTU), potentially containing a combination of muscle, aponeurosis, and tendon, as described in Section \ref{sec:extension_sef_mtu}. The boundary of this body, $\partial \B_0$, can be subdivided into two parts: $\partial \B_0 = \Gamma_{0,D} \cup \Gamma_{0,N}$, with $\Gamma_{0,D} \cap \Gamma_{0,N} = \emptyset$. They represent respectively the Dirichlet and Neumann parts of the boundary in the reference configuration. Let also $\B_t$ denote the deformed MTU at time $t > 0$ (see Figure \ref{fig:continuum_mtu}).
 
 The elastodynamic deformation of the MTU can be modelled using a system of PDEs in which, given an initial displacement $\*U_0 \in \*H^1(\B_0)$, an initial velocity $\*V_0 \in \*H^1(\B_0)$, an initial pressure $p_0 \in L^2(\B_0)$, a body force $\*f_0(\cdot, t) \in \*L^2(\B_0)$, a prescribed traction $\*T(\cdot,t) \in \*H^{-1/2}(\Gamma_{N,0})$, and a prescribed displacement $\*U_D(\cdot, t) \in \*H^{1/2}(\Gamma_{D,0})$, we want to find large (material) displacements $\*U(\cdot,t) \in \*H^1(\B_0)$, a (material) velocity $\*V \in \*H^1(\B_0)$, a (material) internal pressure $p(\cdot,t) \in L^2(\B_0)$, and a (material) dilation $D(\cdot, t) \in L^2(\B_0)$ such that:
 \begin{subequations} \label{eq:LF_main_system}
@@ -2671,7 +2712,9 @@ The elastodynamic deformation of the MTU can be modelled using a system of PDEs 
         \*U = \*U_0, \quad \*V=\*V_0, \quad p=p_0, \quad D &= D_0 \quad \text{in } \B_0 \times \{t=0\}.
     \end{align}
 \end{subequations}
-Here, the first expression corresponds to the definition of the material velocity (see Remark \ref{re:velocity_def}), whereas the second equation is just Cauchy's first equation of motion written in the Lagrangian description (see \cite[Section 4.3]{HolzapfelBook}). In the third equation, $J(\*U)$ can be considered as the \textit{true} dilation whose approximation is given by $D$. Furthermore, $\rho_0$ denotes the \textit{reference density} of the MTU, and although it might depend on space coordinates $\*X$, it does not depend on time.
+Here, the first expression corresponds to the definition of the material velocity (see Remark \ref{re:velocity_def}), whereas the second equation is just Cauchy's first equation of motion written in the Lagrangian description (see \cite[Section 4.3]{HolzapfelBook}). 
+The third equation is a constraint that relates $D$ to its definition.
+Furthermore, $\rho_0$ denotes the \textit{reference density} of the MTU, and although it might depend on space coordinates $\*X$, it does not depend on time.
 
 The set of equations \eqref{eq:LF_main_system} corresponds to a dynamic extension of the Euler-Lagrange equations that arise from the stationarity of the potential first proposed by Simo et al. \cite{SimoTaylorPister1985}:
 \begin{equation} \label{eq:potential_qs}
@@ -2719,7 +2762,11 @@ Combining the first two equations above we obtain the following displacement-pre
     \label{eq:LF_time_3}p^{n+1}-\Psi'_{vol}(D^{n+1}) &= 0,
     \end{align}
 \end{subequations}
-with boundary conditions \eqref{eq:bc0_1} and \eqref{eq:bc0_2}. 
+and
+\begin{equation}
+    \*V^{n+1} = \dfrac{\*U^{n+1} - \*U^n}{\Delta t},
+\end{equation}
+with boundary conditions \eqref{eq:bc0_1} and \eqref{eq:bc0_2} 
 
 We now construct a variational formulation for the system \eqref{eq:LF_time}. First, multiplying \eqref{eq:LF_time_1} by $\delta \*U \in \*H^1_0(\B_0)$ and integrating by parts, we obtain:
 \begin{multline} \label{eq:weak0_1}
@@ -2814,7 +2861,8 @@ Before jumping into the linearization of the nonlinear problem \eqref{eq:LF_weak
 
 \section{Linearization}
 
-We now derive in detail the linearization of the nonlinear formulation \eqref{eq:LF_weak}. First, we give general details of Newton iteration. Then, we compute each one of the blocks forming the tangent operator. Finally, we focus on the computation of the fibre contribution to the fourth-order tensor $J\c$ since it is an expression that is typically not reported in the literature.
+The linearization of the three-field formulation \eqref{eq:LF_weak} is based on previous developments by Dominguez \cite{Seba} and Pelteret \cite{PelteretThesis}, with additional terms appearing naturally from the inertia of the system. First, we give general details of Newton iteration, along with the boundary conditions needed each for each iterate. Then, we provide computable versions of each one of the blocks that form the tangent operator $\bm{\mathcal{D}}R$.
+%Finally, we focus on the computation of the fibre contribution to the fourth-order tensor $J\c$ since it is an expression that is typically not reported in the literature. In particular, we provide details on the treatment of the newton iterates for the along-fibre strain rate, rate of deformation tensor, and some derivatives of these quantities.
 
 \subsection{Newton's method}
 
@@ -2935,24 +2983,30 @@ Therefore, the problem \eqref{eq:newton} can formally be written in matrix form 
     \end{matrix}\right).
 \end{equation}
 
-\subsection{Fourth-order elasticity tensors} \label{sec:elasticity_tensors}
+\section{Fourth-order elasticity tensors} \label{sec:elasticity_tensors}
 
-To compute the fourth-order elastcity tensor $\c^{n+1}$, we first need to find the material tensor $\bar{\C}$ (see Equations \eqref{eq:def_c}, \eqref{eq:Jc_iso}, and \eqref{eq:def_c_bar}). Furthermore, each contribution to isochoric SEF $\Psi_{iso}$ yields a different contribution to the elasticity tensor $\bar{\C}$. For example, if we assume that $\B_0$ contains muscle fibres, base material, and intramuscular fat as in \eqref{eq:def_Psi_iso_fibre_bm_fat}, we will have:
+To compute the fourth-order tensor $\c^{n+1}$, we first need to find the material tensor $\bar{\C}$ (see Equations \eqref{eq:def_c}, \eqref{eq:Jc_iso}, and \eqref{eq:def_c_bar}). In fact, each contribution to the isochoric SEF $\Psi_{iso}$ yields a different contribution to the tensor $\bar{\C}$. For example, if we assume that $\B_0$ contains muscle fibres, base material, and intramuscular fat as in \eqref{eq:def_Psi_iso_fibre_bm_fat}, we will have:
 \begin{equation}
     \bar{\C} = (1-\chi_{fat})(\bar{\C}_{fibre} + \bar{\C}_{bm}) + \chi_{fat} \bar{\C}_{fat},
 \end{equation}
-with analogous expressions if ECM, cell, tendon, or aponeurosis tissues are included.
+with analogous expressions if ECM, cell, tendon, or aponeurosis tissues are included. 
 
-The derivation of all parts that make the $\bar{\C}$ tensor follows the same structure, so we will only provide details for the fibre contribution. First, according to \eqref{eq:def_C_bar}, we have
+The derivation of all parts that make the $\bar{\C}$ tensor follows the same structure, so we focus mostly on the fibre contribution, as this is novel to the elastodynamics of skeletal muscle tissue. 
+
+\subsection{Along-fibre contribution}
+
+Because of the implicit treatment of the velocity in the Kirchhoff stress, and because we are not considering the velocity and displacement as \textit{independent} variables, the elasticity tensors needed for a Newton iteration take a more involved form (compared to the quasi-static case) that requires some particular approximations, specially regarding the modified fibre strain rate $\bar{\depsilon}$. This will be one of the main contributions in this section.
+
+According to Equation \eqref{eq:def_C_bar}, we first have:
 \begin{equation}
-    J^{4/3} \bar{\C}_{fibre}^{n+1} = 2 \pder{\bar{\*S}_{fibre}^{n+1}}{\bar{\*C}^{n+1}} = 2 \pder{\bar{\*S}_{fibre}^{n+1}}{\I_4^{n+1}} \otimes \pder{\I_4^{n+1}}{\bar{\*C}^{n+1}},
+    J^{4/3} \bar{\C}_{fibre}^{n+1} = 2 \pder{\bar{\*S}_{fibre}^{n+1}}{\bar{\*C}^{n+1}} = 2 \pder{\bar{\*S}_{fibre}^{n+1}}{\I_4^{n+1}} \otimes \pder{\I_4^{n+1}}{\bar{\*C}^{n+1}}.
 \end{equation}
-which, from \eqref{eq:derivatives_invariants} and the particular expression for $\bar{\*S}_{fibre}$ in \eqref{eq:def_S_fibre}, we obtain
+Moreover, using \eqref{eq:derivatives_invariants} and the particular expression for $\bar{\*S}_{fibre}$ in \eqref{eq:def_S_fibre}, we obtain:
 \begin{align}
     \notag J^{4/3} \bar{\C}_{fibre}^{n+1} &= 2 \pder{}{\I_4^{n+1}} \left[ \dfrac{1}{\I_4^{n+1}} \sigma_{Hill}(\I_4^{n+1})\right] \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0 \\
     &= 2 \left[ -\dfrac{1}{\left(\I_4^{n+1}\right)^2} \sigma_{Hill}(\I_4^{n+1}) + \dfrac{1}{\I_4^{n+1}} \pder{\sigma_{Hill}(\I_4^{n+1})}{\I_4^{n+1}} \right] \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0
 \end{align}
-At this juncture, we emphasize that these expressions are meant to be evaluated at the current Newton iteration $k$ (see \eqref{eq:def_K_int_11}). Thus, using the expression for Hill's fibre stress \eqref{eq:def_hill_stress_sigma}, we obtain
+At this juncture, we emphasize that these expressions are meant to be evaluated at the current Newton iteration $k$ (see \eqref{eq:def_K_int_11}). In particular, using the definition of Hill's fibre stress in \eqref{eq:def_hill_stress_sigma}, we obtain the following expression for its derivative:
 \begin{align}
     \notag \pder{\sigma_{Hill}(\I_4^{n+1})}{\I_4^{n+1}} &= \pder{\sigma_{Hill}(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \pder{\bar{\lambda}^{n+1}_k}{\I_4^{n+1}} +  \pder{\sigma_{Hill}(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k)}{\bar{\depsilon}^{n+1}_k} \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} \pder{\bar{\lambda}^{n+1}_k}{\I_4^{n+1}} \\
     \notag &= \sigma_{0,mus} \left[ a^{n+1} \der{\widehat{\sigma}_L(\bar{\lambda}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \widehat{\sigma}_V(\bar{\depsilon}^{n+1}_k) + \der{\widehat{\sigma}_P(\bar{\lambda}^{n+1}_k)}{\bar{\lambda}^{n+1}_k} \right] \dfrac{1}{2\bar{\lambda}^{n+1}_k} \\
@@ -2960,7 +3014,7 @@ At this juncture, we emphasize that these expressions are meant to be evaluated 
 \end{align}
 
 In particular, following the definition of the modified strain rate $\bar{\depsilon}$ in \eqref{eq:def_strain_rate_bar}$_2$ we consider:
-\begin{equation}
+\begin{equation} \label{eq:strain_rate_bar_newton_iteration}
     \bar{\depsilon}^{n+1}_k = \dfrac{1}{\depsilon_0} \dfrac{(\bar{\*F}_k^{n+1}\*a_0)^\T (\p : \*d^{n+1}_k) (\bar{\*F}_k^{n+1} \*a_0)}{\bar{\lambda}^{n+1}_k},
 \end{equation}
 where, according to \eqref{eq:def_l_spatial_velocity_gradient},
@@ -2972,7 +3026,7 @@ However, for the term $\pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k}$ (a
     \bar{\depsilon}^{n+1}_k \approx \dfrac{1}{\depsilon_0} \dfrac{\bar{\lambda}^{n+1}_k - \bar{\lambda}^n}{\Delta t},
 \end{equation}
 and thus we set:
-\begin{equation}
+\begin{equation} \label{eq:d_strain_rate_bar_d_lambda_bar}
     \pder{\bar{\depsilon}^{n+1}_k}{\bar{\lambda}^{n+1}_k} = \dfrac{1}{\depsilon_0} \dfrac{1}{\Delta t}.
 \end{equation}
 
@@ -2989,9 +3043,9 @@ where
 \end{align}
 In this way,
 \begin{equation}
-    \bar{\c}_{fibre}^{n+1} = \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) \, \bar{\*a} \otimes \bar{\*a} \otimes \bar{\*a} \otimes \bar{\*a},
+    \bar{\c}_{fibre}^{n+1} = \mathfrak{C}\left(\bar{\lambda}^{n+1}_k, \bar{\depsilon}^{n+1}_k \right) \, \bar{\*a}_k^{n+1} \otimes \bar{\*a}_k^{n+1} \otimes \bar{\*a}_k^{n+1} \otimes \bar{\*a}_k^{n+1},
 \end{equation}
-where $\bar{\*a} = \bar{\*F} \*a_0$.
+where $\bar{\*a}_k^{n+1} = \bar{\*F}_k^{n+1} \*a_0$.
 
 \begin{remark}
     If the simulation is quasi-static, then Hill's stress does not depend on the fibre strain rate, and therefore
@@ -3004,6 +3058,27 @@ where $\bar{\*a} = \bar{\*F} \*a_0$.
         &+ \dfrac{\sigma_{0,mus}}{(\bar\lambda^{n+1}_k)^3} \Bigg[ a^{n+1} \der{\widehat{\sigma}_A}{\bar\lambda}\left(\bar\lambda^{n+1}_k\right) + \der{\widehat{\sigma}_P}{\bar{\lambda}}\left(\bar\lambda^{n+1}_k\right) \Bigg]
     \end{align}
 \end{remark}
+
+{\color{blue}
+Although the expressions for the modified strain rate \eqref{eq:strain_rate_bar_newton_iteration} and its derivative with respect to the modified stretch \eqref{eq:d_strain_rate_bar_d_lambda_bar} may seem like a minor detail in the discretization of the Lagrangian formulation \eqref{eq:LF_main_system}, they constitute elements of the numerical method that can ``make or break'' the code for fully active, fully dynamic simulations. First, Dominguez \cite{Seba} suggested the following expression for the fibre strain rate:
+\begin{equation}
+    \bar{\depsilon}_k^{n+1} = \*V^n \cdot (\bar{\*F}_k^{n+1} \*a_0),
+\end{equation}
+with no information about what the expression for $\partial_{\bar{\lambda}_k^{n+1}} \bar{\depsilon}_k^{n+1}$ should look like. Later, in Ross et al. \cite{Paper3_RossEtAl2021}, the following expressions were used:
+\begin{equation}
+    \bar{\depsilon}_k^{n+1} = \dfrac{(\bar{\*F}^{n}\*a_0)^\T (\p : \*d^{n}) (\bar{\*F}^{n} \*a_0)}{\bar{\lambda}^{n+1}_k}, \quad \pder{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}} = -\dfrac{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}},
+\end{equation}
+with the latter being an expression that implicitly assumes that the strain rate $\bar{\depsilon}_k^{n+1}$ does depend on the current deformation tensor $\bar{\*F}_k^{n+1}$ in the numerator, but keeps the deviatoric part of the rate of strain tensor (i.e. $\p:\*d^n$) constant for the current time step and the current Newton iteration. While this work does contain fully active, fully dynamic contractions, Tam \cite{Cassidy} would later find that the FV properties in this work where not implemented properly, as any contraction would lead to the strain-rate-dependent stress $\widehat{\sigma}_V(\depsilon)$ in \eqref{eq:def_hill_stress_sigma} default to its maximum value of 1.5950. To remediate this, Tam \cite{Cassidy} made use of the following expressions:
+\begin{equation}
+    \bar{\depsilon}_k^{n+1} = \dfrac{(\bar{\*F}_k^{n+1}\*a_0)^\T (\p : \*d^{n}) (\bar{\*F}_k^{n+1} \*a_0)}{\bar{\lambda}^{n+1}_k}, \quad \pder{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}} = +\dfrac{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}}.
+\end{equation}
+This resulted in successful dynamic contractions but only to a maximum of 50\% activation, provided the following time size restriction is met:
+\begin{equation}
+    \dfrac{c \Delta t}{h} < 1, \quad c := \sqrt{\dfrac{\kappa}{\rho_0}}.
+\end{equation}
+}
+
+\subsection{Base material and other components of the MTU}
 
 Following the same procedure, we obtain the contributions to $\bar{\c}$ from the base material components:
 \begin{align}
@@ -3033,15 +3108,44 @@ Let $\mathcal{T}_h$ be an unstructured mesh made of hexahedra $T \in \mathcal{T}
 \end{align}
 In this way, the triplet displacement-pressure-dilation is approximated using the $\*Q_{k+1} \times P_k \times P_k$ element. For $k=1$, this implies that the displacements are approximated using quadratic 27-node Lagrange $\*Q_2$ elements, while pressures and dilations are approximated with discontinuous elements $P_1$ (based on monomials, 4 degrees of freedom per element). We omit details of the discretization of the linear system \eqref{eq:LF_linear_system} as this will be solved using the C++ finite element library \textit{deal.II} \cite{dealii}. This will be the focus of the next chapter.
 
+{\color{blue} Q) TALK ABOUT LINEAR SOLVERS?}
 
 \chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics}
 
-\begin{enumerate}
-    \item Implementation details
-    \item Convergence
-    \item Nonlinear Solvers
-    \item Different muscle architectures (e.g. bi-pennate)
-\end{enumerate}
+\section{Implementation details}
+
+\section{Output quantities}
+
+\section{Convergence studies}
+
+\section{The effect of the FV relationship in isometric contractions}
+
+\section{The FL relationship of whole muscle}
+
+\section{MRI}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{Gearing in muscle tissues: a first-of-its-kind computational study}
 
