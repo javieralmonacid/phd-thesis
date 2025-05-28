@@ -6,3 +6,4 @@ Rothe
 Newmark
 pennation
 Galerkin
+Flexodeal
