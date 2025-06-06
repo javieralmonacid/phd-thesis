@@ -3291,38 +3291,29 @@ Flexodeal Lite implements the same solver used in Flexodeal but in this case, th
 
 In this Chapter, we present details about the computational implementation of Flexodeal, including documentation of input and output variables. Furthermore, we present a set of carefully-selected fundamental experiments that can be used as reference points for further modelling and computatiional developments. These include a combination of dynamic and quasi-static experiments.
 
-We begin in Section \ref{sec:flexodeal_background} with a brief background on musculoskeletal simulation software, to then describe some implementation aspects of Flexodeal in Section \ref{sec:flexodeal_implementation}. Here, we focus on explaining how the different parameters in the solver are specified, the treatment of boundary conditions, and how to input the activation function. We also discuss how some properties (such as tissue type, fibre orientation, and intramuscular fat fraction) can be implemented in a space-dependent fashion thanks to the quadrature point logic surrounding deal.II and finite element methods in general.
+We begin in Section \ref{sec:flexodeal_background} with some motivation behind these developments. Then, we describe some implementation aspects of Flexodeal in Section \ref{sec:flexodeal_implementation}. Here, we focus on explaining how the different parameters in the solver are specified, the treatment of boundary conditions, and how to input the activation function. We also discuss how some properties (such as tissue type, fibre orientation, and intramuscular fat fraction) can be implemented in a space-dependent fashion thanks to the quadrature point logic surrounding deal.II and finite element methods in general.
 Next, in Section \ref{sec:flexodeal_convergence}, we study the computational convergence of the numerical method for the nonlinear problem \eqref{eq:LF_weak} in the particular case of the isometric contraction of a pennate block of muscle tissue. These results will be contrasted with the theoretical statements introduced in Section \ref{sec:finite_element_approximation}.
-Then, in Section \ref{sec:flexodeal_fl_curves} we study the force-length relationship of \textit{whole} muscle and discuss its implications on the numerical stability of the finite element method. 
+In Section \ref{sec:flexodeal_fl_curves} we study the force-length relationship of \textit{whole} muscle and discuss its implications on the numerical stability of the finite element method. 
 Furthermore, in Section \ref{sec:flexodeal_dynamic_effects}, we study the differences in key biomechanical quantities that arise from the consideration of dynamic simulations when compared to more classic quasi-static results. 
 Finally, we show the applicability of Flexodeal to a more realistic situation in which the geometry is derived from magnetic resonance imaging (MRI), while the activation and prescribed boundary conditions are obtained from an \textit{in vivo} experiment of locomotion.
 
-\section{Background} \label{sec:flexodeal_background} 
+\section{Motivation} \label{sec:flexodeal_background} 
 
-\begin{itemize}
-    \item Musculoskeletal software that is freely available and open source is scarce.
-    \item Many labs build their own codes, but because they're never made public, the results are not reproducible.
-    \item Modelling using 3D models such as the one introduced in the previous chapter gets complicated quite fast. The high number of parameters does not help.
-    \item 
-\end{itemize}
+%\begin{itemize}
+%    \item Musculoskeletal software that is freely available and open source is scarce.
+%    \item Many labs build their own codes, but because they're never made public, the results are not reproducible.
+%    \item Modelling using 3D models such as the one introduced in the previous chapter gets complicated quite fast. The high number of parameters does not help.
+%    \item 
+%\end{itemize}
 
-\begin{definition}[Isometric contraction in the Flexodeal framework] \label{def:isometric_contraction_3d}
-    Consider a muscle-tendon unit (MTU) whose current configuration occupies a region $\B \subset \R^3$. Furthermore, assume this region has a boundary $\partial\B = \Gamma_D \cup \Gamma_N$, where $\Gamma_D \cap \Gamma_N = \emptyset$, and $\Gamma_D,\Gamma_N$ represent respectively the Dirichlet and Neumann boundaries of the domain. We say that a contraction is \textit{isometric} if the MTU is activated from 0\% to a pre-defined maximum activation level $a_{max}$ over a timespan of $T$ seconds, subject to the following boundary conditions:
-    \[
-        \*u = \*0 \quad \text{on }\Gamma_D, \qquad \bsigma\*n = \*0 \quad \text{on } \Gamma_N,
-    \]
-    with equivalent Lagrangian boundary conditions when the contraction starts from its initial configuration $\B_0$.
-\end{definition}
+Three-dimensional musculoskeletal simulations have been performed at the Neuromuscular Mechanics Laboratory (Simon Fraser University) for more than 10 years. Early works by Rahemi et al. focused on the effects of space-dependent activation \cite{RahemiNigamWakeling2014} and the distribution of intramuscular fat \cite{RahemiNigamWakeling2015}. Later, a series of articles on muscle energetics were published by Wakeling et al. \cite{Paper1_WakelingEtAl2020}, Ryan et al. \cite{Paper2_RyanEtAl2020}, and Ross et al. \cite{Paper3_RossEtAl2021}. More recently, Konno et al. studied the inclusion of extracellular (ECM) material as part of the base material properties of muscle \cite{KonnoNigamWakeling2021_ECM} and the effect of this component in muscle affected by cerebral palsy \cite{KonnoEtAl2022_CP}. Behind all these works, there was a single C++ file based on deal.II's tutorial ``step-44'' \cite{step44} that was adapted to each research project, refactored to include new features, or simply rewritten. This resulted in a roughly 10,000-line C++ code that included many undocumented and untested features. Moreover, as deal.II continues to evolve, many parts of the original code simply became deprecated. Therefore, there was an urgent need to unify these code developments to ensure extensibility, reproducibility, and to facilitate dissemination of results.
 
-Therefore, when $\Gamma_D$ coincides with the ends of the muscle, an isometric contraction maintains the (current) length of the MTU constant while allowing the fibres to deform. Furthermore, in this setup, isometric contractions are yet another example of a dynamic contraction for which force-velocity properties are perfectly applicable. After all, strains are nonuniform throughout the muscular structure \cite{BlemkerDelp2005}, so velocity changes are expected to happen within. We will discuss this effect in more detail in Section \ref{sec:flexodeal_dynamic_effects}.
+In this way, since significant modifications to the original code were required anyway to accommodate the Lagrangian model \eqref{eq:LF_main_system}, we decided to take a more modern approach in terms of software engineering. This included the consideration of simple but fundamental computational experiments that can be used for testing and debugging, version control (using Git), and enough documentation to support future code developments and make this software publicly available. Hence, Flexodeal was born. This constitutes the first open-source musculoskeletal simulation tool that includes active anisotropy in a fully dynamic environment. Since this software was developed in a modular framework (facilitated by deal.II), researchers have the opportunity to adapt this code to other expressions of, for instance, force-length and force-velocity relationships, as well as different strain-energy functions for the different tissue components.
 
 
 \section{Implementation details} \label{sec:flexodeal_implementation}
 
-\begin{itemize}
-    \item The backbone of Flexodeal is the C++-based finite element library deal.II \cite{dealii}.
-    \item Flexodeal full and flexodeal lite
-\end{itemize}
+Flexodeal and Flexodeal Lite have been implemented similarly to deal.II tutorials, which means they require CMake compilation and a version of deal.II which, in our case, must at or above v9.3.0. As of the time of writing this document, Flexodeal also works with the newest version v9.6.2 \cite{dealii962}. The fibre and base material properties for all tissues are implemented as specified in Chapter \ref{ch:lagrangian_formulation} of this thesis. For reference, we show in Figure \ref{fig:FL_curves_diff_act} the fibre properties implemented in this code.
 
 \begin{figure}
     \centering
@@ -3331,6 +3322,8 @@ Therefore, when $\Gamma_D$ coincides with the ends of the muscle, an isometric c
     \caption{Fibre force relationships implemented in Flexodeal (muscle and aponeurosis) and Flexodeal Lite (muscle only). The code allows for continuously varying activation profiles, but for reference, we choose 6 different choices of activation level (from 0\% to 100\%) to represent the influence of the activation level on the fibre force. 
     \label{fig:FL_curves_diff_act}}
 \end{figure}
+
+We now proceed to describe the main inputs required to run Flexodeal and the output variables and results that the code produces. For more information on the default experiments implemented in Flexodeal and Flexodeal Lite (i.e. the experiments that users can run immediately after downloading and compiling the software), we refer the reader to Appendices \ref{app:default_flexodeal_lite} and  \ref{app:default_flexodeal}.
 
 \subsection{Inputs}
 
@@ -3726,7 +3719,17 @@ We discretized the muscle block by subdividing its length, width, and height int
 \]
 Therefore, to simplify the presentation, we refer to each mesh according to its GRL rather than to its mesh size $h$.
 
-We performed an isometric contraction (see Definition \ref{def:isometric_contraction_3d}) where the activation was linearly ramped up from 0\% at $t=0 \ \unit{s}$ to 100\% at $t = T := 0.2 \ \unit{s}$ (i.e., over 200 ms). In particular, the fixed ends correspond to the +x and -x faces of the block. The other faces were traction free. 
+We performed an isometric contraction where the activation was linearly ramped up from 0\% at $t=0 \ \unit{s}$ to 100\% at $t = T := 0.2 \ \unit{s}$ (i.e., over 200 ms). In particular, the fixed ends correspond to the +x and -x faces of the block. The other faces were traction free. At this juncture, it is important to properly define the concept of an ``isometric contraction'' for our purposes, since definitions of this concept can vary in the literature.
+
+\begin{definition}[Isometric contraction in the Flexodeal framework] \label{def:isometric_contraction_3d}
+    Consider a muscle-tendon unit (MTU) whose current configuration occupies a region $\B \subset \R^3$. Furthermore, assume this region has a boundary $\partial\B = \Gamma_D \cup \Gamma_N$, where $\Gamma_D \cap \Gamma_N = \emptyset$, and $\Gamma_D,\Gamma_N$ represent respectively the Dirichlet and Neumann boundaries of the domain. We say that a contraction is \textit{isometric} if the MTU is activated from 0\% to a pre-defined maximum activation level $a_{max}$ over a timespan of $T$ seconds, subject to the following boundary conditions:
+    \[
+        \*u = \*0 \quad \text{on }\Gamma_D, \qquad \bsigma\*n = \*0 \quad \text{on } \Gamma_N,
+    \]
+    with equivalent Lagrangian boundary conditions when the contraction starts from its initial configuration $\B_0$.
+\end{definition}
+
+Therefore, when $\Gamma_D$ coincides with the ends of the muscle (as it is our case here), an isometric contraction maintains the (current) length of the MTU constant while allowing the fibres to deform. Furthermore, in this setup, isometric contractions are yet another example of a dynamic contraction for which force-velocity properties are perfectly applicable. After all, strains are nonuniform throughout the muscular structure \cite{BlemkerDelp2005}, so velocity changes are expected to happen within. We will discuss this effect in more detail in Section \ref{sec:flexodeal_dynamic_effects}.
 
 To study the convergence in time, we computed the relative errors:
 \begin{subequations}
@@ -3999,27 +4002,53 @@ In turn, Figure \ref{fig:ic-mean-fibre-strain-rate-slab} (middle) shows the mean
 \end{figure}
 
 
-\section{MRI} \label{sec:flexodeal_mri}
+\section{Deformation of a human medial gastrocnemius during locomotion} \label{sec:flexodeal_mri}
+
+In this last experiment, we move one step closer towards the realistic simulation of skeletal muscle deformation. Here, we couple a geometry obtained from magnetic resonance imaging (MRI) with motion capture and electromyography (EMG) data obtained from a locomotion study. This constitutes a ``proof of concept'' of the applicability of Flexodeal to subject-specific inputs, which could further lead into the development of digital twins of muscle. This is an active research area that has the potential to provide transformative solutions in healthcare and musculoskeletal simulation in general \cite{Diniz2025DigitalTwin}.
+
+\subsection{Setup}
 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{mri_mesh_XZ.png}\\
+    \hspace*{-1.4em}\includegraphics[width=0.97\textwidth]{mri_mesh_XY.png}
+    \caption{Computational geometry of the human MG used in Section \ref{sec:flexodeal_mri} derived from MRI shown in the XZ plane (top) and in the XY plane (bottom).
+    \label{fig:mri_mesh}}
+\end{figure}
 
 
+We considered the geometry of a human medial gastrocnemius (MG), collected as part of the study by D'Souza et al. \cite{DSouza2019}. Exact details about the subject from which this geometry was extracted were not available, but we deduce from \cite{DSouza2019} that it corresponds approximately to a boy with cerebral palsy, aged 11 years old, with shank length of about 34 cm. The length of the muscle, as seen in Figure \ref{fig:mri_mesh}, was about 22 cm. Moreover, it had a volume of 126.01 cm$^3$, which resulted in a mass of 133.57 g (assuming a constant density of 1,060 \unit{kg \ m^{-3}}). Tendinous structures were not considered in this computational domain. We aligned this geometry with the X axis and set $\widehat{\bm{\ell}} = \langle 1 ,0,0 \rangle$ as the line of action (see Figure \ref{fig:mri_mesh}). The hexahedral mesh for this geometry contained 1,265 voxels. We also assumed that the muscle had parallel fibres (i.e. zero initial pennation). 
 
+The locomotion data used for this experiment corresponds to a particular set of traces used in Chapter \ref{ch:mass_enhanced_model} for the study of 1D mass-enhanced models. In particular, we considered the muscle-tendon unit length and EMG data from the MG of a subject while running. To construct a boundary strain profile, we first estimated the muscle length from the muscle-tendon unit (MTU) length data using the muscle-to-MTU length ratio in Table \ref{tab:1d-parameters}. This is equivalent to assuming that the tendon behaved like a strut. Then, we scaled this length so that at time $t = 0.0$ s, the muscle length matches the one from the geometry. This profile constituted the boundary condition on the +x end of the geometry. The -x end was fixed at all times.
 
+Similarly to the experiments in Chapter \ref{ch:mass_enhanced_model}, we computed the activation profile using Zajac's transfer function \eqref{eq:zajac} from the available EMG data. This resulted in submaximal activation that did not exceed 30\%. For both strain and activation profiles, we selected a representative window of data (of 4.28 seconds) from the complete \textit{in vivo} experiment (about 25 seconds).
 
+The computational experiment was performed under fully dynamic conditions using Flexodeal v1.0.1 in a standard desktop computer (Intel i5-9600K, 3.70 GHz, 6 cores, 16 GB of RAM) using a Q2-P1 finite element and a CG linear solver with a Jacobi preconditioner. Furthermore, we set the time step size $\Delta t  = 0.01$ s.
 
+\section{Results}
 
+In Figure \ref{fig:mri_traces}, we show the traces of some important quantities in the simulation. In particular, we notice that the muscle was strained at most 3\%, mostly along the ascending limb of the fibre FL curve. Furthermore, the fibre strain rate was at most 5\% of the maximum fibre strain rate (5 \unit{s^{-1}}) and the pennation increased to at most 4$^\circ$, consistent with the parallel-fibred nature of the geometry we considered. The x-component of the force measured at the moving end never exceeded 15 N. We also examined the volume ratio $V/V_0$, which was computed as:
+\[
+(V/V_0)(t) = \frac{|\B_t|}{|\B_0|}.
+\]
+It can be seen from the last row of Figure \ref{fig:mri_traces} that the change in volume never exceeded 0.1\%. This shows that, although compressibility has been introduced in the model (through the dilatation $D$), Flexodeal is capable of reproducing essentially incompressible dynamic without the need of imposing $D = 1$ in the system
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.99\textwidth]{mri_traces.eps}
+    \caption{Top to bottom: traces of activation, boundary strain, average fibre stretch, average normalized fibre strain rate, average pennation angle, force (x component at the +x end of the geometry) and volume ratio, for the experiment described in Section \ref{sec:flexodeal_mri}.
+    \label{fig:mri_traces}}
+\end{figure}
 
+Finally, we show in Figure \ref{fig:mri_displacement_3d} snapshots of the displacement field at particular times: when the muscle is at rest ($t = 0.0$ s), after a period of isometric contraction ($t = 0.42$ s), when the muscle is at its shortest ($t = 2.00$ s), when the muscle is at its longest and at its highest level of activation ($t = 2.75$ s), and at the end of the simulation ($t = 4.28$ s).
 
-
-
-
-
-
-
-
-
+\begin{figure}
+    \centering
+    \includegraphics[width=0.99\textwidth]{mri_vertical_traces_displacement.pdf}
+    \caption{Snapshots of the displacement field (magnitude, in m) at five different points of the simulation described in Section \ref{sec:flexodeal_mri}.
+    \label{fig:mri_displacement_3d}}
+\end{figure}
 
 
 
@@ -4057,9 +4086,9 @@ From paper w/ James. Add different pennations. Cedar access?
 Describe in detail force-length and force-velocity relationships in use.
 Github repository: force-relationships
 
-\chapter{Flexodeal Lite v1.5.4 default experiment}
+\chapter{Flexodeal Lite v1.5.4 default experiment} \label{app:default_flexodeal_lite}
 
-\chapter{Flexodeal v1.0.1 default experiment}
+\chapter{Flexodeal v1.0.1 default experiment} \label{app:default_flexodeal}
 
 
 \end{appendices}
