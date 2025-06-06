@@ -7,3 +7,7 @@ Newmark
 pennation
 Galerkin
 Flexodeal
+Rahemi
+Wakeling
+Konno
+deal.II
