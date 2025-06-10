@@ -276,9 +276,9 @@
 \end{abstract}
 
 
-\begin{dedication}
-This is an optional page. Use your choice of paragraph style for text on this page.
-\end{dedication}
+%\begin{dedication}
+%This is an optional page. Use your choice of paragraph style for text on this page.
+%\end{dedication}
 
 
 \begin{acknowledgements}
@@ -2548,7 +2548,7 @@ The base material component can be modelled using the following Yeoh SEF \cite{P
 where $s_{bm}$ is a scaling factor, $\sigma_{0,bm}$ a normalizing constant stress, and $c_k \in \R$ are constants that were computed by Wakeling et al. \cite{Paper1_WakelingEtAl2020} to fit the experimental data in Mohammadkhah et al. \cite{Mohammadkhah2016}.
 
 Similarly to the computation of $\bar{\*S}_{fibre}$ and $\bar{\btau}_{fibre}$, the fictitious PK2 and Kirchhoff stresses in this case are:
-\begin{equation}
+\begin{equation} \label{eq:def_S_bar_bm}
     \bar{\*S}_{bm} = s_{bm} \sigma_{0,bm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I,
 \end{equation}
 and
@@ -3277,7 +3277,7 @@ When the linear system \eqref{eq:LF_linear_system} is discretized using the fini
 We omit details of the discretization as this will be solved using the C++ finite element library \textit{deal.II} \cite{dealii}. In this case, the system as written in \eqref{eq:LF_linear_system} is sufficient to begin a computational implementation. This will be the focus of the next chapter.
 
 
-\chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics}
+\chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics} \label{ch:flexodeal}
 
 In this chapter, we present \textit{Flexodeal}, a new finite-element tool for the study of 3D skeletal muscle deformation in a fully dynamic regime (with quasi-static deformations provided as an option as well). Flexodeal is completely open-source and licensed under the same conditions as deal.II (GNU Lesser General Public License, version 2.1 \cite{dealii}). It is freely available at:
 \begin{center}
@@ -3552,9 +3552,9 @@ and
     \vec{F}_{iso} = \vec{F}_{mus,act} + \vec{F}_{mus,pas} + \vec{F}_{mus,bm} + \vec{F}_{apo,fibre} + \vec{F}_{apo,bm} + \vec{F}_{ten,fibre} + \vec{F}_{ten,bm}.
 \end{equation}
 
-\subsubsection{Gearing-related information}
+\subsubsection{Gearing-related information} \label{sec:flexodeal-gearing-related-info}
 
-Gearing refers to the relationship between the muscle's overall shortening (or lengthening) speed and the shortening (or lengthening) speed of its individual muscle fibres \cite{Eng2018,Randhawa2013}. This file, named \texttt{gearing\_info-3d.csv}, contains the following information:
+Gearing refers to the relationship between the muscle's overall shortening (or lengthening) speed and the shortening (or lengthening) speed of its individual muscle fibres \cite{Azizi2008VariableGearing,Eng2018}. This file, named \texttt{gearing\_info-3d.csv}, contains the following information:
 \begin{itemize}
     \item $x$-component of the prescribed velocity at the moving end of the muscle, computed using the prescribed boundary strain $\varepsilon_M$ (see Section \ref{sec:prescribed_act_strain}) at each time step $t_k$ as
     \begin{equation}
@@ -4061,7 +4061,127 @@ Finally, we show in Figure \ref{fig:mri_displacement_3d} snapshots of the displa
 
 \chapter{Gearing in muscle tissues: a first-of-its-kind computational study} \label{ch:gearing}
 
-From paper w/ James. Add different pennations. Cedar access?
+%Parts of this study are intended to be published in the review article:
+
+%\medskip
+%\noindent \bibentry{GearingReviewPaper}
+%\medskip
+In this chapter...
+
+
+As an inherently dynamic, three-dimensional phenomenon \cite{RobertsEtAl2019MutiScale3DNature}, ...
+
+\section{Introduction}
+
+% Write about modelling of gearing, stuff like mckibben actuators, some computational modelling, showing that our approach is truly unique and it does represent the first of its kind in this area.
+
+Muscle gearing represents a fundamental mechanism by which muscles adapt their mechanical output under varying contractile demand \cite{Azizi2008VariableGearing}. Unlike static architectural descriptors that are typically derived from resting muscle morphology \cite{LieberFriden2000}, gearing encapsulates the \textit{dynamic} relationship between muscle and fibre velocities during contraction \cite{Azizi2008VariableGearing,DickWakeling2017ShiftingGears}. It allows muscles to alter their functional output, shifting between force production and fibre shortening velocity, by modulating fibre orientation and muscle shape \cite{Eng2018,WakelingEtAl2011MovementMechanics}, much like a transmission system in a car. This capacity for variable gearing is particularly important in pennate muscles, since in this case muscle fibres tend to be shorter (so they have less sarcomeres in series to generate force) and the space in which they can contract is limited by other musculoskeletal elements (such as bones, aponeurosis, or other muscles) \cite{Eng2018}. As such, understanding muscle gearing is essential for explaining how muscles adapt their function \textit{in vivo}, and for predicting performance in both healthy and pathological states, particularly during dynamic tasks involving non-isometric contractions.
+
+The idea that fibre and muscle velocities are decoupled from one another has been around for 100 years. In 1925, Beritoff \cite{Beritoff1925} observed from different frog muscles that, as muscle fibres contracted, their pennation angle rose significantly, meaning the fibres did not shorten as much as the overall muscle-tendon unit. These experimental findings were confirmed (and published in English) much later by Muhl \cite{Muhl1982} in 1982. It was also around this time in the work by Huijing \& Woittiez \cite{HuijingWoittiez1983PlanimetricModel} that geometrical arguments were used to explain the relationship between whole muscle length, fibre length, and pennation angle (see also Otten \cite{Otten1984}, Woittiez \& Huijing \cite{WoittiezHuijing1984Notes}, and Woittiez et al. \cite{WoittiezEtAl1984ThreeDimensional}).
+
+Studies about gearing continue to be carried out in isolated muscle preparations \cite{Azizi2008VariableGearing,AziziRoberts2014,EngRoberts2018,Holt2016}, \textit{in vivo} for instance, using ultrasound \cite{BohmEtAl2019, DickWakeling2017ShiftingGears, RandhawaJackmanWakeling2013,WakelingEtAl2011MovementMechanics} or microcomputed tomography \cite{LeavyRichardsPorro2025}, and using bioinspired actuators, most commonly McKibben actuators \cite{AziziRoberts2013McKibben,Liu2021BioinspiredActuators, SlebodaRobertsAzizi2024, Wang2022LoadDependentVariableGearing}. In particular, Wang \cite{Wang2022LoadDependentVariableGearing} in 2022 studied the importance of pennation angle and number of contractile units in a Himisk actuator based on experimental testing and finite element simulations of the fluid dynamics within the actuators. To date, no studies in the literature have employed three-dimensional continuum mechanics models of skeletal muscle tissue to investigate muscle gearing.
+
+According to the above, ...
+
+
+\section{Computational setup and main definitions}
+
+
+
+\subsection{Geometry and architecture}
+
+We considered a block of muscle tissue with dimensions and architecture that mimiced the the average medial gastrocnemius (MG) from a young population of rats, as described by Holt et al. \cite{Holt2016}. First, to define an appropriate muscle block height $H_{mus}$, we notice that the pennation angle and initial fibre length for this population was $\beta_0 = 26.1^\circ$ and $L_f^0 = 15.8$ mm, respectively. Assuming the fibres are oriented parallel to the XZ plane and that $L_f^0$ corresponds to the longest possible fibre length within the geometry, we set the height of the block to
+\begin{equation}
+    H_{mus} = L_f^0 \sin(\beta_0) = 6.95 \ \unit{mm}.
+\end{equation}
+Next, Holt et al. \cite{Holt2016} report a maximum isometric stress of $\sigma_0 = 47.9$ \unit{N \ cm^{-2}} and a maximum isometric force of $F_0 = 24.4$ N. Thus, we estimate the physiological cross sectional area (PCSA) at:
+\begin{equation}
+    PCSA = \dfrac{F_0}{\sigma_0} = 0.509 \ \unit{cm^2}.
+\end{equation}
+Having computed the height of the block and the PCSA, we compute the width of the muscle block as:
+\begin{equation}
+    W_{mus} = \dfrac{PCSA \cdot \cos(\beta_0)}{H_{mus}} = 6.58 \ \unit{mm}.
+\end{equation}
+
+The average MG in the young population had a mass of 0.9 g. Assuming a constant muscle tissue density of 1,060 \unit{\mu g\ mm^{-3}}, we estimate a volume $V_0 = 849 \ \unit{mm^3}$. Therefore, we set the length of the muscle block so that its volume (and therefore its mass) coincides with the average rat MG:
+\begin{equation}
+    L_{mus} = \dfrac{V_0}{H_{mus} \, W_{mus}} = 18.6 \ \unit{mm}.
+\end{equation}
+
+Finally, given that the initial pennation angle was measured at 26.1$^\circ$, we set the initial orientation field to
+\begin{equation}
+    \*a_0 = \langle \cos(\beta_0), 0, \sin(\beta_0)\rangle = \langle 0.8980, 0, 0.4399 \rangle.
+\end{equation}
+
+\subsection{Muscle model}
+
+We chose the muscle model implemented in Flexodeal Lite, as described at the beginning of Chapter \ref{ch:flexodeal}. That is, we consider muscle tissue described as a fibre-reinforced composite material containing a Hill-type fibre contribution:
+\begin{equation}
+    \*S_{fibre}(\bar{\lambda}, \bar{\depsilon}) = \dfrac{1}{\bar{\lambda}^2} \sigma_0 \left( a(t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right) \*a_0 \otimes \*a_0,
+\end{equation}
+and a Yeoh base material contribution:
+\begin{equation}
+    \bar{\*S}_{bm} = s_{bm} \sigma_{0} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I,
+\end{equation}
+where $\bar{\*S}_{fibre}$ and $\bar{\*S}_{bm}$ are the modified second Piola-Kirchhoff (PK2) tensors defined in \eqref{eq:def_S_fibre} and \eqref{eq:def_S_bar_bm}, respectively. Differently from Holt et al. \cite{Holt2016}, we set the maximum isometric stress to a more standard value of $\sigma_0 = 20.0$ \unit{N \ cm^{-2}}. Furthermore, we set the scaling factor $s_{bm} = 1$ and we also assumed that the maximum unloaded strain rate was $\depsilon_0 = 5$ \unit{s^{-1}}.
+
+\subsection{Testing protocol}
+
+Let $\depsilon_M^* > 0$ and $0 < a_{max}\leq 1$ be a prescribed whole-muscle shortening strain rate and a maximum activation level, respectively. The main experiment consisted of the following steps:
+\begin{enumerate}
+    \item Starting from its rest state with the $-x$ face fixed (clamped), passively lengthen the muscle at a speed of 1 \unit{s^{-1}} until it reaches a whole-muscle strain of $\varepsilon_M = 0.1$ (i.e. 110\% of its resting length),
+    \item Perform an isometric contraction (in the sense of Defintion \ref{def:isometric_contraction_3d}) where the activation is linearly ramped up to $a_{max}$ over 0.2 s,
+    \item Shorten the muscle block at a speed of $\depsilon_M^*$ (measured at the +x face) until it reaches back its resting length.
+\end{enumerate}
+The procedure above thus yields the following boundary condition:
+\begin{equation}
+    \varepsilon_M(t) = \left\{
+        \begin{aligned}
+            &t, &&0 \leq t < 0.1, \\
+            &0.1, &&0.1 \leq t < 0.3, \\
+            &-\depsilon_M^* (t-T), && 0.3 \leq t \leq T,\\
+        \end{aligned}
+    \right.
+\end{equation}
+where $T := 0.3 + 0.1/\depsilon_M^*$ \unit{s}, as well as the activation profile:
+\begin{equation}
+    a(t) = \left\{
+        \begin{aligned}
+            &0, &&0 \leq t < 0.1, \\
+            &5\, a_{max} \, (t-0.1), &&0.1 \leq t < 0.3, \\
+            &a_{max}, && 0.3 \leq t \leq T.\\
+        \end{aligned}
+    \right.
+\end{equation}
+
+We implemented this contraction in Flexodeal Lite for multiple whole-muscle shortening speeds $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments.
+
+\subsection{Gearing in the Flexodeal framework}
+
+The term ``gearing'' was introduced by Brainerd \& Azizi \cite{BrainerdAzizi2005} in 2005 as ``architectural gear ratio''. This quantity was introduced as the ratio of whole muscle strain to fibre strain. It was studied in aquatic salamanders using sonomicrometry and the results were compared to a geometrical model showing qualitatively similar results. However, the work of Azizi et al. \cite{Azizi2008VariableGearing} in 2008 defined gearing as the ratio of whole muscle \textit{velocity} to fibre velocity, a definition that is now agreed upon in the literature due to its functional and physiological importance (see, for instance, the review by Pinto et al. \cite{PintoEtAl2023Nomenclature}). However, in our modelling framework, neither the muscle velocity nor the fibre strain rate are constant, scalar quantities, so we must derive a new expression to account for our three-dimensional variations.
+
+According to the above, we define the muscle gearing $G$ as:
+\begin{equation} \label{eq:def_gearing}
+    G = \dfrac{\text{muscle velocity}}{\text{fibre velocity}}:= \dfrac{-\left|\mathrm{avg}_S(\*V)(t=T) \right|}{L_f^0 \, \depsilon_0 \, \mathrm{avg}_S(\depsilon)(t=T)},
+\end{equation}
+where $|\cdot|$ is the Euclidean norm, $T$ is the simulation end time (i.e. when the muscle reaches back its resting length according to the previously described protocol), and $\mathrm{avg}_S(\*V)(t)$ and $\mathrm{avg}_S(\depsilon)$ are respectively the average muscle velocity and fibre strain rate in the middle section of the muscle block as described in Section \ref{sec:flexodeal-gearing-related-info}, that is:
+\begin{equation}
+    \mathrm{avg}_\mathrm{S}(\*V_{mus})(t) = \dfrac{1}{|\mathrm{slab}(\B_t)|} \int_{\mathrm{slab}(\B_0)} \*V(\*X,t) J(\*X,t) \ d\*X,
+\end{equation}
+and
+\begin{equation}
+    \mathrm{avg}_\mathrm{S}(\dot{\varepsilon})(t) = \dfrac{1}{|\mathrm{slab}(\B_t)|} \int_{\mathrm{slab}(\B_0)} \dot{\varepsilon}(\*X,t) J(\*X,t) \ d\*X,
+\end{equation}
+where
+\begin{equation}
+    \mathrm{slab}(\B_0) := \left\{ \*X = (x_1,x_2,x_3) \in \B_0 : \dfrac{3}{8}L_{mus} \leq x_1 \leq \dfrac{5}{8} L_{mus} \right\}
+\end{equation}
+and $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$, with $\bm{\varphi}$  the deformation that maps $\B_0$ into $\B_t$. Note that the minus sign in \eqref{eq:def_gearing} is to obtain a positive quantity since when the muscle actively shortens, so do the fibres, and therefore we expect that $\depsilon < 0$. We also note that, in \eqref{eq:def_gearing}, one could have alternatively considered the $x$ component of the velocity field $\*V$, or even the prescribed muscle velocity at the $+x$ face as the numerator for $G$. However, computing gearing using $|\*V|$ rather than a singular component gave better results when compared to the values in \cite{Holt2016}, as we will see next.
+
+\section{Results}
+
+\section{Discussion}
+
 
 
 
