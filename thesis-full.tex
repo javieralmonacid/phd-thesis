@@ -125,6 +125,7 @@
                 decorations.pathmorphing,
                 shapes.geometric}
 
+\usepackage{enumerate}
 \usepackage{makecell}
 \usepackage[percent]{overpic}
 \usepackage{comment}
@@ -241,6 +242,8 @@
 
 \DeclareMathOperator{\Adj}{\mathrm{Adj}}
 \DeclareMathOperator{\Cof}{\mathrm{Cof}}
+
+\newcommand{\Flexodeal}{{\texttt{Flexodeal}} }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -2635,7 +2638,7 @@ where $\kappa_{bm}$ and $\kappa_{fat}$ are the bulk moduli for the base material
 
 \section{Extending the SEF to the muscle-tendon unit} \label{sec:extension_sef_mtu}
 
-The expressions in the previous section are only applicable to geometries made entirely of muscle tissue, without internal or external tendons. To create a SEF for the whole muscle-tendon unit, let us consider a partition of the geometry of interest into three parts $\B_0 = \B_0^M \cup \B_0^A z \cup \B_0^T$, where $\B_0^M$, $\B_0^A$, and $\B_0^T$ represent the parts of $\B_0$ made of muscle tissue, aponeurosis, and tendon. Thus, a SEF for the MTU reads:
+The expressions in the previous section are only applicable to geometries made entirely of muscle tissue, without internal or external tendons. To create a SEF for the whole muscle-tendon unit, let us consider a partition of the domain of interest into three parts $\B_0 = \B_0^M \cup \B_0^A z \cup \B_0^T$, where $\B_0^M$, $\B_0^A$, and $\B_0^T$ represent the parts of $\B_0$ made of muscle tissue, aponeurosis, and tendon. Thus, a SEF for the MTU reads:
 \begin{equation}
     \Psi_{MTU}(\*X,t) = \Psi_{mus}(\*X,t) \bm{\iota}_M(\*X) + \Psi_{apo}(\*X,t) \bm{\iota}_A(\*X) + \Psi_{ten}(\*X,t) \bm{\iota}_T(\*X),
 \end{equation}
@@ -3276,27 +3279,41 @@ When the linear system \eqref{eq:LF_linear_system} is discretized using the fini
 
 We omit details of the discretization as this will be solved using the C++ finite element library \textit{deal.II} \cite{dealii}. In this case, the system as written in \eqref{eq:LF_linear_system} is sufficient to begin a computational implementation. This will be the focus of the next chapter.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics} \label{ch:flexodeal}
 
-In this chapter, we present \textit{Flexodeal}, a new finite-element tool for the study of 3D skeletal muscle deformation in a fully dynamic regime (with quasi-static deformations provided as an option as well). Flexodeal is completely open-source and licensed under the same conditions as deal.II (GNU Lesser General Public License, version 2.1 \cite{dealii}). It is freely available at:
+\Flexodeal is a new finite-element tool developed during this research project. It aims to be a research software for the study of 3D skeletal muscle deformation in a fully dynamic regime (with quasi-static deformations provided as an option as well). Some elements are based on previous codes developed by the Neuromuscular Mechanics Laboratory at Simon Fraser University, but they have been significantly restructured. \Flexodeal is completely open-source and licensed under the same conditions as deal.II (GNU Lesser General Public License, version 2.1 \cite{dealii}). It is freely available at:
 \begin{center}
     \url{https://github.com/sfu-nml/flexodeal}.
 \end{center}
-Using deal.II as a base library, Flexodeal implements an object-oriented C++ solver for the elastodynamic problem \eqref{eq:LF_main_system} based on user-defined material properties, boundary conditions, and other parameters. 
+
+Using deal.II as a base library, Flexodeal implements an object-oriented C++ solver for the elastodynamic problem \eqref{eq:LF_main_system} based on user-defined material properties, boundary conditions, and other parameters of physiological relevance, such as activation profiles. 
 It assumes that the muscle-tendon unit (MTU) can contain a combination of muscle, aponeurosis, and tendon tissues, each one of them admitting both a fibre and a base material contribution. In addition, muscle tissue is allowed to have a user-defined fraction of intramuscular fat, which is implemented according to Section \ref{sec:intramuscular_fat}. Given that the complexity of the tissue models can easily overtake many of the numerical aspects of this solver, we have also implemented a ``lite'' version of this software, which can be used as a tool to further develop the numerical methods used in of skeletal muscle deformation. We have called this code \textit{Flexodeal Lite} and it is freely available at:
 \begin{center}
     \url{https://github.com/sfu-nml/flexodeal-lite}.
 \end{center}
 Flexodeal Lite implements the same solver used in Flexodeal but in this case, the strain-energy function $\Psi$ only models muscle tissue as a combination of fibres and base material with no intramuscular fat (cf. \eqref{eq:def_Psi_iso_fibre_bm_fat}) or other tendinous tissues.
 
-In this Chapter, we present details about the computational implementation of Flexodeal, including documentation of input and output variables. Furthermore, we present a set of carefully-selected fundamental experiments that can be used as reference points for further modelling and computatiional developments. These include a combination of dynamic and quasi-static experiments.
+In both cases, two particular challenges arise when implementing a solver for the elastodynamic system \eqref{eq:LF_main_system}: 
+\begin{enumerate}[(i)]
+    \item the problem is highly nonlinear and potentially non-convex, and
+    \item the physiological quantities of interest--such as force on a boundary surface or fibre strain rates--are unconventional finite element methods.
+\end{enumerate}
 
-We begin in Section \ref{sec:flexodeal_background} with some motivation behind these developments. Then, we describe some implementation aspects of Flexodeal in Section \ref{sec:flexodeal_implementation}. Here, we focus on explaining how the different parameters in the solver are specified, the treatment of boundary conditions, and how to input the activation function. We also discuss how some properties (such as tissue type, fibre orientation, and intramuscular fat fraction) can be implemented in a space-dependent fashion thanks to the quadrature point logic surrounding deal.II and finite element methods in general.
-Next, in Section \ref{sec:flexodeal_convergence}, we study the computational convergence of the numerical method for the nonlinear problem \eqref{eq:LF_weak} in the particular case of the isometric contraction of a pennate block of muscle tissue. These results will be contrasted with the theoretical statements introduced in Section \ref{sec:finite_element_approximation}.
+In this Chapter, we present details about the computational implementation of Flexodeal, including documentation of input and output variables. Furthermore, we present a set of carefully-selected fundamental experiments that can be used as reference points for further modelling and computational developments. These include a combination of dynamic and quasi-static experiments.
+
+We begin in Section \ref{sec:flexodeal_background} with some motivation behind these developments. Then, we describe some implementation aspects of Flexodeal in Section \ref{sec:flexodeal_implementation}. Here, we focus on explaining how the different parameters in the solver are specified, the treatment of boundary conditions, and how to input the fibre activation function. We also discuss how some properties (such as tissue type, fibre orientation, and intramuscular fat fraction) can be prescribed in a space-dependent fashion thanks to the quadrature point logic surrounding deal.II and finite element methods in general.
+Next, in Section \ref{sec:flexodeal_convergence}, we study the computational convergence of the numerical method for the nonlinear problem \eqref{eq:LF_weak} in the particular case of the isometric contraction of a pennate block of muscle tissue. These results will be compared with the theoretical statements introduced in Section \ref{sec:finite_element_approximation}.
 In Section \ref{sec:flexodeal_fl_curves} we study the force-length relationship of \textit{whole} muscle and discuss its implications on the numerical stability of the finite element method. 
 Furthermore, in Section \ref{sec:flexodeal_dynamic_effects}, we study the differences in key biomechanical quantities that arise from the consideration of dynamic simulations when compared to more classic quasi-static results. 
-Finally, we show in Section \ref{sec:flexodeal_mri} the applicability of Flexodeal to a more realistic situation in which the geometry is derived from magnetic resonance imaging (MRI), while the activation and prescribed boundary conditions are obtained from an \textit{in vivo} experiment of locomotion.
+Finally, we show in Section \ref{sec:flexodeal_mri} the applicability of Flexodeal to a more realistic situation in which the finite element mesh is derived from magnetic resonance imaging (MRI), while the activation and prescribed boundary conditions are obtained from an \textit{in vivo} experiment of locomotion.
 
 \section{Motivation} \label{sec:flexodeal_background} 
 
@@ -3309,7 +3326,7 @@ Finally, we show in Section \ref{sec:flexodeal_mri} the applicability of Flexode
 
 Three-dimensional musculoskeletal simulations have been performed at the Neuromuscular Mechanics Laboratory (Simon Fraser University) for more than 10 years. Early works by Rahemi et al. focused on the effects of space-dependent activation \cite{RahemiNigamWakeling2014} and the distribution of intramuscular fat \cite{RahemiNigamWakeling2015}. Later, a series of articles on muscle energetics were published by Wakeling et al. \cite{Paper1_WakelingEtAl2020}, Ryan et al. \cite{Paper2_RyanEtAl2020}, and Ross et al. \cite{Paper3_RossEtAl2021}. More recently, Konno et al. studied the inclusion of extracellular material (ECM) as part of the base material properties of muscle \cite{KonnoNigamWakeling2021_ECM} and the effect of this component in muscle affected by cerebral palsy \cite{KonnoEtAl2022_CP}. Behind all these works, there was a single C++ file based on deal.II's tutorial ``step-44'' \cite{step44} that was adapted to each research project, refactored to include new features, or simply rewritten. This resulted in a roughly 10,000-line C++ code that included many undocumented and untested features. Moreover, as deal.II continues to evolve, many parts of the original code simply became obsolete. Therefore, there was an urgent need to unify these code developments to ensure extensibility, reproducibility, and to facilitate dissemination of results.
 
-In this way, since significant modifications to the original code were required anyway to accommodate the Lagrangian model \eqref{eq:LF_main_system}, we decided to take a more modern approach in terms of software engineering. This included the consideration of: simple but fundamental computational experiments that can be used for testing and debugging, version control (using GitHub), and enough documentation to support future code developments and make this software publicly available. Hence, Flexodeal was born. This constitutes the first open-source, 3D nonlinear musculoskeletal simulation tool that includes active anisotropy in a fully dynamic environment. Since this software was developed in a modular framework (facilitated by deal.II), researchers have the opportunity to adapt this code to other expressions of, for instance, force-length and force-velocity relationships, as well as different strain-energy functions for the tissue components.
+Significant modifications to the original code were required to accommodate the Lagrangian model \eqref{eq:LF_main_system} used for the fully dynamic simulations. Therefore, we decided to take a more modern approach in terms of software engineering. This included the consideration of: simple but fundamental computational experiments that can be used for testing and debugging, version control (using GitHub), and enough documentation to support future code developments and make this software publicly available. Hence, Flexodeal was born. This constitutes the first open-source, 3D nonlinear musculoskeletal simulation tool that includes active anisotropy in a fully dynamic environment. Since this software was developed in a modular framework (facilitated by deal.II), researchers have the opportunity to adapt this code to other expressions of, for instance, force-length and force-velocity relationships, as well as different strain-energy functions for the tissue components.
 
 
 \section{Implementation details} \label{sec:flexodeal_implementation}
@@ -3328,7 +3345,7 @@ We now proceed to describe the main inputs required to run Flexodeal and the out
 
 \subsection{Inputs}
 
-We use different files to systematically input important variables, such as the boundary strain and activation profiles, as well as the marker locations used for tracking point-valued displacements.
+We use distinct input files to systematically prescribe important variables, such as the boundary strain and activation profiles, as well as the marker locations used for tracking point-valued displacements.
 
 \subsubsection{Parameter file}
 
@@ -3337,16 +3354,16 @@ Named by default \texttt{parameters.prm}, this file provides information about m
     \item Polynomial degree $k$ in the finite element $\*Q_{k} \times P_{k-1} \times P_{k-1}$ \eqref{eq:FE_spaces} used to approximate the solution to the three-field formulation \eqref{eq:LF_main_system}.
     \item Rule order of the Gaussian quadrature formula used to approximate integrals in the computation of local mass and stiffness matrices, as well as local forcing terms.
     \item Type of simulation: \texttt{quasi-static} or \texttt{dynamic}, per Remark \ref{re:quasi-static_dynamic}.
-    \item Geometry and meshing parameters required in \texttt{Solid<dim>::make\_grid}.
+    \item Geometry and meshing parameters required to build the mesh.
     \item Linear solve information, such as preconditioners (\texttt{jacobi} or \texttt{ssor}) and solvers: \texttt{direct} (which uses the UMFPACK solver), \texttt{CG} (conjugate gradient), or \texttt{GMRES}.
     \item Material parameters, such as bulk moduli and the constants defining the Yeoh strain-energy functions (Table \ref{tab:constants_base_material_muscle}) for muscle, tendon, aponeurosis, and fat tissue.
-    \item Nonlinear solver information, such as the maximum number of nonlinear iterations and tolerances for displacement and force\footnote{In this context, force refers to the \textit{forcing} term, i.e. the right-hand side of the linear system of equations \eqref{eq:LF_linear_system}.}, respectively denoted by $\mathtt{tol}_u$ and $\mathtt{tol}_f$. Therefore, at each time step, convergence of the Newton method is assessed according to the criterion:
+    \item Nonlinear solver information, such as the maximum number of nonlinear iterations and tolerances for displacement and force\footnote{In this context, force refers to the \textit{forcing} term, i.e. the right-hand side of the linear system of equations \eqref{eq:LF_linear_system}.}, respectively denoted by $\mathtt{tol}_u$ and $\mathtt{tol}_f$. At each time step, numerical convergence of the Newton method is assessed according to the criterion:
     \[
         \vertiii{\*d \*U_k^{n+1}} \leq \mathtt{tol}_u \quad \text{and} \quad \vertiii{R(\*U_k^{n+1}, p_k^{n+1}, D_k^{n+1})} \leq \mathtt{tol}_f,
     \]
     where $\vertiii{\*d \*U_k^{n+1}}$ is the discrete $\ell^2$ norm of the vector containing the evaluation of the Newton increment for displacement $\*d \*U_k^{n+1}$ (see Section \ref{sec:newton_method}) at the degrees of freedom (in the finite element sense) of the system and $\vertiii{R(\*U_k^{n+1}, p_k^{n+1}, D_k^{n+1})}$ is the $\ell^2$ norm of the right-hand side of the linear system of equations \eqref{eq:LF_linear_system}.
     \item Time step size $\Delta t $ simulation end time $T$.
-    \item Boundary ID on which the prescribed strain will be applied.
+    \item Label of the boundary surface (also known as ``boundary ID'') on which the prescribed strain will be applied (see, for example, Figure \ref{fig:idealized_geometry}).
     \item Location of file containing markers (see Section \ref{sec:prescribed_act_strain}).
     \item Booleans that activate the output of binary files (see Section \ref{sec:flexodeal_outputs}).
 \end{itemize}
@@ -3356,11 +3373,11 @@ Named by default \texttt{parameters.prm}, this file provides information about m
 Named by default \texttt{control\_points\_strain.dat} and \texttt{control\_points\_activation.dat}, these files provide respectively information about the time-dependent boundary strain $\varepsilon_M$ and activation $a$ profiles. In particular, prescribing the boundary strain implements the following boundary condition for the system of PDEs \eqref{eq:LF_main_system}:
 \begin{equation}
     \*u_D = \left\{ \begin{array}{ll}
-        \*0, & \text{on } \mathcal{S}_{0,fixed} \\
-        L_{mus} \left( \varepsilon_M(t) + 1 \right) \widehat{\bm{\ell}}, & \text{on } \mathcal{S}_{0,moving}
+        \*0, & \text{on } \mathcal{S}_{0,\, fixed}, \\
+        L_{mus} \left( \varepsilon_M(t) + 1 \right) \widehat{\bm{\ell}}, & \text{on } \mathcal{S}_{0,\, moving}.
     \end{array}\right.
 \end{equation}
-Here $\mathcal{S}_{0,fixed}, \mathcal{S}_{0,moving}  \subseteq \Gamma_{D,0}$ are respectively the fixed and moving parts of the boundary $\Gamma_{D,0}$, $L_{mus}$ is the initial length of the muscle (as defined in the parameter file), and $\widehat{\bm{\ell}}$ is the line of action vector,  which is set by default to $\langle 1,0,0 \rangle$.
+Here $\mathcal{S}_{0,\, fixed}, \, \mathcal{S}_{0,\, moving}  \subseteq \Gamma_{D,0}$ are respectively the fixed and moving parts of the boundary $\Gamma_{D,0}$, $L_{mus}$ is the initial length of the muscle (as defined in the parameter file), and $\widehat{\bm{\ell}}$ is the line of action vector,  which is set by default to $\langle 1,0,0 \rangle$.
 
 In these files, information is provided as a space-separated, two-column matrix containing the pairs $(t_k, \varepsilon_M(t_k))$ (or $(t_k, a(t_k)$ for activation). The continuous profiles $\varepsilon_M(t)$ and $a(t)$ are then constructed via linear interpolation between the provided control points. As shown in Figure \ref{fig:flexodeal_lite_act_strain_profiles}, simple linear profiles can be constructed with a few control points. Since the code allows for an arbitrary number of control points, more involved profiles can be constructed as well (see Section \ref{sec:flexodeal_mri}).
 
@@ -3401,9 +3418,17 @@ Similar to a motion capture experiment, Flexodeal allows the user to mark a numb
 
 In the context of finite element methods, many of the integrals involved in computing element stiffness matrices, mass matrices, and load vectors are not straightforward to evaluate analytically. Since exact integration may not be possible or practical for most element shapes, numerical integration is used to approximate these integrals.
 
-Quadrature points (QPs) are used to evaluate these integrals approximately by placing ``evaluation points'' within each element and using weights associated with these points to compute the integral. This helps in ensuring that the element-level calculations (like stiffness or mass matrices) are accurately represented in the global system, which is essential for the solution of the finite element problem.
+%Quadrature points (QPs) are used to evaluate these integrals approximately by placing ``evaluation points'' within each element and using weights associated with these points to compute the integral. This helps in ensuring that the element-level calculations (like stiffness or mass matrices) are accurately represented in the global system, which is essential for the solution of the finite element problem.
 
-The number of QPs is determined by the order of the quadrature rule. Flexodeal uses a Gaussian quadrature rule and the order is specified in the \texttt{parameters.prm} file (see \texttt{set Quadrature order} in the \texttt{Finite element system} subsection). In Table \ref{tab:number_of_qp_points}  we provide a guideline to choose the correct quadrature rule order based on the chosen polynomial degree and whether the simulation is quasi-static or dynamic.
+Flexodeal uses a Gaussian quadrature rule. The order of this rule (which dictate the amount of QPs in each voxel) is specified in the \texttt{parameters.prm} file (see \texttt{set Quadrature order} in the \texttt{Finite element system} subsection). In Table \ref{tab:number_of_qp_points}  we provide a guideline to choose the correct quadrature rule order based on the chosen polynomial degree and whether the simulation is quasi-static or dynamic.
+
+The QP file serves two main purposes: to list all the QPs associated to the current mesh and to attach material properties that might vary in space but not in time. Currently, the following properties are supported:
+\begin{itemize}
+    \item Tissue ID (column name: \texttt{tissue\_id}, SI units: none) which is set to 1 for muscle tissue, 2 for aponeurosis tissue, and 3 for tendon tissue. These IDs are set according to the material ID (also called ``physical ID'') of each cell to which a QP belongs. Therefore, the material ID of each cell may be set at the time the mesh is constructed.
+    \item Muscle maximum isometric stress $\sigma_{0,mus}$ (column name: \texttt{max\_iso\_stress\_muscle}, SI units: Pa). Although this quantity (see \eqref{eq:def_hill_stress_sigma}) is usually constant throughout muscle tissue (equal to $\sim$200 kPa), some experiments might require this quantity to vary depending on fibre types \cite{Bottinelli1999}.
+    \item Muscle fibre orientation (specified in three columns, \texttt{muscle\_fibre\_orientation\_x}, \texttt{muscle\_fibre\_orientation\_y}, and \texttt{muscle\_fibre\_orientation\_z}, SI units: none), a unit vector indicating orientation of a fibre passing through the QP location.
+    \item Fat fraction $\chi_{fat}$ (column name: \texttt{fat\_fraction}, SI units: none), the fraction of fat (see \eqref{eq:def_kappa_bm_fat}) at the QP location.
+\end{itemize}
 
 \begin{table}
     \centering
@@ -3419,21 +3444,13 @@ The number of QPs is determined by the order of the quadrature rule. Flexodeal u
     \caption{Minimum quadrature order required depending on the type of simulation (dynamic of quasi-static) and finite element polynomial degree.\label{tab:number_of_qp_points}}
 \end{table}
 
-The QP file serves two main purposes: to list all the QPs associated to the current mesh and to attach material properties that might vary in space but not on time. Currently, the following properties are supported:
-\begin{itemize}
-    \item Tissue ID (column name: \texttt{tissue\_id}, SI units: none) which is set to 1 for muscle tissue, 2 for aponeurosis tissue, and 3 for tendon tissue. These IDs are set according to the material ID (also called ``physical ID'') of each cell to which a QP belongs. Therefore, the material ID of each cell may be set at the time the mesh is constructed.
-    \item Muscle maximum isometric stress $\sigma_{0,mus}$ (column name: \texttt{max\_iso\_stress\_muscle}, SI units: Pa). Although this quantity (see \eqref{eq:def_hill_stress_sigma}) is usually constant throughout muscle tissue (equal to $\sim$200 kPa), some experiments might require this quantity to vary depending on fibre types \cite{Bottinelli1999}.
-    \item Muscle fibre orientation (specified in three columns, \texttt{muscle\_fibre\_orientation\_x}, \texttt{muscle\_fibre\_orientation\_y}, and \texttt{muscle\_fibre\_orientation\_z}, SI units: none), a unit vector indicating orientation of a fibre passing through the QP location.
-    \item Fat fraction $\chi_{fat}$ (column name: \texttt{fat\_fraction}, SI units: none), the fraction of fat (see \eqref{eq:def_kappa_bm_fat}) at the QP location.
-\end{itemize}
-
 \begin{remark}
-    In Flexodeal Lite, these properties are implemented as constants throughout the geometry and specified via the parameter file \texttt{parameters.prm}.
+    In Flexodeal Lite, these properties are implemented as constants throughout the domain and specified via the parameter file \texttt{parameters.prm}.
 \end{remark}
 
 \subsection{Outputs} \label{sec:flexodeal_outputs}
 
-Several variables of interest are readily available in Flexodeal.
+Several variables of physiological interest are readily available in Flexodeal.
 
 \subsubsection{Activation and muscle length}
 
@@ -3445,7 +3462,7 @@ This CSV file (named \texttt{displacements-3d.csv}) provides 3D displacement inf
 
 \subsubsection{Energies}
 
-This CSV file (named \texttt{energy\_data-3d.csv}) provides time series for each one of the strain energies (in \unit{J \, m^{-3}}) in the system (in what follows, $|\B_t|$ denotes the volume of the current configuration $\B_t$):
+This CSV file (named \texttt{energy\_data-3d.csv}) provides time series for each one of the strain energies (in \unit{J \, m^{-3}}) in the system. In what follows, $|\B_t|$ denotes the volume of the current configuration $\B_t$:
 \begin{itemize}
     \item Kinetic energy:
     \begin{equation}
@@ -3478,7 +3495,7 @@ This CSV file (named \texttt{energy\_data-3d.csv}) provides time series for each
     \begin{equation}
         E_{mus,pas}(t) = \dfrac{1}{|\B_t|} \int_{\B_0} (\nabla_0 \*U) \*F^{-1} \btau_{mus,pas} \ d\*X,
     \end{equation}
-    where similar to the muscle active energy,  $\btau_{mus,pas} = \p : \bar{\btau}_{mus,pas}$ and:
+    analogous to the muscle active energy,  $\btau_{mus,pas} = \p : \bar{\btau}_{mus,pas}$ and:
     \[
         \bar{\btau}_{mus,pas} = \dfrac{1}{\bar{\lambda}^2} \sigma_{0,mus}  \widehat{\sigma}_P(\bar{\lambda})  \bar{\*a} \otimes \bar{\*a},
     \]
@@ -3515,6 +3532,8 @@ and
 
 \subsubsection{Forces}
 
+Muscle forces are essential because they represent the active mechanical output generated by muscle fibres and transmitted to the tendon, ultimately enabling joint motion and force application to the skeleton. Therefore, it is of great physiological interest to compute these forces at particular surfaces of the muscle-tendon unit.
+
 The general expression for the force exerted on a surface $\mathcal{S}_t \subseteq \partial \B_t$ of the body whose current configuration is $\B_t$ is given by:
 \begin{equation} \label{eq:def_force_general}
     \vec{F}(t) = \int_{\mathcal{S}_t} \bsigma \*n \ ds = \int_{\mathcal{S}_0} J \bsigma \*F^{-\top} \*N \ dS = \int_{\mathcal{S}_0} \btau \*F^{-\top} \*N \ dS.
@@ -3523,15 +3542,15 @@ Here, we have used Nanson's formula \eqref{eq:differentials}\textsubscript{2} to
 \begin{equation} \label{eq:def_force_approximated}
     \vec{F}(t) \approx \sum_{T \in \mathcal{T}_h(\mathcal{S}_0)} \ \sum_{q = 1}^{N_q^\partial} \btau(\widetilde{\*X}_q, t) \, \*F^{-\top}(\widetilde{\*X}_q, t) \, \*N(\*X_q, t) \, J_{T \to \Box} \, w_q,
 \end{equation}
-where $\mathcal{T}_h(\mathcal{S}_0)$ is a triangularization (made of quadrilaterals) of the surface $\mathcal{S}_0$, $(\*X_q, w_q)_{q = 1}^{N_q^\partial}$ is a Gaussian quadrature on the unit square $\Box$ (of the same order as the one used in computing the volume integrals) with points $\*X_q$ and weigths $w_q$, $J_{T \to \Box}$ is the Jacobian of the affine transformation that maps $T$ into $\Box$, and $\widetilde{\*X}_q$ is the closest interior quadrature point to the surface quadrature point $\*X_q$.
+where $\mathcal{T}_h(\mathcal{S}_0)$ is a tesselation (made of quadrilaterals) of the surface $\mathcal{S}_0$, $(\*X_q, w_q)_{q = 1}^{N_q^\partial}$ is a Gaussian quadrature on the unit square $\Box$ (of the same order as the one used in computing the volume integrals) with points $\*X_q$ and weights $w_q$, $J_{T \to \Box}$ is the Jacobian of the affine transformation that maps $T$ into $\Box$, and $\widetilde{\*X}_q$ is the closest interior quadrature point to the surface quadrature point $\*X_q$.
 
 These forces are written to disk in the files:
 \begin{center}
     \texttt{force\_data-3d-XYZ.csv} and \texttt{force\_data-3d.csv}.
 \end{center}
-The first file exports the force derived from the different Kirchhoff stresses that are computed in the code (e.g. $\btau$, $\btau_{vol}$, $\btau_{iso}$, etc.) at each boundary ID at time step XYZ. The second file exports the $x$ component of the force vector $\vec{F}$ at the boundary ID indicated in the parameter ``\texttt{set Pulling face ID}'' of the parameter file, since this is typically a quantity of interest in lengthening/shortening experiments. 
+The first file exports the force derived from the different Kirchhoff stresses that are computed in the code (e.g. $\btau$, $\btau_{vol}$, $\btau_{iso}$, etc.) at each part of the boundary $\partial \B_0$, where XYZ is a suffix used to identify a particular time step. The second file exports the $x$ component of the force vector $\vec{F}$ at the boundary ID indicated in the parameter ``\texttt{set Pulling face ID}'' of the parameter file, since this is typically a quantity of interest in lengthening/shortening experiments. 
 
-The force $\vec{F}$ computed in \eqref{eq:def_force_general} corresponds to the total force arising from all the material components of the system, that is, using the stress tensor $\btau$. To compute individual contributions to this force, we modify the Kirchhoff stress to be used in \eqref{eq:def_force_general} and proceed as in the computation of energies. This leads to the following quantites, which are available in all force-related CSV files:
+The force $\vec{F}$ computed in \eqref{eq:def_force_general} corresponds to the total force arising from all the material components of the system, that is, using the stress tensor $\btau$. To compute individual contributions to this force, we modify the Kirchhoff stress to be used in \eqref{eq:def_force_general} and proceed as in the computation of energies. This leads to the following quantities, which are available in all force-related CSV files:
 \begin{itemize}
     \item Volumetric force $\vec{F}_{vol}$ computed using $\btau_{vol}$,
     \item Isochoric force $\vec{F}_{iso}$ computed using $\btau_{iso}$,
@@ -3545,7 +3564,7 @@ The force $\vec{F}$ computed in \eqref{eq:def_force_general} corresponds to the 
 \end{itemize}
 Therefore, the following additive relationships hold:
 \begin{equation}
-    \vec{F} = \vec{F}_{vol} + \vec{F}_{iso}
+    \vec{F} = \vec{F}_{vol} + \vec{F}_{iso},
 \end{equation}
 and
 \begin{equation}
@@ -3554,7 +3573,7 @@ and
 
 \subsubsection{Gearing-related information} \label{sec:flexodeal-gearing-related-info}
 
-Gearing refers to the relationship between the muscle's overall shortening (or lengthening) speed and the shortening (or lengthening) speed of its individual muscle fibres \cite{Azizi2008VariableGearing,Eng2018}. This file, named \texttt{gearing\_info-3d.csv}, contains the following information:
+Gearing refers to the relationship between the muscle's overall shortening (or lengthening) speed and the shortening (or lengthening) speed of its individual muscle fibres \cite{Azizi2008VariableGearing,Eng2018}. This is a concept that we discuss in detail in Chapter \ref{ch:gearing}. This file, named \texttt{gearing\_info-3d.csv}, contains the following information:
 \begin{itemize}
     \item $x$-component of the prescribed velocity at the moving end of the muscle, computed using the prescribed boundary strain $\varepsilon_M$ (see Section \ref{sec:prescribed_act_strain}) at each time step $t_k$ as
     \begin{equation}
@@ -3568,14 +3587,13 @@ Gearing refers to the relationship between the muscle's overall shortening (or l
     \begin{equation}
         \mathrm{slab}(\B_0) := \left\{ \*X = (x_1,x_2,x_3) \in \B_0 : \dfrac{3}{8}L_{mus} \leq x_1 \leq \dfrac{5}{8} L_{mus} \right\}
     \end{equation}
-    is a subregion of the reference configuration $\B_0$ that removes the ends of the geometry (assuming its length runs along the $x$ direction) to leave out of consideration nonphysical effects that may happen at the Dirichlet boundaries. Naturally, we have $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$ where $\bm{\varphi}$ is the deformation that maps $\B_0$ into $\B_t$.
+    is a subregion of the reference configuration $\B_0$ that removes the ends of the domain (assuming its length runs along the $x$ direction) to leave out of consideration nonphysical effects that may happen at the Dirichlet boundaries. Naturally, we have $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$ where $\bm{\varphi}$ is the deformation that maps $\B_0$ into $\B_t$.
     \item Mean fibre strain rate, computed as:
     \begin{equation} \label{eq:def_mean_fibre_strain_rate}
         \mathrm{avg}_\mathrm{S}(\dot{\varepsilon})(t) = \dfrac{1}{|\mathrm{slab}(\B_t)|} \int_{\mathrm{slab}(\B_0)} \dot{\varepsilon}(\*X,t) J(\*X,t) \ d\*X,
     \end{equation}
     where $\dot{\varepsilon}$ is the fibre strain rate defined in \eqref{eq:def_strain_rate_fibre_non_bar}. 
 \end{itemize}
-These variables will be studied in detail in Chapter \ref{ch:gearing} of this thesis.
 
 \subsubsection{Mean fibre stretch and pennation}
 
@@ -3604,7 +3622,7 @@ These set of files, named
 \begin{center}
     \texttt{cell\_data\_main-3d-XYZ.data} and \texttt{cell\_data\_tensors-3d-XYZ.data}    
 \end{center}
-provide detailed QP information about most of the variables computed in Flexodeal at time step \texttt{XYZ}. Each file contains an 2D array with a fixed number of columns and a fixed number of rows, the latter corresponding to the total number of quadrature points in the system. A description of the columns in each one of these files can be found respectively in Tables \ref{tab:contents_binary_file_main} and \ref{tab:contents_binary_file_tensors}.
+provide detailed QP information about most of the variables computed in Flexodeal, where XYZ is a suffix used to identify a particular time step. Each file contains an 2D array with a fixed number of columns and a fixed number of rows, the latter corresponding to the total number of quadrature points in the system. A description of the columns in each one of these files can be found respectively in Tables \ref{tab:contents_binary_file_main} and \ref{tab:contents_binary_file_tensors}.
 
 \begin{table}
     \centering
@@ -3661,7 +3679,7 @@ provide detailed QP information about most of the variables computed in Flexodea
 
 \subsubsection{VTU files}
 
-To visualize the solutions in 3D space, we export several VTU files that can be opened in software such as Paraview or Visio. The main variables (displacement, pressure, and dilatation) are exported at each time step \texttt{XYZ} in the \texttt{solution-3d-XYZ.vtu}. These are constructed directly from the DOFs of the finite element solution. In turn, variables that are stored only at quadrature points, such as stresses, fibre stretches, and fibre strain rates, are first projected onto an appropriate finite element space and then exported to VTU format. In particular, at each time step \texttt{XYZ}, the following files are available:
+To visualize the solutions in 3D space, we export several VTU files that can be opened in software such as Paraview or Visio. The main variables (displacement, pressure, and dilatation) are exported at each time step (denoted by the suffix \texttt{XYZ}) in the \texttt{solution-3d-XYZ.vtu}. These are constructed directly from the DOFs of the finite element solution. In turn, variables that are stored only at quadrature points, such as stresses, fibre stretches, and fibre strain rates, are first projected onto an appropriate finite element space and then exported to VTU format. In particular, at each time step \texttt{XYZ}, the following files are available:
 \begin{itemize}
     \item \texttt{strain\_rate-3d-XYZ.vtu} which contains the fibre strain rate field $\depsilon(\*X,\cdot)$ computed via projection onto the \texttt{FE\_DGQ} finite element of order $k$ (same order as in the displacement finite element). This is a discontinuous element similar to $P_k$ (see \eqref{eq:Hhp}) but based on Lagrange polynomials rather than monomials.
     \item \texttt{stress-3d-XYZ.vtu} which contains each of the 9 components\footnote{Technically, only 6 components are required since this is a symmmetric tensor.} of the Kirchhoff stress $\btau$, computed via projection onto the \texttt{FE\_DGQ} finite element of order $k-1$.
@@ -3695,7 +3713,7 @@ where $(\*X_q, w_q)$ are the QPs and weights of the quadrature rule associated t
     \item Read the binary file corresponding to the fine solution and store the data in an appropriate structure,
     \item Project the data into an evaluable FE solution, that is, solve the problem: find $\widetilde{p_h} \in L^2(\B_0)$ such that
     \[
-    \int_{\B_0} \widetilde{p_h} q  \ d\*X = \int_{\B_0} p_{h_f} q_h \ d\*X, \quad \forall \ q \in L^2(\B_0),
+    \int_{\B_0} \widetilde{p_h} q  \ d\*X = \int_{\B_0} p_{h_f} q_h \ d\*X, \quad \forall \ q_h \in L^2(\B_0),
     \]
     which is a solvable problem since we have the necessary QP information for $p_{h_f}$ in the fine solution,
     \item Evaluate $\widetilde{p_h}$ at the QPs of the coarse mesh (using the \texttt{VectorTools::point\_difference} function from deal.II),
@@ -3725,9 +3743,9 @@ Therefore, when $\Gamma_D$ coincides with the ends of the muscle (as it is our c
     \caption{Muscle block geometry, including a 3D view (top) and the main quantities that describe the muscle architecture (bottom). In particular, the fibres are parallel to each other and oriented with an initial pennation angle $\beta_0$ in the $xz$ plane, which results in an initial orientation field $\*a_0(\*X) = \langle \cos(\beta_0), 0, \sin(\beta_0) \rangle$ for any $\*X \in \B_0$.\label{fig:muscle_block}}
 \end{figure}
 
-We considered the geometry and muscle architecture described in Figure \ref{fig:muscle_block}, which we henceforth refer to as the ``muscle block''. We also assumed that the block had dimensions $L_{mus} = 3 \ \unit{cm}$, $W_{mus} = H_{mus} = 1 \ \unit{cm}$ and an initial pennation angle of $\beta_0 = 30^\circ$. Assuming a constant density of $\rho_0 = 1,060 \ \unit{kg \ m^{-3}}$, the block therefore had a mass of 3.18 \unit{g}. 
+We considered the domain and muscle architecture described in Figure \ref{fig:muscle_block}, which we henceforth refer to as the ``muscle block''. We also assumed that the block had dimensions $L_{mus} = 3 \ \unit{cm}$, $W_{mus} = H_{mus} = 1 \ \unit{cm}$ and an initial pennation angle of $\beta_0 = 30^\circ$. Assuming a constant density of $\rho_0 = 1,060 \ \unit{kg \ m^{-3}}$, the block therefore had a mass of 3.18 \unit{g}. 
 
-We discretized the muscle block by subdividing its length, width, and height into $2^n$ segments, where $n \in \mathbb{N}$ is called \textit{grid refinement level} (GRL), which resulted in a geometry with $2^{3n}$ voxels and $125 \times 2^{3n}$ quadrature points (a quadrature rule of order 5 was used). In this case, the mesh size is given by the diameter of each voxel, that is
+We discretized the muscle block by subdividing its length, width, and height into $2^n$ segments, where $n \in \mathbb{N}$ is called \textit{grid refinement level} (GRL), which resulted in a mesh with $2^{3n}$ voxels and $125 \times 2^{3n}$ quadrature points (a quadrature rule of order 5 was used). In this case, the mesh size is given by the diameter of each voxel, that is
 \[
     h = 2^{-n} \sqrt{L_{mus}^2 + W_{mus}^2 + H_{mus}^2} = 2^{-n} \sqrt{11} \ \unit{cm}.
 \]
@@ -3748,7 +3766,7 @@ for a fixed GRL = 3 and time step sizes $\Delta t = 1/(10 \cdot 2^{k+1}) \ \unit
     r^{\star}_t := \dfrac{\log \left(e^\star_{\Delta t} / e^\star_{\Delta t'} \right)}{\log \left(\Delta t / \Delta t'  \right)}, \quad \star \in \{ \*U, p, D \}.
 \end{equation}
 
-In turn, to study the convergence in space, we compute the relative errors:
+To study the convergence in space, we compute the relative errors:
 \begin{subequations}
     \begin{eqnarray}
         e^{\*U}_{h} &:= \dfrac{\norm{\*U_{h}(\cdot,T) - \*U(\cdot,T)}_{\*L^2(\B_0)}}{\norm{\*U(\cdot,T)}_{\*L^2(\B_0)}}, \\
@@ -3853,11 +3871,11 @@ GRL & h [cm] & $e_h^{\*U}$ & $r_{\*x}^\*U$ & $e_h^{p}$ & $r_{\*x}^p$  & $e_h^{D}
 
 The force–length (FL) relationship describes how the force a muscle can generate depends on its length at the time of contraction. While the overall pattern may remain similar from single fibres to whole muscles, there are important differences that arise due to structural and functional complexity at larger scales. At a single fibre level, the FL relationship is primarily determined by the overlap between actin and myosin filaments. However, at a whole muscle level, the FL relationship includes the effects of the muscle architecture overall (such as the pennation angle) and other components of muscle, such as connective tissues and intramuscular fat. Therefore, the shape of a fibre FL curve does not immediately translate into a whole muscle FL curve. For example, while fibre FL curves for cat soleus muscle do have a descending limb \cite{ScottBrownLoeb1996-1,VazDeLaRocha2012}, whole muscle FL curves for cat soleus do not \cite{Gareis1992}.
 
-In this section, we examine the FL relationship for whole muscle using Flexodeal v1.0.1 and Flexodeal Lite v1.5.1. This will allow us to examine the force behaviour when multiple material components of muscle tissue are combined. First, we describe a new geometry in consideation and the protocol followed to compute these curves. Then, we describe the obtained results. Finally, we describe the implications of a different (but equally acceptable) protocol and how it relates to the (lack of) polyconvexity of the strain-energy function of the system.
+In this section, we examine the FL relationship for whole muscle using Flexodeal v1.0.1 and Flexodeal Lite v1.5.1. This will allow us to examine the force behaviour when multiple material components of muscle tissue are combined. First, we describe a new domain under consideration and the protocol followed to compute these curves. Then, we describe the obtained results. Finally, we describe the implications of a different (but equally acceptable) protocol and how it relates to the (lack of) polyconvexity of the strain-energy function of the system.
 
-\subsection{An idealized geometry}
+\subsection{An idealized muscle}
 
-In addition to performing experiments using muscle tissue only, we would like to study the behaviour of the system when aponeurosis tissue is included. To accomplish this, we consider an idealized version of a human medial gastrocnemius (MG) previously considered in the work by Ross et al. \cite{Paper3_RossEtAl2021} and others \cite{Seba,Hadi}. We will refer to this geometry as the ``idealized MG'', which we show in Figure \ref{fig:idealized_geometry}. This configuration in 3D space is characterized by the following parameters:
+In addition to performing experiments using muscle tissue only, we would like to study the behaviour of the system when aponeurosis tissue is included. To accomplish this, we consider an idealized version of a human medial gastrocnemius (MG) previously considered in the work by Ross et al. \cite{Paper3_RossEtAl2021} and others \cite{Seba,Hadi}. We will refer to this domain as the ``idealized MG'', which we show in Figure \ref{fig:idealized_geometry}. This configuration in 3D space is characterized by the following parameters:
 \begin{enumerate}
     \item Muscle length $L_{mus}$, which is the measure of the muscle, from end to end, along the line of action $\widehat{\bm{\ell}} = \langle 1,0,0 \rangle$,
     \item Aponeurosis length $L_{apo}$, which is measured along the main direction of the aponeurosis layer,
@@ -3866,18 +3884,16 @@ In addition to performing experiments using muscle tissue only, we would like to
 \end{enumerate}
 
 Other parameters shown in Figure \ref{fig:idealized_geometry}, such as the initial fibre length $L_f$ and the angle between the aponeurosis layer and the fibres $\alpha_0$ can be computed from trigonometric relations:
-\begin{subequations} \label{eq:idealized_geometry_Lf_alpha0}
-    \begin{align}
-        \gamma_0 &:= 180^\circ - \sin^{-1} \left(\dfrac{\sin(\beta_0) L_{mus}}{L_{apo}} \right), \\
-        L_f &= L_{apo} \dfrac{\sin(\gamma_0 + \beta_0)}{\sin(\beta_0)}, \\
-        \alpha_0 &= 180^\circ - \gamma_0.
-    \end{align}
-\end{subequations}
+\begin{equation} \label{eq:idealized_geometry_Lf_alpha0}
+    \gamma_0 := 180^\circ - \sin^{-1} \left(\dfrac{\sin(\beta_0) L_{mus}}{L_{apo}} \right), \quad
+    L_f = L_{apo} \dfrac{\sin(\gamma_0 + \beta_0)}{\sin(\beta_0)}, \quad
+    \alpha_0 = 180^\circ - \gamma_0.
+\end{equation}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.99\textwidth]{geometry_with_aponeurosis.pdf}
-    \caption{Idealized geometry of a medial gastrocnemius muscle according to Ross et al. \cite{Paper3_RossEtAl2021}. Top row: main dimensions describing the muscle architecture. Bottom row: (computational) boundary IDs for each face. The muscle fibres (grey region) run parallel to each other at an angle $\beta_0$ with respect to the line of action $\widehat{\bm{\ell}}$. In turn, the aponeurosis fibres (white regions) run parallel to the direction of the aponeurosis. The parameters that define the geometry are the muscle length $L_{mus}$, aponeurosis length $L_{apo}$, aponeurosis height $H_{apo}$, muscle width $W_{mus}$, and the pennation angle $\beta_0$. The muscle fibre length $L_f$ and angle $\alpha_0$ can be computed as in Equation \eqref{eq:idealized_geometry_Lf_alpha0}. 
+    \caption{Idealization of a medial gastrocnemius muscle according to Ross et al. \cite{Paper3_RossEtAl2021}. Top row: main dimensions describing the muscle architecture. Bottom row: (computational) boundary IDs for each face. The muscle fibres (grey region) run parallel to each other at an angle $\beta_0$ with respect to the line of action $\widehat{\bm{\ell}}$. In turn, the aponeurosis fibres (white regions) run parallel to the longitudinal direction of the aponeurosis. The parameters that define this domain are the muscle length $L_{mus}$, aponeurosis length $L_{apo}$, aponeurosis height $H_{apo}$, muscle width $W_{mus}$, and the pennation angle $\beta_0$. The muscle fibre length $L_f$ and angle $\alpha_0$ can be computed as in Equation \eqref{eq:idealized_geometry_Lf_alpha0}. 
     \label{fig:idealized_geometry}}
 \end{figure}
 
@@ -3886,7 +3902,7 @@ Other parameters shown in Figure \ref{fig:idealized_geometry}, such as the initi
 For this computational experiment, we considered two different geometries:
 
 \begin{enumerate}
-    \item A muscle block geometry (as specified in Figure \ref{fig:muscle_block}) with dimensions $L_{mus} = 3$ cm, $W_{mus} = H_{mus} = 1$ cm and an architecture based on parallel-fibred muscle (i.e. $\beta_0 = 0$). In this case, the fibre length coincides with the muscle length $L_{mus}$, and therefore the average fibre stretch $\mathrm{avg}_S(\lambda)$ has magnitudes close to the whole muscle stretch $\lambda_M= L_{mus}(t)/L_{mus}(0)$. The mesh considered for these expermiments had a grid refinement level $GRL=4$, yielding a total of 4,096 voxels (see Figure \ref{fig:fl_meshes} left).
+    \item A muscle block geometry (as specified in Figure \ref{fig:muscle_block}) with dimensions $L_{mus} = 3$ cm, $W_{mus} = H_{mus} = 1$ cm and an architecture based on parallel-fibred muscle (i.e. $\beta_0 = 0$). In this case, the fibre length coincides with the muscle length $L_{mus}$, and therefore the average fibre stretch $\mathrm{avg}_S(\lambda)$ has magnitude close to the whole muscle stretch $\lambda_M= L_{mus}(t)/L_{mus}(0)$. The mesh considered for these experiments had a grid refinement level $GRL=4$, yielding a total of 4,096 voxels (see Figure \ref{fig:fl_meshes} left).
     \item An idealized MG with dimensions $L_{mus} = 27$ cm, $L_{apo} = 20.8$ cm, $H_{apo} = 1$ cm, and an initial pennation angle $\beta_0 = 15.3^\circ$. The mesh in this case has 1,280 voxels and is shown in Figure \ref{fig:fl_meshes} right.
 \end{enumerate}
 
@@ -3898,11 +3914,11 @@ For this computational experiment, we considered two different geometries:
     \label{fig:fl_meshes}}
 \end{figure}
 
-For both geometries, we set their bulk moduli to $\kappa_{mus} = \kappa_{apo} = 10^7 \ \unit{Pa}$. In the muscle block, the choice of increasing $\kappa_{mus}$ from a previously used value of $10^6$ (cf. \cite{Paper3_RossEtAl2021,Paper2_RyanEtAl2020,Paper1_WakelingEtAl2020}) was made to keep volume changes under 1\%. Furthermore, the choice of reducing $\kappa_{apo}$ from a previous value of $10^8$ (cf. \cite{KonnoNigamWakeling2021_ECM, KonnoEtAl2022_CP}) was made to avoid excessive force generation by the aponeurosis. No agreement on the literature exists as to what these values should be (for example, B\"{o}l \& Reese \cite{BolReese2008} consider $\kappa_{mus} = 10^8 \ \unit{Pa}$, whereas Blemker et al. \cite{BlemkerPinskyDelp2005} consider $\kappa_{mus} = 10^7 \ \unit{Pa}$ and $\kappa_{apo} = 10^8 \ \unit{Pa}$), so further research in this area is needed.
+For both domains, we set their bulk moduli to $\kappa_{mus} = \kappa_{apo} = 10^7 \ \unit{Pa}$. In the muscle block, the choice of increasing $\kappa_{mus}$ from a previously used value of $10^6$ (cf. \cite{Paper3_RossEtAl2021,Paper2_RyanEtAl2020,Paper1_WakelingEtAl2020}) was made to keep volume changes under 1\%. Furthermore, the choice of reducing $\kappa_{apo}$ from a previous value of $10^8$ (cf. \cite{KonnoNigamWakeling2021_ECM, KonnoEtAl2022_CP}) was made to avoid excessive force generation by the aponeurosis. No agreement on the literature exists as to what these values should be (for example, B\"{o}l \& Reese \cite{BolReese2008} consider $\kappa_{mus} = 10^8 \ \unit{Pa}$, whereas Blemker et al. \cite{BlemkerPinskyDelp2005} consider $\kappa_{mus} = 10^7 \ \unit{Pa}$ and $\kappa_{apo} = 10^8 \ \unit{Pa}$), so further research in this area is needed.
 
 In terms of boundary conditions, both geometries had a fixed end and a moving end. The fixed end corresponded to the $-x$ face for the muscle block geometry and to the face with boundary ID 0 for the idealized MG. In turn, the moving end corresponded to the $+x$ face in the muscle block and to the face with boundary ID 1 in the idealized MG. All other faces were traction free.
 
-To find the force-length relationship of whole muscle, we first lengthened or shortened each geometry from its resting length to a predefined stretch $\lambda_M= L_{mus}(t)/L_{mus}(0)$ over 0.2 s. Then, we held the muscle in place and performed an isometric contraction in which we linearly increased the activation from 0\% to 100\% over 0.2 s (the total simulation time was therefore 0.4 s). In real life experiments, after the muscle (or fibre) has achieved its maximum activation level, there is usually a period of time in which the muscle (or fibre) is held at this state until all forces stabilize (see, for example, \cite{Gareis1992,HerzogLeonard2002}). In our computational setting, this translated into a series of quasi-static computations that were performed for each value of $\lambda_M = 0.6, 0.65, 0.7, \dots, 1.6$ and for each one of the two geometries. To obtain quicker results, these experiments were run in the cluster \textit{Cedar} at Simon Fraser University by linking Flexodeal (for the idealized MG) and Flexodeal Lite (for the muscle block) to deal.II v9.3.1. In all the experiments, the time step size was set to $\Delta t = 0.01$ s. Experiments with the muscle block geometry were solved using a CG solver and a Jacobi preconditioner, while those with the idealized geometry were simply solved using a direct solver (UMFPACK).
+To find the force-length relationship of whole muscle, we first lengthened or shortened each domain from its resting length to a predefined stretch $\lambda_M= L_{mus}(t)/L_{mus}(0)$ over 0.2 s. Then, we held the muscle in place and performed an isometric contraction in which we linearly increased the activation from 0\% to 100\% over 0.2 s (the total simulation time was therefore 0.4 s). In real life experiments, after the muscle (or fibre) has achieved its maximum activation level, there is usually a period of time in which the muscle (or fibre) is held at this state until all forces stabilize (see, for example, \cite{Gareis1992,HerzogLeonard2002}). In our computational setting, this translated into a series of quasi-static computations that were performed for each value of $\lambda_M = 0.6, 0.65, 0.7, \dots, 1.6$ and for each one of the two domains. To obtain quicker results, these experiments were run in the cluster \textit{Cedar} at Simon Fraser University by linking Flexodeal (for the idealized MG) and Flexodeal Lite (for the muscle block) to deal.II v9.3.1. In all the experiments, the time step size was set to $\Delta t = 0.01$ s. Experiments with the muscle block geometry were solved using a CG solver and a Jacobi preconditioner, while those with the idealized MG were simply solved using a direct solver (UMFPACK).
 
 \subsection{Results}
 
@@ -3911,23 +3927,25 @@ To find the force-length relationship of whole muscle, we first lengthened or sh
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_lite_bm_1.eps}\\[1em]
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_lite_bm_1.5.eps}\\[1em]
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_lite_bm_10.eps}
-    \caption{Force-length curves of whole muscle computed using Flexodeal Lite using a parallel-fibred muscle block geometry and different base material factors: $s_{base}=1$ (top row), $s_{base}=1.5$ (middle row), $s_{base}=10$ (bottom row). Force measured at the +x end of the geometry.\label{fig:fl-curves-block}}
+    \caption{Force-length curves of whole muscle computed using Flexodeal Lite using a parallel-fibred muscle block geometry and different base material factors: $s_{base}=1$ (top row), $s_{base}=1.5$ (middle row), $s_{base}=10$ (bottom row). Force measured at the +x end of the domain.\label{fig:fl-curves-block}}
 \end{figure}
 
 In Figure \ref{fig:fl-curves-block} (top left), we observe the FL relationship for whole muscle when only muscle tissue is present and the scaling factor $s_{base}$ (appearing as $s_{bm}$ in \eqref{eq:def_Psi_bm}) is equal to 1. First, we notice that for $\lambda_M > 1$, the total force resembles the shape of the fibre FL relationship shown in, for example, Figure \ref{fig:FL_curves_diff_act}. However, this is not the case for $\lambda_M < 1$ given the presence of compressive stresses, which 1D fibre FL curves do not account for.
 
-The total force represents the aggregate of different components. First, We notice that about 35\% of the maximum isometric force (i.e. when $\lambda_M = 1$) comes from volumetric effects (i.e. the strain-energy function $\Psi_{vol}$, see \eqref{eq:def_Psi_vol}), while 65\% comes from isochoric effects. The isochoric force, in this case, is made of the fibre active and passive components, as well as the base material (see Figure \ref{fig:fl-curves-block} top right). The proportions in these forces are in line with the results by Wakeling et al. \cite{Paper1_WakelingEtAl2020}, and therefore it is an indication that the material properties have been correctly implemented in Flexodeal.
+The total force represents the aggregate of different components. First, we notice that about 35\% of the maximum isometric force (i.e. when $\lambda_M = 1$) comes from volumetric effects (i.e. the strain-energy function $\Psi_{vol}$, see \eqref{eq:def_Psi_vol}), while 65\% comes from isochoric effects. The isochoric force, in this case, is made of the fibre active and passive components, as well as the base material (see Figure \ref{fig:fl-curves-block} top right). The proportions in these forces are in line with the results by Wakeling et al. \cite{Paper1_WakelingEtAl2020}, and therefore it is an indication that the material properties have been correctly implemented in Flexodeal.
 
 One interesting fact that we observe from Figure \ref{fig:fl-curves-block} (top left) is that the total force still has a region where the slope is negative. Therefore, unlike in the 1D case where adding a base material component led to a FL relationship without a descending limb (see Section \ref{sec:stabilized_muscle_model_1d}), the base material component does not completely convexify the total FL relationship. Naturally, if we artificially increase the contribution of the base material to the overall strain-energy of the system, then the total FL curve does not have a descending limb. We show this in Figure \ref{fig:fl-curves-block} (middle and bottom row) where we take $s_{base}$ factors of 1.5 and 10.
 
-Another way to convexify the FL relationship in 3D is the addition of aponeurosis, as we observe in Figure \ref{fig:fl-curve-apo}. In this case, the measured force does not have an active component since this has taken place at a face where there is only aponeurosis tissue. We observe from Figure \ref{fig:fl-curve-apo} (left) that the total force in this geometry resembles the force generated by a muscle block when $s_{base} = 10$ (see Figure \ref{fig:fl-curves-block} bottom left).
-Furthermore, we observe from Figure \ref{fig:fl-curve-apo} (right) that the base material is the primary contributor to the isochoric force. This could be explained because the base material component of the aponeurosis is significantly stiffer than the one corresponding to muscle tissue. We show the latter for the particular case of uniaxial extension \eqref{eq:uniaxial_stretch_F} in Figure \ref{fig:uniaxial_extension_bm}.
+Another way to convexify the FL relationship in 3D is the addition of aponeurosis, as we observe in Figure \ref{fig:fl-curve-apo}. In this case, the force does not have an active component since it has been measured at a face where there is only aponeurosis tissue. We observe from Figure \ref{fig:fl-curve-apo} (left) that the total force in this domain resembles the force generated by a muscle block when $s_{base} = 10$ (see Figure \ref{fig:fl-curves-block} bottom left).
+Furthermore, we observe from Figure \ref{fig:fl-curve-apo} (right) that the aponeurosis base material is the primary contributor to the isochoric force. This could be explained because the base material component of the aponeurosis is significantly stiffer than the one corresponding to muscle tissue. We show the latter for the particular case of uniaxial extension \eqref{eq:uniaxial_stretch_F} in Figure \ref{fig:uniaxial_extension_bm}.
+
+
 
 
 \begin{figure}
     \centering
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_full_apo_thin.eps}
-    \caption{Force-length curve of whole muscle computed using Flexodeal using an idealized geometry containing a pair of aponeuroses layers. Force measured at the face where the moving Dirichlet condition was applied, which also is a face where there is only aponeurosis tissue.\label{fig:fl-curve-apo}}
+    \caption{Force-length curve of whole muscle computed in Flexodeal using the idealized MG described in Figure \ref{fig:idealized_geometry}. Force measured at the face where the moving Dirichlet condition was applied, which also is a face where there is only aponeurosis tissue.\label{fig:fl-curve-apo}}
 \end{figure}
 
 \begin{figure}
@@ -3947,21 +3965,21 @@ Furthermore, we observe from Figure \ref{fig:fl-curve-apo} (right) that the base
     \label{fig:act_len_len_act}}
 \end{figure}
 
-As described in Section \ref{sec:flexodeal-fl-curve-setup}, the experiments in Figures \ref{fig:fl-curves-block} and \ref{fig:fl-curve-apo} have been performed by lengthening or shortening the muscular structure to a predetermined stretch $\lambda_M$, then activating the muscle while keeping the ends fixed. Alternatively, one could think about activating the muscle first, and then lengthen or shorten to a desired stretch $\lambda_M$. In real muscle, these two protocols lead to different results, especially for $\lambda_M > 1$. Activating the muscle and then lengthening introduces residual force enhancement (RFE), commonly attributed to the action of titin (see the discussion in Section \ref{sec:stabilizing_the_model_ch3}). Therefore, the total (unnormalized) force for $\lambda_M > 1$ would be greater than the maximum isometric force (so no descending limb). However, in our 3D computational model, titin is not present, so activation and lengthening/shortening \textit{are} processes whose order is interchangeable. We show these two protocols in Figure \ref{fig:act_len_len_act} for the particular case of lengthening.
+As described in Section \ref{sec:flexodeal-fl-curve-setup}, the experiments in Figures \ref{fig:fl-curves-block} and \ref{fig:fl-curve-apo} have been performed by lengthening or shortening the muscular structure to a predetermined stretch $\lambda_M$, then activating the muscle while keeping the ends fixed. Alternatively, one could think about activating the muscle first, and then lengthening or shortening to a desired stretch $\lambda_M$. In real muscle, these two protocols lead to different results, especially for $\lambda_M > 1$. Activating the muscle and then lengthening introduces residual force enhancement (RFE), commonly attributed to the action of titin (see the discussion in Section \ref{sec:stabilizing_the_model_ch3}). Therefore, the total (unnormalized) force for $\lambda_M > 1$ would be greater than the maximum isometric force (so no descending limb). However, in our 3D computational model, titin is not present, so activation and lengthening/shortening \textit{are} processes whose order is interchangeable. We show these two protocols in Figure \ref{fig:act_len_len_act} for the particular case of lengthening.
 
-The performance of the numerical methods along the ascending limb of the fibre FL curve ($\lambda < 1$) is equivalent regardless on whether muscle is activated isometrically or passively shortened first. However, active lengthening along the descending limb (approximately $1 < \lambda < 1.35$) was not possible and the solver would immediately break (with error $\det(\*F) < 0$) while solving the first time step after the muscle reached maximum activation. We conjecture that this is caused by the descending limb present in the \textit{whole} muscle FL relationship (see Figure \ref{fig:fl-curves-block} top right), which according to the discussion in Section \ref{sec:polyconvexity}, could lead to a loss of polyconvexity in the strain-energy function of the system, and a consequent loss of coercivity in the finite element system. In fact, these simulations ran succesfully when we increased the scaling factor in the base material component of muscle tissue $s_{base}$ from 1 to 1.5. The latter leads to a completely convex (total) FL curve (see Figure \ref{fig:fl-curves-block} middle left).
+The performance of the numerical methods along the ascending limb of the fibre FL curve ($\lambda < 1$) is equivalent regardless on whether muscle is activated isometrically or passively shortened first. However, active lengthening along the descending limb (approximately $1 < \lambda < 1.35$) was not possible and the solver would immediately break (with error $\det(\*F) < 0$) while solving the first time step after the muscle reached maximum activation. We conjecture that this is caused by the descending limb present in the \textit{whole} muscle FL relationship (see Figure \ref{fig:fl-curves-block} top right), which according to the discussion in Section \ref{sec:polyconvexity}, could lead to a loss of polyconvexity in the strain-energy function of the system, and a consequent loss of coercivity in the finite element system. In fact, these simulations ran succesfully when we increased the scaling factor in the base material component of muscle tissue $s_{base}$ from 1 to 1.5. The latter leads to a completely convex (total) FL curve (see Figure \ref{fig:fl-curves-block} middle left). Given that an alternative (and perhaps, more realistic) way of convexifying the FL curve is by adding aponeurosis to the domain (as seen in Figure \ref{fig:fl-curve-apo}), this also demonstrates the importance of aponeurosis in numerical stability.
 
-The unsuccesful results discuss in this section here should not demotivate users of Flexodeal. For submaximal contractions, and especially for activations lower than 20\%, the fibre FL curve \textit{does not} have a descending limb (see Figure \ref{fig:FL_curves_diff_act}), so active lengthening should not pose a major difficulty. We will show in Section \ref{sec:flexodeal_mri} a more realistic example in which we combine a geometry derived from magnetic resonance imaging (MRI) and experimentally-obtained activation and whole muscle stretch profiles.
+The unsuccessful results discuss in this section here should not demotivate users of Flexodeal. For submaximal contractions, and especially for activations lower than 20\%, the fibre FL curve \textit{does not} have a descending limb (see Figure \ref{fig:FL_curves_diff_act}), so active lengthening should not pose a major difficulty. We will show in Section \ref{sec:flexodeal_mri} a more realistic example in which we combine a domain derived from magnetic resonance imaging (MRI) and experimentally-obtained activation and whole muscle stretch profiles.
 
 \section{The effect of mass and the FV relationship in isometric contractions} \label{sec:flexodeal_dynamic_effects}
 
-The title of this section might sound strange at first to many biomechanists. After all, in the traditional context of a single mass-spring system (i.e. Figure \ref{fig:muscle_models_1D} Left), if there is no change in the length of the muscle (the isometric condition) then there is no change in velocity, and so force-velocity properties do not play a role. This idea would also apply to the three-dimensional case \textit{if}, in Definition \ref{def:isometric_contraction_3d}, we had included a ``holding'' step after $t = T$ seconds, that is, a period of time in which the muscle is held at a fixed length and at a fixed activation until the quasi-static state is achieved (i.e. no accelerations and no velocities). Before reaching this state, however, muscle experiences local deformations with non-negligible velocity. Given that fibres rotate when they are activated \cite{LieberFriden2000}, fibre strain rates are locally not zero, and therefore force-velocity effects (represented by the term $\widehat{\sigma}_V$ in Equation \eqref{eq:def_hill_stress_sigma}) are non unitary. 
+The title of this section might sound strange at first to many biomechanists. After all, in the traditional context of a single mass-spring system (i.e. Figure \ref{fig:muscle_models_1D} Left), if there is no change in the length of the muscle (the isometric condition) then there is no change in velocity, and so force-velocity properties do not play a role. This idea would also apply to the three-dimensional case \textit{if}, in Definition \ref{def:isometric_contraction_3d}, we had included a ``holding'' step after $t = T$ seconds, that is, a period of time in which the muscle is held at a fixed length and at a fixed activation until the quasi-static state is achieved (i.e. no accelerations and no velocities). Before reaching this state, however, muscle experiences local deformations with non-negligible velocity. Given that fibres rotate when they are activated \cite{LieberFriden2000}, fibre strain rates are locally not zero, and therefore force-velocity effects (represented by the term $\widehat{\sigma}_V$ in Equation \eqref{eq:def_hill_stress_sigma}) are not necessarily negligible.
 
 In this experiment, we will quantify the differences between quasi-static and dynamic simulations of isometric contractions (in the sense of Definition \ref{def:isometric_contraction_3d}). In particular, we will analyze the behaviour of unipennate muscle tissue at different initial pennation angles. We will show that mass and force-velocity effects have a significant impact in several biomechanical quantities, such as muscle force and fibre pennation, stretch, and strain rate, particularly during submaximal contractions.
 
 \subsection{Setup}
 
-We considered a block of muscle tissue of dimensions $L_{mus}=3$ cm, $H_{mus}=W_{mus}=1$ cm as described in Figure \ref{fig:muscle_block} with unipennate fibre architecture. In particular, we considered different initial pennation angles $\beta_0 = 0^\circ, 5^\circ, \dots, 30^\circ$, which correspond to the typical range of pennations found in mammalian muscle (measured at resting length) \cite{LieberFriden2000}. For this geometry, we constructed a hexahedral mesh with grid refinement level GRL = 3 and we chose a time step size $\Delta t = 10 \ \si{ms}$. For each muscle architecture, we performed an isometric contraction over 200 ms under fully dynamic conditions and another one under quasi-static conditions, both to a maximum activation level of 100\%.
+We considered a block of muscle tissue of dimensions $L_{mus}=3$ cm, $H_{mus}=W_{mus}=1$ cm as described in Figure \ref{fig:muscle_block} with unipennate fibre architecture. In particular, we considered different initial pennation angles $\beta_0 = 0^\circ, 5^\circ, \dots, 30^\circ$, which correspond to the typical range of pennations found in mammalian muscle (measured at resting length) \cite{LieberFriden2000}. For this domain, we constructed a hexahedral mesh with grid refinement level GRL = 3 and we chose a time step size $\Delta t = 10 \ \si{ms}$. For each muscle architecture, we performed an isometric contraction over 200 ms under fully dynamic conditions and another one under quasi-static conditions, both to a maximum activation level of 100\%.
 
 Similar to the convergence study, the solutions were computed using Flexodeal Lite v1.5.1 and a $Q_2/P_1$ element. The linear systems were solved using a CG solver with a Jacobi preconditioner. Furthermore, the force and displacement tolerances for the nonlinear solver were set to $10^{-4}$, and the quadrature rule order was set to 5.
 
@@ -3969,7 +3987,7 @@ Similar to the convergence study, the solutions were computed using Flexodeal Li
 
 We focus our attention on the evolution of four key variables: force, pennation, fibre stretch, and fibre strain rate. 
 
-First, in Figure \ref{fig:ic-force-at-end}, we compare the muscle forces obtained from a quasi-static simulation vs. a dynamic one. These are computed according to Equation \eqref{eq:def_force_approximated}. The force reported in these figures correspond to the $+x$ component measured on the $+x$ face (which is fixed). In particular, we notice almost no difference between the outputs when muscle has no initial pennation (i.e. $\beta_0 = 0^\circ$), and between 30\% and 52\% relative difference when the muscle tissue has an initial pennation angle of $\beta_0 = 30^\circ$. The fact that the differences in force are the largest at low activation levels suggests that these effects arise from the consideration of mass in the system rather than from the FV relationship (according to Hill's stress equation \eqref{eq:def_hill_stress_sigma}). These findings confirm that mass effects are more noticeable for submaximal contractions of highly-pennate muscle \cite{Paper1_WakelingEtAl2020}.
+First, in Figure \ref{fig:ic-force-at-end}, we compare the muscle forces obtained from a quasi-static simulation vs. a dynamic one. These are computed according to Equation \eqref{eq:def_force_approximated}. The force reported in these figures correspond to the $+x$ component measured on the $+x$ face (which is fixed). In particular, we notice almost no difference between the outputs when muscle has zero pennation (i.e. $\beta_0 = 0^\circ$), and between 30\% and 52\% relative difference when the muscle tissue has an initial pennation angle of $\beta_0 = 30^\circ$. The fact that the differences in force are the largest at low activation levels suggests that these effects arise from the consideration of mass in the system rather than from the FV relationship (according to Hill's stress equation \eqref{eq:def_hill_stress_sigma}). These findings confirm that mass effects are more noticeable for submaximal contractions of highly-pennate muscle \cite{Paper1_WakelingEtAl2020}.
 
 \begin{figure}
     \centering
@@ -3998,7 +4016,7 @@ Finally, we look at the mean fibre strain rate $\mathrm{avg}_S(\depsilon)$. FV p
 \begin{equation}
     \mathrm{avg}_S(\depsilon)(t_{n+1}) \approx \dfrac{\mathrm{avg}_S(\lambda)(t_{n+1}) - \mathrm{avg}_S(\lambda)(t_{n})}{\depsilon_0 \Delta t}.
 \end{equation}
-In turn, Figure \ref{fig:ic-mean-fibre-strain-rate-slab} (middle) shows the mean fibre strain rate $\mathrm{avg}_S(\depsilon)$ computed as in \eqref{eq:def_mean_fibre_strain_rate}. From these results, we observe that fibre strain rate increases with larger pennations (so fibres rotate faster). However, fibre strain rates for an isometric contraction are, in general, expected to be small. Therefore, the fibre strain rates obtained from a quasi-static experiment are not to be trusted, specially for low activation levels. Indeed, one can attribute this overestimation to the lack of mass in the model, since FV properties do not play a significant role in this case.
+In turn, Figure \ref{fig:ic-mean-fibre-strain-rate-slab} (middle) shows the mean fibre strain rate $\mathrm{avg}_S(\depsilon)$ computed as in \eqref{eq:def_mean_fibre_strain_rate}. From these results, we observe that fibre strain rate increases with larger pennation (so fibres rotate faster). However, fibre strain rates for an isometric contraction are, in general, expected to be small. Therefore, the fibre strain rates obtained from a quasi-static experiment do not seem to be physiologically reasonable, specially for low activation levels. Indeed, one can attribute this overestimation to the lack of mass in the model, since FV properties do not play a significant role in this case.
 
 \begin{figure}
     \centering
@@ -4010,23 +4028,23 @@ In turn, Figure \ref{fig:ic-mean-fibre-strain-rate-slab} (middle) shows the mean
 
 \section{Deformation of a human medial gastrocnemius during locomotion} \label{sec:flexodeal_mri}
 
-In this last experiment, we move one step closer towards the realistic simulation of skeletal muscle deformation. Here, we couple a geometry obtained from magnetic resonance imaging (MRI) with motion capture and electromyography (EMG) data obtained from a locomotion study. This constitutes a ``proof of concept'' of the applicability of Flexodeal to subject-specific inputs, which could further lead into the development of digital twins of muscle. This is an active research area that has the potential to provide transformative solutions in healthcare and musculoskeletal simulation in general \cite{Diniz2025DigitalTwin}.
+In this last experiment, we move one step closer towards the realistic simulation of skeletal muscle deformation. Here, we combined a computational domain based on magnetic resonance imaging (MRI) with motion capture and electromyography (EMG) data obtained from a locomotion study. This constitutes a ``proof of concept'' of the applicability of Flexodeal to subject-specific inputs, which could further lead into the development of digital twins of muscle. This is an active research area that has the potential to provide transformative solutions in healthcare and musculoskeletal simulation in general \cite{Diniz2025DigitalTwin}.
 
 \subsection{Setup}
-
 
 \begin{figure}
     \centering
     \includegraphics[width=0.85\textwidth]{mri_mesh_XZ.png}\\
     \hspace*{-1.4em}\includegraphics[width=0.87\textwidth]{mri_mesh_XY.png}
-    \caption{Computational geometry of the human MG used in Section \ref{sec:flexodeal_mri} derived from MRI shown in the XZ plane (top) and in the XY plane (bottom).
+    \caption{Computational representation of the human MG used in Section \ref{sec:flexodeal_mri} derived from MRI shown in the XZ plane (top) and in the XY plane (bottom).
     \label{fig:mri_mesh}}
 \end{figure}
 
+We considered a domain based on a human medial gastrocnemius (MG), collected as part of the study by D'Souza et al. \cite{DSouza2019}. 
+%Exact details about the subject from which this domain was extracted were not available, but we deduce from \cite{DSouza2019} that it corresponds approximately to a boy with cerebral palsy, aged 11 years old, with shank length of about 34 cm. 
+The length of the muscle, as seen in Figure \ref{fig:mri_mesh}, was about 22 cm. Moreover, it had a volume of 126.01 cm$^3$, which resulted in a mass of 133.57 g (assuming a constant density of 1,060 \unit{kg \ m^{-3}}). Tendinous structures were not considered in this computational domain. We aligned this domain with the X axis and set $\widehat{\bm{\ell}} = \langle 1 ,0,0 \rangle$ as the line of action (see Figure \ref{fig:mri_mesh}). The hexahedral mesh contained 1,265 voxels. We also assumed that the muscle had parallel fibres (i.e. zero initial pennation). 
 
-We considered the geometry of a human medial gastrocnemius (MG), collected as part of the study by D'Souza et al. \cite{DSouza2019}. Exact details about the subject from which this geometry was extracted were not available, but we deduce from \cite{DSouza2019} that it corresponds approximately to a boy with cerebral palsy, aged 11 years old, with shank length of about 34 cm. The length of the muscle, as seen in Figure \ref{fig:mri_mesh}, was about 22 cm. Moreover, it had a volume of 126.01 cm$^3$, which resulted in a mass of 133.57 g (assuming a constant density of 1,060 \unit{kg \ m^{-3}}). Tendinous structures were not considered in this computational domain. We aligned this geometry with the X axis and set $\widehat{\bm{\ell}} = \langle 1 ,0,0 \rangle$ as the line of action (see Figure \ref{fig:mri_mesh}). The hexahedral mesh for this geometry contained 1,265 voxels. We also assumed that the muscle had parallel fibres (i.e. zero initial pennation). 
-
-The locomotion data used for this experiment corresponds to a particular set of traces used in Chapter \ref{ch:mass_enhanced_model} for the study of 1D mass-enhanced models. In particular, we considered the muscle-tendon unit length and EMG data from the MG of a subject while running. To construct a boundary strain profile, we first estimated the muscle length from the muscle-tendon unit (MTU) length data using the muscle-to-MTU length ratio in Table \ref{tab:1d-parameters}. This is equivalent to assuming that the tendon behaved like a strut. Then, we scaled this length so that at time $t = 0.0$ s, the muscle length matches the one from the geometry. This profile constituted the boundary condition on the +x end of the geometry. The -x end was fixed at all times.
+The locomotion data used for this experiment corresponds to a particular set of traces used in Chapter \ref{ch:mass_enhanced_model} for the study of 1D mass-enhanced models. In particular, we considered the muscle-tendon unit length and EMG data from the MG of a subject while running. To construct a boundary strain profile, we first estimated the muscle length from the muscle-tendon unit (MTU) length data using the muscle-to-MTU length ratio in Table \ref{tab:1d-parameters}. This is equivalent to assuming that the tendon behaved like a strut. Then, we scaled this length so that at time $t = 0.0$ s, the muscle length matches the one from the computational domain. This profile constituted the boundary condition prescribed on the +x end of this domain. The -x end was fixed at all times.
 
 Similarly to the experiments in Chapter \ref{ch:mass_enhanced_model}, we computed the activation profile using Zajac's transfer function \eqref{eq:zajac} from the available EMG data. This resulted in submaximal activation that did not exceed 30\%. For both strain and activation profiles, we selected a representative window of data (of 4.28 seconds) from the complete \textit{in vivo} experiment (about 25 seconds).
 
@@ -4034,7 +4052,7 @@ The computational experiment was performed under fully dynamic conditions using 
 
 \section{Results}
 
-In Figure \ref{fig:mri_traces}, we show the traces of some important quantities in the simulation. In particular, we notice that the muscle was strained at most 3\%, purely along the ascending limb of the fibre FL curve. Furthermore, the fibre strain rate was at most 5\% of the maximum fibre strain rate (5 \unit{s^{-1}}) and the pennation increased to at most 4$^\circ$, consistent with the parallel-fibred nature of the geometry we considered. The x-component of the force measured at the moving end never exceeded 15 N. We also examined the volume ratio $V/V_0$, which was computed as:
+In Figure \ref{fig:mri_traces}, we show the traces of some important quantities in the simulation. In particular, we notice that the muscle was strained at most 3\%, purely along the ascending limb of the fibre FL curve. Furthermore, the fibre strain rate was at most 5\% of the maximum fibre strain rate (5 \unit{s^{-1}}) and the pennation increased to at most 4$^\circ$, consistent with the parallel-fibred nature of the domain we considered. The x-component of the force measured at the moving end never exceeded 15 N. We also examined the volume ratio $V/V_0$, which was computed as:
 \[
 (V/V_0)(t) = \frac{|\B_t|}{|\B_0|}.
 \]
@@ -4043,7 +4061,7 @@ It can be seen from the last row of Figure \ref{fig:mri_traces} that the change 
 \begin{figure}
     \centering
     \includegraphics[width=0.99\textwidth]{mri_traces.eps}
-    \caption{Top to bottom: traces of activation, boundary strain, average fibre stretch, average normalized fibre strain rate, average pennation angle, force (x component at the +x end of the geometry) and volume ratio, for the experiment described in Section \ref{sec:flexodeal_mri}.
+    \caption{Top to bottom: traces of activation, boundary strain, average fibre stretch, average normalized fibre strain rate, average pennation angle, force (x component at the +x end of the domain) and volume ratio, for the experiment described in Section \ref{sec:flexodeal_mri}.
     \label{fig:mri_traces}}
 \end{figure}
 
@@ -4088,7 +4106,7 @@ According to the above, ...
 
 
 
-\subsection{Geometry and architecture}
+\subsection{Computational domain and architecture}
 
 We considered a block of muscle tissue with dimensions and architecture that mimiced the the average medial gastrocnemius (MG) from a young population of rats, as described by Holt et al. \cite{Holt2016}. First, to define an appropriate muscle block height $H_{mus}$, we notice that the pennation angle and initial fibre length for this population was $\beta_0 = 26.1^\circ$ and $L_f^0 = 15.8$ mm, respectively. Assuming the fibres are oriented parallel to the XZ plane and that $L_f^0$ corresponds to the longest possible fibre length within the geometry, we set the height of the block to
 \begin{equation}
