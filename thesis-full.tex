@@ -243,8 +243,6 @@
 \DeclareMathOperator{\Adj}{\mathrm{Adj}}
 \DeclareMathOperator{\Cof}{\mathrm{Cof}}
 
-\newcommand{\Flexodeal}{{\texttt{Flexodeal}} }
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % END OF DEFINITIONS
@@ -3289,17 +3287,17 @@ We omit details of the discretization as this will be solved using the C++ finit
 
 \chapter{Flexodeal: a new finite-element tool for studying musculoskeletal dynamics} \label{ch:flexodeal}
 
-\Flexodeal is a new finite-element tool developed during this research project. It aims to be a research software for the study of 3D skeletal muscle deformation in a fully dynamic regime (with quasi-static deformations provided as an option as well). Some elements are based on previous codes developed by the Neuromuscular Mechanics Laboratory at Simon Fraser University, but they have been significantly restructured. \Flexodeal is completely open-source and licensed under the same conditions as deal.II (GNU Lesser General Public License, version 2.1 \cite{dealii}). It is freely available at:
+\texttt{Flexodeal} is a new finite-element tool developed during this research project. It aims to be a research software for the study of 3D skeletal muscle deformation in a fully dynamic regime (with quasi-static deformations provided as an option as well). Some elements are based on previous codes developed by the Neuromuscular Mechanics Laboratory at Simon Fraser University, but they have been significantly restructured. \texttt{Flexodeal} is completely open-source and licensed under the same conditions as deal.II (GNU Lesser General Public License, version 2.1 \cite{dealii}). It is freely available at:
 \begin{center}
     \url{https://github.com/sfu-nml/flexodeal}.
 \end{center}
 
-Using deal.II as a base library, Flexodeal implements an object-oriented C++ solver for the elastodynamic problem \eqref{eq:LF_main_system} based on user-defined material properties, boundary conditions, and other parameters of physiological relevance, such as activation profiles. 
-It assumes that the muscle-tendon unit (MTU) can contain a combination of muscle, aponeurosis, and tendon tissues, each one of them admitting both a fibre and a base material contribution. In addition, muscle tissue is allowed to have a user-defined fraction of intramuscular fat, which is implemented according to Section \ref{sec:intramuscular_fat}. Given that the complexity of the tissue models can easily overtake many of the numerical aspects of this solver, we have also implemented a ``lite'' version of this software, which can be used as a tool to further develop the numerical methods used in of skeletal muscle deformation. We have called this code \textit{Flexodeal Lite} and it is freely available at:
+Using deal.II as a base library, \texttt{Flexodeal} implements an object-oriented C++ solver for the elastodynamic problem \eqref{eq:LF_main_system} based on user-defined material properties, boundary conditions, and other parameters of physiological relevance, such as activation profiles. 
+It assumes that the muscle-tendon unit (MTU) can contain a combination of muscle, aponeurosis, and tendon tissues, each one of them admitting both a fibre and a base material contribution. In addition, muscle tissue is allowed to have a user-defined fraction of intramuscular fat, which is implemented according to Section \ref{sec:intramuscular_fat}. Given that the complexity of the tissue models can easily overtake many of the numerical aspects of this solver, we have also implemented a ``lite'' version of this software, which can be used as a tool to further develop the numerical methods used in of skeletal muscle deformation. We have called this code \texttt{Flexodeal Lite} and it is freely available at:
 \begin{center}
     \url{https://github.com/sfu-nml/flexodeal-lite}.
 \end{center}
-Flexodeal Lite implements the same solver used in Flexodeal but in this case, the strain-energy function $\Psi$ only models muscle tissue as a combination of fibres and base material with no intramuscular fat (cf. \eqref{eq:def_Psi_iso_fibre_bm_fat}) or other tendinous tissues.
+\texttt{Flexodeal Lite} implements the same solver used in \texttt{Flexodeal} but in this case, the strain-energy function $\Psi$ only models muscle tissue as a combination of fibres and base material with no intramuscular fat (cf. \eqref{eq:def_Psi_iso_fibre_bm_fat}) or other tendinous tissues.
 
 In both cases, two particular challenges arise when implementing a solver for the elastodynamic system \eqref{eq:LF_main_system}: 
 \begin{enumerate}[(i)]
@@ -3309,11 +3307,11 @@ In both cases, two particular challenges arise when implementing a solver for th
 
 In this Chapter, we present details about the computational implementation of Flexodeal, including documentation of input and output variables. Furthermore, we present a set of carefully-selected fundamental experiments that can be used as reference points for further modelling and computational developments. These include a combination of dynamic and quasi-static experiments.
 
-We begin in Section \ref{sec:flexodeal_background} with some motivation behind these developments. Then, we describe some implementation aspects of Flexodeal in Section \ref{sec:flexodeal_implementation}. Here, we focus on explaining how the different parameters in the solver are specified, the treatment of boundary conditions, and how to input the fibre activation function. We also discuss how some properties (such as tissue type, fibre orientation, and intramuscular fat fraction) can be prescribed in a space-dependent fashion thanks to the quadrature point logic surrounding deal.II and finite element methods in general.
+We begin in Section \ref{sec:flexodeal_background} with some motivation behind these developments. Then, we describe some implementation aspects of \texttt{Flexodeal} in Section \ref{sec:flexodeal_implementation}. Here, we focus on explaining how the different parameters in the solver are specified, the treatment of boundary conditions, and how to input the fibre activation function. We also discuss how some properties (such as tissue type, fibre orientation, and intramuscular fat fraction) can be prescribed in a space-dependent fashion thanks to the quadrature point logic surrounding deal.II and finite element methods in general.
 Next, in Section \ref{sec:flexodeal_convergence}, we study the computational convergence of the numerical method for the nonlinear problem \eqref{eq:LF_weak} in the particular case of the isometric contraction of a pennate block of muscle tissue. These results will be compared with the theoretical statements introduced in Section \ref{sec:finite_element_approximation}.
 In Section \ref{sec:flexodeal_fl_curves} we study the force-length relationship of \textit{whole} muscle and discuss its implications on the numerical stability of the finite element method. 
 Furthermore, in Section \ref{sec:flexodeal_dynamic_effects}, we study the differences in key biomechanical quantities that arise from the consideration of dynamic simulations when compared to more classic quasi-static results. 
-Finally, we show in Section \ref{sec:flexodeal_mri} the applicability of Flexodeal to a more realistic situation in which the finite element mesh is derived from magnetic resonance imaging (MRI), while the activation and prescribed boundary conditions are obtained from an \textit{in vivo} experiment of locomotion.
+Finally, we show in Section \ref{sec:flexodeal_mri} the applicability of \texttt{Flexodeal} to a more realistic situation in which the finite element mesh is derived from magnetic resonance imaging (MRI), while the activation and prescribed boundary conditions are obtained from an \textit{in vivo} experiment of locomotion.
 
 \section{Motivation} \label{sec:flexodeal_background} 
 
@@ -3326,22 +3324,22 @@ Finally, we show in Section \ref{sec:flexodeal_mri} the applicability of Flexode
 
 Three-dimensional musculoskeletal simulations have been performed at the Neuromuscular Mechanics Laboratory (Simon Fraser University) for more than 10 years. Early works by Rahemi et al. focused on the effects of space-dependent activation \cite{RahemiNigamWakeling2014} and the distribution of intramuscular fat \cite{RahemiNigamWakeling2015}. Later, a series of articles on muscle energetics were published by Wakeling et al. \cite{Paper1_WakelingEtAl2020}, Ryan et al. \cite{Paper2_RyanEtAl2020}, and Ross et al. \cite{Paper3_RossEtAl2021}. More recently, Konno et al. studied the inclusion of extracellular material (ECM) as part of the base material properties of muscle \cite{KonnoNigamWakeling2021_ECM} and the effect of this component in muscle affected by cerebral palsy \cite{KonnoEtAl2022_CP}. Behind all these works, there was a single C++ file based on deal.II's tutorial ``step-44'' \cite{step44} that was adapted to each research project, refactored to include new features, or simply rewritten. This resulted in a roughly 10,000-line C++ code that included many undocumented and untested features. Moreover, as deal.II continues to evolve, many parts of the original code simply became obsolete. Therefore, there was an urgent need to unify these code developments to ensure extensibility, reproducibility, and to facilitate dissemination of results.
 
-Significant modifications to the original code were required to accommodate the Lagrangian model \eqref{eq:LF_main_system} used for the fully dynamic simulations. Therefore, we decided to take a more modern approach in terms of software engineering. This included the consideration of: simple but fundamental computational experiments that can be used for testing and debugging, version control (using GitHub), and enough documentation to support future code developments and make this software publicly available. Hence, Flexodeal was born. This constitutes the first open-source, 3D nonlinear musculoskeletal simulation tool that includes active anisotropy in a fully dynamic environment. Since this software was developed in a modular framework (facilitated by deal.II), researchers have the opportunity to adapt this code to other expressions of, for instance, force-length and force-velocity relationships, as well as different strain-energy functions for the tissue components.
+Significant modifications to the original code were required to accommodate the Lagrangian model \eqref{eq:LF_main_system} used for the fully dynamic simulations. Therefore, we decided to take a more modern approach in terms of software engineering. This included the consideration of: simple but fundamental computational experiments that can be used for testing and debugging, version control (using GitHub), and enough documentation to support future code developments and make this software publicly available. Hence, \texttt{Flexodeal} was born. This constitutes the first open-source, 3D nonlinear musculoskeletal simulation tool that includes active anisotropy in a fully dynamic environment. Since this software was developed in a modular framework (facilitated by deal.II), researchers have the opportunity to adapt this code to other expressions of, for instance, force-length and force-velocity relationships, as well as different strain-energy functions for the tissue components.
 
 
 \section{Implementation details} \label{sec:flexodeal_implementation}
 
-Flexodeal and Flexodeal Lite have been implemented similarly to deal.II tutorials, which means they require CMake compilation and a version of deal.II which, in our case, must be at or above v9.3.0. As of the time of writing this document, Flexodeal also works with the newest version v9.6.2 \cite{dealii962}. The fibre and base material properties for all tissues are implemented as specified in Chapter \ref{ch:lagrangian_formulation} of this thesis. For reference, we show in Figure \ref{fig:FL_curves_diff_act} the fibre properties implemented in this code.
+\texttt{Flexodeal} and \texttt{Flexodeal Lite} have been implemented similarly to deal.II tutorials, which means they require CMake compilation and a version of deal.II which, in our case, must be at or above v9.3.0. As of the time of writing this document, \texttt{Flexodeal} also works with the newest version v9.6.2 \cite{dealii962}. The fibre and base material properties for all tissues are implemented as specified in Chapter \ref{ch:lagrangian_formulation} of this thesis. For reference, we show in Figure \ref{fig:FL_curves_diff_act} the fibre properties implemented in this code.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.49\textwidth]{fibre-FL-diff-a.eps}
     \includegraphics[width=0.49\textwidth]{fibre-FV-diff-a.eps}
-    \caption{Fibre force relationships implemented in Flexodeal (muscle and aponeurosis) and Flexodeal Lite (muscle only). The code allows for continuously varying activation profiles, but for reference, we choose 6 different choices of activation level (from 0\% to 100\%) to represent the influence of the activation level on the fibre force. 
+    \caption{Fibre force relationships implemented in \texttt{Flexodeal} (muscle and aponeurosis) and \texttt{Flexodeal Lite} (muscle only). The code allows for continuously varying activation profiles, but for reference, we choose 6 different choices of activation level (from 0\% to 100\%) to represent the influence of the activation level on the fibre force. 
     \label{fig:FL_curves_diff_act}}
 \end{figure}
 
-We now proceed to describe the main inputs required to run Flexodeal and the output variables and results that the code produces. For more information on the default experiments implemented in Flexodeal and Flexodeal Lite (i.e. the experiments that users can run immediately after downloading and compiling the software), we refer the reader to Appendices \ref{app:default_flexodeal_lite} and  \ref{app:default_flexodeal}.
+We now proceed to describe the main inputs required to run \texttt{Flexodeal} and the output variables and results that the code produces. For more information on the default experiments implemented in \texttt{Flexodeal} and \texttt{Flexodeal Lite} (i.e. the experiments that users can run immediately after downloading and compiling the software), we refer the reader to Appendices \ref{app:default_flexodeal_lite} and  \ref{app:default_flexodeal}.
 
 \subsection{Inputs}
 
@@ -3407,12 +3405,12 @@ In these files, information is provided as a space-separated, two-column matrix 
         \hline
       \end{tabular}\hspace{1em}\scalebox{1.5}{$\Rightarrow$}\hspace{1em}
       \raisebox{-5.5em}{\includegraphics[width=6cm]{plot_activation.eps}}
-    \caption{An example of the \texttt{.dat} files containing the necessary control points to define time-dependent curve. These particular boundary strain and activation profiles are part of the default experiment in Flexodeal Lite v1.5.4. \label{fig:flexodeal_lite_act_strain_profiles}}
+    \caption{An example of the \texttt{.dat} files containing the necessary control points to define time-dependent curve. These particular boundary strain and activation profiles are part of the default experiment in \texttt{Flexodeal Lite} v1.5.4. \label{fig:flexodeal_lite_act_strain_profiles}}
 \end{figure}
 
 \subsubsection{Markers}
 
-Similar to a motion capture experiment, Flexodeal allows the user to mark a number of mesh vertices to track their displacement. They can be provided in a space-separated text file which, by default, is named \texttt{markers.dat} and their output can be found in the CSV file \texttt{displacements-3d.csv}.
+Similar to a motion capture experiment, \texttt{Flexodeal} allows the user to mark a number of mesh vertices to track their displacement. They can be provided in a space-separated text file which, by default, is named \texttt{markers.dat} and their output can be found in the CSV file \texttt{displacements-3d.csv}.
 
 \subsubsection{Quadrature point data (not implemented in Flexodeal Lite)} 
 
@@ -3420,7 +3418,7 @@ In the context of finite element methods, many of the integrals involved in comp
 
 %Quadrature points (QPs) are used to evaluate these integrals approximately by placing ``evaluation points'' within each element and using weights associated with these points to compute the integral. This helps in ensuring that the element-level calculations (like stiffness or mass matrices) are accurately represented in the global system, which is essential for the solution of the finite element problem.
 
-Flexodeal uses a Gaussian quadrature rule. The order of this rule (which dictate the amount of QPs in each voxel) is specified in the \texttt{parameters.prm} file (see \texttt{set Quadrature order} in the \texttt{Finite element system} subsection). In Table \ref{tab:number_of_qp_points}  we provide a guideline to choose the correct quadrature rule order based on the chosen polynomial degree and whether the simulation is quasi-static or dynamic.
+\texttt{Flexodeal} uses a Gaussian quadrature rule. The order of this rule (which dictate the amount of QPs in each voxel) is specified in the \texttt{parameters.prm} file (see \texttt{set Quadrature order} in the \texttt{Finite element system} subsection). In Table \ref{tab:number_of_qp_points}  we provide a guideline to choose the correct quadrature rule order based on the chosen polynomial degree and whether the simulation is quasi-static or dynamic.
 
 The QP file serves two main purposes: to list all the QPs associated to the current mesh and to attach material properties that might vary in space but not in time. Currently, the following properties are supported:
 \begin{itemize}
@@ -3445,7 +3443,7 @@ The QP file serves two main purposes: to list all the QPs associated to the curr
 \end{table}
 
 \begin{remark}
-    In Flexodeal Lite, these properties are implemented as constants throughout the domain and specified via the parameter file \texttt{parameters.prm}.
+    In \texttt{Flexodeal Lite}, these properties are implemented as constants throughout the domain and specified via the parameter file \texttt{parameters.prm}.
 \end{remark}
 
 \subsection{Outputs} \label{sec:flexodeal_outputs}
@@ -3538,7 +3536,7 @@ The general expression for the force exerted on a surface $\mathcal{S}_t \subset
 \begin{equation} \label{eq:def_force_general}
     \vec{F}(t) = \int_{\mathcal{S}_t} \bsigma \*n \ ds = \int_{\mathcal{S}_0} J \bsigma \*F^{-\top} \*N \ dS = \int_{\mathcal{S}_0} \btau \*F^{-\top} \*N \ dS.
 \end{equation}
-Here, we have used Nanson's formula \eqref{eq:differentials}\textsubscript{2} to transform the surface from its current configuration $\mathcal{S}_t$ to the reference configuration $\mathcal{S}_0$. However, $\btau$ is a quantity that is only available at \textit{interior} quadrature points, so the expression in \eqref{eq:def_force_general} can only be \textit{estimated}. In particular, the force at a surface $\mathcal{S}_0$ is approximated in Flexodeal using the last equality in \eqref{eq:def_force_general}:
+Here, we have used Nanson's formula \eqref{eq:differentials}\textsubscript{2} to transform the surface from its current configuration $\mathcal{S}_t$ to the reference configuration $\mathcal{S}_0$. However, $\btau$ is a quantity that is only available at \textit{interior} quadrature points, so the expression in \eqref{eq:def_force_general} can only be \textit{estimated}. In particular, the force at a surface $\mathcal{S}_0$ is approximated in \texttt{Flexodeal} using the last equality in \eqref{eq:def_force_general}:
 \begin{equation} \label{eq:def_force_approximated}
     \vec{F}(t) \approx \sum_{T \in \mathcal{T}_h(\mathcal{S}_0)} \ \sum_{q = 1}^{N_q^\partial} \btau(\widetilde{\*X}_q, t) \, \*F^{-\top}(\widetilde{\*X}_q, t) \, \*N(\*X_q, t) \, J_{T \to \Box} \, w_q,
 \end{equation}
@@ -3708,7 +3706,7 @@ at some time $t > 0$. Using the pressure field as an example, we notice that
     &= \displaystyle \sum_{T \in \mathcal{T}_{h_c}} \int_{\Box} (p_{h_f}(\*X, t) - p_{h_c}(\*X, t))^2 J_{T \to \Box} \ d\*X \notag \\
     &\approx \displaystyle \sum_{T \in \mathcal{T}_{h_c}} \sum_{q=1}^{N_q^c} (p_{h_f}(\*X_q, t) - p_{h_c}(\*X_q, t))^2 J_{T \to \Box} \ w_q, \label{eq:error_p_discrete}
 \end{align}
-where $(\*X_q, w_q)$ are the QPs and weights of the quadrature rule associated to the coarse mesh. Therefore, while the quantities $p_{h_c}(\*X_q,t)$ and $J_{T \to \Box}$, and $w_q$ are available in the binary files that Flexodeal exports (see Section \ref{sec:binary_files}), we must find a way to compute $p_{h_f}(\*X_q,t)$, i.e. the \textit{fine} solution at the QPs of the \textit{coarse} mesh. This is performed in four steps:
+where $(\*X_q, w_q)$ are the QPs and weights of the quadrature rule associated to the coarse mesh. Therefore, while the quantities $p_{h_c}(\*X_q,t)$ and $J_{T \to \Box}$, and $w_q$ are available in the binary files that \texttt{Flexodeal} exports (see Section \ref{sec:binary_files}), we must find a way to compute $p_{h_f}(\*X_q,t)$, i.e. the \textit{fine} solution at the QPs of the \textit{coarse} mesh. This is performed in four steps:
 \begin{enumerate}
     \item Read the binary file corresponding to the fine solution and store the data in an appropriate structure,
     \item Project the data into an evaluable FE solution, that is, solve the problem: find $\widetilde{p_h} \in L^2(\B_0)$ such that
@@ -3778,7 +3776,7 @@ for a fixed time step size $\Delta t = 0.01 \ \unit{s}$ and GRL = 2, 3, 4, and 5
 \begin{equation}
     r^\star_\*x := \dfrac{\log \left(e^\star_{h} / e^\star_{h'} \right)}{\log \left(h / h'  \right)}, \quad \star \in \{ \*U, p, D \}.
 \end{equation}
-The solutions were computed using Flexodeal Lite v1.5.1 and a $Q_2/P_1$ element. The linear systems were solved using a CG solver with a Jacobi preconditioner. Furthermore, the force and displacement tolerances for the nonlinear solver were set to $10^{-4}$. We set the quadrature order to 5, which was above the required number of quadrature points according to Table \ref{tab:number_of_qp_points} to capture forces more accurately. This will be a constant choice throughout this thesis.
+The solutions were computed using \texttt{Flexodeal Lite} v1.5.1 and a $Q_2/P_1$ element. The linear systems were solved using a CG solver with a Jacobi preconditioner. Furthermore, the force and displacement tolerances for the nonlinear solver were set to $10^{-4}$. We set the quadrature order to 5, which was above the required number of quadrature points according to Table \ref{tab:number_of_qp_points} to capture forces more accurately. This will be a constant choice throughout this thesis.
 
 \subsection{Main results}
 
@@ -3871,7 +3869,7 @@ GRL & h [cm] & $e_h^{\*U}$ & $r_{\*x}^\*U$ & $e_h^{p}$ & $r_{\*x}^p$  & $e_h^{D}
 
 The force–length (FL) relationship describes how the force a muscle can generate depends on its length at the time of contraction. While the overall pattern may remain similar from single fibres to whole muscles, there are important differences that arise due to structural and functional complexity at larger scales. At a single fibre level, the FL relationship is primarily determined by the overlap between actin and myosin filaments. However, at a whole muscle level, the FL relationship includes the effects of the muscle architecture overall (such as the pennation angle) and other components of muscle, such as connective tissues and intramuscular fat. Therefore, the shape of a fibre FL curve does not immediately translate into a whole muscle FL curve. For example, while fibre FL curves for cat soleus muscle do have a descending limb \cite{ScottBrownLoeb1996-1,VazDeLaRocha2012}, whole muscle FL curves for cat soleus do not \cite{Gareis1992}.
 
-In this section, we examine the FL relationship for whole muscle using Flexodeal v1.0.1 and Flexodeal Lite v1.5.1. This will allow us to examine the force behaviour when multiple material components of muscle tissue are combined. First, we describe a new domain under consideration and the protocol followed to compute these curves. Then, we describe the obtained results. Finally, we describe the implications of a different (but equally acceptable) protocol and how it relates to the (lack of) polyconvexity of the strain-energy function of the system.
+In this section, we examine the FL relationship for whole muscle using \texttt{Flexodeal} v1.0.1 and \texttt{Flexodeal Lite} v1.5.1. This will allow us to examine the force behaviour when multiple material components of muscle tissue are combined. First, we describe a new domain under consideration and the protocol followed to compute these curves. Then, we describe the obtained results. Finally, we describe the implications of a different (but equally acceptable) protocol and how it relates to the (lack of) polyconvexity of the strain-energy function of the system.
 
 \subsection{An idealized muscle}
 
@@ -3918,7 +3916,7 @@ For both domains, we set their bulk moduli to $\kappa_{mus} = \kappa_{apo} = 10^
 
 In terms of boundary conditions, both geometries had a fixed end and a moving end. The fixed end corresponded to the $-x$ face for the muscle block geometry and to the face with boundary ID 0 for the idealized MG. In turn, the moving end corresponded to the $+x$ face in the muscle block and to the face with boundary ID 1 in the idealized MG. All other faces were traction free.
 
-To find the force-length relationship of whole muscle, we first lengthened or shortened each domain from its resting length to a predefined stretch $\lambda_M= L_{mus}(t)/L_{mus}(0)$ over 0.2 s. Then, we held the muscle in place and performed an isometric contraction in which we linearly increased the activation from 0\% to 100\% over 0.2 s (the total simulation time was therefore 0.4 s). In real life experiments, after the muscle (or fibre) has achieved its maximum activation level, there is usually a period of time in which the muscle (or fibre) is held at this state until all forces stabilize (see, for example, \cite{Gareis1992,HerzogLeonard2002}). In our computational setting, this translated into a series of quasi-static computations that were performed for each value of $\lambda_M = 0.6, 0.65, 0.7, \dots, 1.6$ and for each one of the two domains. To obtain quicker results, these experiments were run in the cluster \textit{Cedar} at Simon Fraser University by linking Flexodeal (for the idealized MG) and Flexodeal Lite (for the muscle block) to deal.II v9.3.1. In all the experiments, the time step size was set to $\Delta t = 0.01$ s. Experiments with the muscle block geometry were solved using a CG solver and a Jacobi preconditioner, while those with the idealized MG were simply solved using a direct solver (UMFPACK).
+To find the force-length relationship of whole muscle, we first lengthened or shortened each domain from its resting length to a predefined stretch $\lambda_M= L_{mus}(t)/L_{mus}(0)$ over 0.2 s. Then, we held the muscle in place and performed an isometric contraction in which we linearly increased the activation from 0\% to 100\% over 0.2 s (the total simulation time was therefore 0.4 s). In real life experiments, after the muscle (or fibre) has achieved its maximum activation level, there is usually a period of time in which the muscle (or fibre) is held at this state until all forces stabilize (see, for example, \cite{Gareis1992,HerzogLeonard2002}). In our computational setting, this translated into a series of quasi-static computations that were performed for each value of $\lambda_M = 0.6, 0.65, 0.7, \dots, 1.6$ and for each one of the two domains. To obtain quicker results, these experiments were run in the cluster \textit{Cedar} at Simon Fraser University by linking \texttt{Flexodeal} (for the idealized MG) and \texttt{Flexodeal Lite} (for the muscle block) to deal.II v9.3.1. In all the experiments, the time step size was set to $\Delta t = 0.01$ s. Experiments with the muscle block geometry were solved using a CG solver and a Jacobi preconditioner, while those with the idealized MG were simply solved using a direct solver (UMFPACK).
 
 \subsection{Results}
 
@@ -3927,7 +3925,7 @@ To find the force-length relationship of whole muscle, we first lengthened or sh
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_lite_bm_1.eps}\\[1em]
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_lite_bm_1.5.eps}\\[1em]
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_lite_bm_10.eps}
-    \caption{Force-length curves of whole muscle computed using Flexodeal Lite using a parallel-fibred muscle block geometry and different base material factors: $s_{base}=1$ (top row), $s_{base}=1.5$ (middle row), $s_{base}=10$ (bottom row). Force measured at the +x end of the domain.\label{fig:fl-curves-block}}
+    \caption{Force-length curves of whole muscle computed using \texttt{Flexodeal Lite} using a parallel-fibred muscle block geometry and different base material factors: $s_{base}=1$ (top row), $s_{base}=1.5$ (middle row), $s_{base}=10$ (bottom row). Force measured at the +x end of the domain.\label{fig:fl-curves-block}}
 \end{figure}
 
 In Figure \ref{fig:fl-curves-block} (top left), we observe the FL relationship for whole muscle when only muscle tissue is present and the scaling factor $s_{base}$ (appearing as $s_{bm}$ in \eqref{eq:def_Psi_bm}) is equal to 1. First, we notice that for $\lambda_M > 1$, the total force resembles the shape of the fibre FL relationship shown in, for example, Figure \ref{fig:FL_curves_diff_act}. However, this is not the case for $\lambda_M < 1$ given the presence of compressive stresses, which 1D fibre FL curves do not account for.
@@ -3945,7 +3943,7 @@ Furthermore, we observe from Figure \ref{fig:fl-curve-apo} (right) that the apon
 \begin{figure}
     \centering
     \includegraphics[width=0.99\textwidth]{fl_curve_flexodeal_full_apo_thin.eps}
-    \caption{Force-length curve of whole muscle computed in Flexodeal using the idealized MG described in Figure \ref{fig:idealized_geometry}. Force measured at the face where the moving Dirichlet condition was applied, which also is a face where there is only aponeurosis tissue.\label{fig:fl-curve-apo}}
+    \caption{Force-length curve of whole muscle computed in \texttt{Flexodeal} using the idealized MG described in Figure \ref{fig:idealized_geometry}. Force measured at the face where the moving Dirichlet condition was applied, which also is a face where there is only aponeurosis tissue.\label{fig:fl-curve-apo}}
 \end{figure}
 
 \begin{figure}
@@ -3981,7 +3979,7 @@ In this experiment, we will quantify the differences between quasi-static and dy
 
 We considered a block of muscle tissue of dimensions $L_{mus}=3$ cm, $H_{mus}=W_{mus}=1$ cm as described in Figure \ref{fig:muscle_block} with unipennate fibre architecture. In particular, we considered different initial pennation angles $\beta_0 = 0^\circ, 5^\circ, \dots, 30^\circ$, which correspond to the typical range of pennations found in mammalian muscle (measured at resting length) \cite{LieberFriden2000}. For this domain, we constructed a hexahedral mesh with grid refinement level GRL = 3 and we chose a time step size $\Delta t = 10 \ \si{ms}$. For each muscle architecture, we performed an isometric contraction over 200 ms under fully dynamic conditions and another one under quasi-static conditions, both to a maximum activation level of 100\%.
 
-Similar to the convergence study, the solutions were computed using Flexodeal Lite v1.5.1 and a $Q_2/P_1$ element. The linear systems were solved using a CG solver with a Jacobi preconditioner. Furthermore, the force and displacement tolerances for the nonlinear solver were set to $10^{-4}$, and the quadrature rule order was set to 5.
+Similar to the convergence study, the solutions were computed using \texttt{Flexodeal Lite} v1.5.1 and a $Q_2/P_1$ element. The linear systems were solved using a CG solver with a Jacobi preconditioner. Furthermore, the force and displacement tolerances for the nonlinear solver were set to $10^{-4}$, and the quadrature rule order was set to 5.
 
 \subsection{Main results}
 
@@ -4028,7 +4026,7 @@ In turn, Figure \ref{fig:ic-mean-fibre-strain-rate-slab} (middle) shows the mean
 
 \section{Deformation of a human medial gastrocnemius during locomotion} \label{sec:flexodeal_mri}
 
-In this last experiment, we move one step closer towards the realistic simulation of skeletal muscle deformation. Here, we combined a computational domain based on magnetic resonance imaging (MRI) with motion capture and electromyography (EMG) data obtained from a locomotion study. This constitutes a ``proof of concept'' of the applicability of Flexodeal to subject-specific inputs, which could further lead into the development of digital twins of muscle. This is an active research area that has the potential to provide transformative solutions in healthcare and musculoskeletal simulation in general \cite{Diniz2025DigitalTwin}.
+In this last experiment, we move one step closer towards the realistic simulation of skeletal muscle deformation. Here, we combined a computational domain based on magnetic resonance imaging (MRI) with motion capture and electromyography (EMG) data obtained from a locomotion study. This constitutes a ``proof of concept'' of the applicability of \texttt{Flexodeal} to subject-specific inputs, which could further lead into the development of digital twins of muscle. This is an active research area that has the potential to provide transformative solutions in healthcare and musculoskeletal simulation in general \cite{Diniz2025DigitalTwin}.
 
 \subsection{Setup}
 
@@ -4048,7 +4046,7 @@ The locomotion data used for this experiment corresponds to a particular set of 
 
 Similarly to the experiments in Chapter \ref{ch:mass_enhanced_model}, we computed the activation profile using Zajac's transfer function \eqref{eq:zajac} from the available EMG data. This resulted in submaximal activation that did not exceed 30\%. For both strain and activation profiles, we selected a representative window of data (of 4.28 seconds) from the complete \textit{in vivo} experiment (about 25 seconds).
 
-The computational experiment was performed under fully dynamic conditions using Flexodeal v1.0.1 in a standard desktop computer (Intel i5-9600K, 3.70 GHz, 6 cores, 16 GB of RAM) with a Q2-P1 finite element, a CG linear solver, and a Jacobi preconditioner. Furthermore, we set the time step size $\Delta t  = 0.01$ s. Under these conditions, it took about 23 hours to compute 4.28 s of dynamic deformation.
+The computational experiment was performed under fully dynamic conditions using \texttt{Flexodeal} v1.0.1 in a standard desktop computer (Intel i5-9600K, 3.70 GHz, 6 cores, 16 GB of RAM) with a Q2-P1 finite element, a CG linear solver, and a Jacobi preconditioner. Furthermore, we set the time step size $\Delta t  = 0.01$ s. Under these conditions, it took about 23 hours to compute 4.28 s of dynamic deformation.
 
 \section{Results}
 
@@ -4056,7 +4054,7 @@ In Figure \ref{fig:mri_traces}, we show the traces of some important quantities 
 \[
 (V/V_0)(t) = \frac{|\B_t|}{|\B_0|}.
 \]
-It can be seen from the last row of Figure \ref{fig:mri_traces} that the change in volume never exceeded 0.1\%. This shows that, although compressibility has been introduced in the model (through the dilatation $D$), Flexodeal is capable of reproducing essentially incompressible dynamics without the need of imposing $D = 1$ in the system
+It can be seen from the last row of Figure \ref{fig:mri_traces} that the change in volume never exceeded 0.1\%. This shows that, although compressibility has been introduced in the model (through the dilatation $D$), \texttt{Flexodeal} is capable of reproducing essentially incompressible dynamics without the need of imposing $D = 1$ in the system
 
 \begin{figure}
     \centering
@@ -4133,7 +4131,7 @@ Finally, given that the initial pennation angle was measured at 26.1$^\circ$, we
 
 \subsection{Muscle model}
 
-We chose the muscle model implemented in Flexodeal Lite, as described at the beginning of Chapter \ref{ch:flexodeal}. That is, we consider muscle tissue described as a fibre-reinforced composite material containing a Hill-type fibre contribution:
+We chose the muscle model implemented in \texttt{Flexodeal Lite}, as described at the beginning of Chapter \ref{ch:flexodeal}. That is, we consider muscle tissue described as a fibre-reinforced composite material containing a Hill-type fibre contribution:
 \begin{equation}
     \*S_{fibre}(\bar{\lambda}, \bar{\depsilon}) = \dfrac{1}{\bar{\lambda}^2} \sigma_0 \left( a(t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right) \*a_0 \otimes \*a_0,
 \end{equation}
@@ -4172,7 +4170,7 @@ where $T := 0.3 + 0.1/\depsilon_M^*$ \unit{s}, as well as the activation profile
     \right.
 \end{equation}
 
-We implemented this contraction in Flexodeal Lite for multiple whole-muscle shortening speeds $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments.
+We implemented this contraction in \texttt{Flexodeal Lite} for multiple whole-muscle shortening speeds $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments.
 
 \subsection{Gearing in the Flexodeal framework}
 
