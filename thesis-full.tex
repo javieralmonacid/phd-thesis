@@ -4146,7 +4146,7 @@ where $\bar{\*S}_{fibre}$ and $\bar{\*S}_{bm}$ are the modified second Piola-Kir
 Let $\depsilon_M^* > 0$ and $0 < a_{max}\leq 1$ be a prescribed whole-muscle shortening strain rate and a maximum activation level, respectively. The main experiment consisted of the following steps:
 \begin{enumerate}
     \item Starting from its rest state with the $-x$ face fixed (clamped), passively lengthen the muscle at a speed of 1 \unit{s^{-1}} until it reaches a whole-muscle strain of $\varepsilon_M = 0.1$ (i.e. 110\% of its resting length),
-    \item Perform an isometric contraction (in the sense of Defintion \ref{def:isometric_contraction_3d}) where the activation is linearly ramped up to $a_{max}$ over 0.2 s,
+    \item Perform an isometric contraction (in the sense of Defintion \ref{def:isometric_contraction_3d}) where the activation is linearly ramped up to $a_{max}$ over 0.1 s,
     \item Shorten the muscle block at a speed of $\depsilon_M^*$ (measured at the +x face) until it reaches back its resting length.
 \end{enumerate}
 The procedure above thus yields the following boundary condition:
@@ -4154,23 +4154,56 @@ The procedure above thus yields the following boundary condition:
     \varepsilon_M(t) = \left\{
         \begin{aligned}
             &t, &&0 \leq t < 0.1, \\
-            &0.1, &&0.1 \leq t < 0.3, \\
-            &-\depsilon_M^* (t-T), && 0.3 \leq t \leq T,\\
+            &0.1, &&0.1 \leq t < 0.2, \\
+            &-\depsilon_M^* (t-T), && 0.2 \leq t \leq T,\\
         \end{aligned}
     \right.
 \end{equation}
-where $T := 0.3 + 0.1/\depsilon_M^*$ \unit{s}, as well as the activation profile:
+where $T := 0.2 + 0.1/\depsilon_M^*$ \unit{s}, as well as the activation profile:
 \begin{equation}
     a(t) = \left\{
         \begin{aligned}
             &0, &&0 \leq t < 0.1, \\
-            &5\, a_{max} \, (t-0.1), &&0.1 \leq t < 0.3, \\
-            &a_{max}, && 0.3 \leq t \leq T.\\
+            &5\, a_{max} \, (t-0.1), &&0.1 \leq t < 0.2, \\
+            &a_{max}, && 0.2 \leq t \leq T.\\
         \end{aligned}
     \right.
 \end{equation}
 
-We implemented this contraction in \texttt{Flexodeal Lite} for multiple whole-muscle shortening speeds $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments.
+Several quantities of interest were measured at the end of the simulation time, including values of mean muscle velocity, mean fibre velocity (necessary to compute gearing), muscle force (x component, at the +x end of the muscle block), and mean pennation angle. We also measured the bulging in the midsection of the muscle block perpendicular to the x-axis by computing, in the current configuration, the distance between the midpoints that defined the width and height of the block in the reference configuration (see Figure \ref{fig:bulging_diagram}), that is, if $\*U = \langle U_1,U_2,U_3 \rangle$ is the computed displacement vector field, the height $H_{mus}^T$ and the width $W_{mus}^T$ in the deformed configuration are given respectively by: 
+\begin{equation}
+    W_{mus}^T = W_{mus} + U_2(\*X_R, T) - U_2(\*X_L, T),
+\end{equation}
+and
+\begin{equation}
+    H_{mus}^T = H_{mus} + U_3(\*X_T, T) - U_3(\*X_B, T),
+\end{equation}
+where $\*X_L, \*X_R, \*X_T,$ and $\*X_B$ are the left, right, top, and bottom midpoints of the muscle block's midsection in the reference configuration (see Figure \ref{fig:bulging_diagram}).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{gearing_bulging_markers.pdf}
+    \caption{Midsection of the muscle block perpendicular to the x-axis (i.e. the plane that slices the domain at $x_1 = L_{mus}/2$) in the reference configuration $\B_0$ (left) and in the deformed configuration $\B_T$ at time $t=T$ (right). The figure also shows the location of the markers $\*X_L$, $\*X_R$, $\*X_T$, and $\*X_B$ in the reference configuration (with their counterparts $\*x_L$, $\*x_R$, $\*x_T$, and $\*x_B$ in the deformed configuration) used to compute the muscle thickness and width ($H_{mus}^T$ and $W_{mus}^T$) at the end of the simulation.\label{fig:bulging_diagram}}
+\end{figure}
+
+
+We implemented this contraction in \texttt{Flexodeal Lite} for multiple whole-muscle shortening speeds $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments. A sample of one of these experiments is portrayed in Figure \ref{fig:traces_s2_a10}. The time step size $\Delta t$ (in s) was set to:
+\begin{equation}
+    \Delta t = \left\{
+        \begin{aligned}
+            &0.025, &&0 \leq t < 0.1, \\
+            &0.0125, &&0.1 \leq t < 0.2, \\
+            &\dfrac{0.1}{16 \depsilon_M^*}, && 0.2 \leq t \leq T,\\
+        \end{aligned}
+    \right.
+\end{equation}
+so that we compute 4 time steps of passive lengthenting, 8 time steps of isometric activation, and 16 time steps of active shortening
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.99\textwidth]{gearing_full_page.pdf}
+    \caption{Representative computational experiment used to compute muscle gearing ($\depsilon_M^* = 2$ \unit{s^{-1}}, $a_{max} = 1.0$). Left column: Evolution of the activation, muscle force (x component, computed at the +x face), mean muscle and fibre velocities, muscle thickness and width, and pennaion angle throughout the experiment. Right column: Evolution of the fibre stretch $\lambda(\*X,t)$ at four different times: initial state at $t=0$ s (A), end of the passive stretch phase at $t=0.1$ s (B), end of activation ramp at $t = 0.2$ s (C), and end state at $t=0.2 + 0.1/\depsilon_M^*$. \label{fig:traces_s2_a10}}
+\end{figure}
 
 \subsection{Gearing in the Flexodeal framework}
 
@@ -4178,9 +4211,9 @@ The term ``gearing'' was introduced by Brainerd \& Azizi \cite{BrainerdAzizi2005
 
 According to the above, we define the muscle gearing $G$ as:
 \begin{equation} \label{eq:def_gearing}
-    G = \dfrac{\text{muscle velocity}}{\text{fibre velocity}}:= \dfrac{-\left|\mathrm{avg}_S(\*V)(t=T) \right|}{L_f^0 \, \depsilon_0 \, \mathrm{avg}_S(\depsilon)(t=T)},
+    G = \dfrac{\text{Mean Muscle Velocity (MMV)}}{\text{Mean Fibre Velocity (MFV)}}:= \dfrac{-\left|\mathrm{avg}_S(\*V)(t=T) \right|}{L_f^0 \, \depsilon_0 \, \mathrm{avg}_S(\depsilon)(t=T)},
 \end{equation}
-where $|\cdot|$ is the Euclidean norm, $T$ is the simulation end time (i.e. when the muscle reaches back its resting length according to the previously described protocol), and $\mathrm{avg}_S(\*V)(t)$ and $\mathrm{avg}_S(\depsilon)$ are respectively the average muscle velocity and fibre strain rate in the middle section of the muscle block as described in Section \ref{sec:flexodeal-gearing-related-info}, that is:
+where $|\cdot|$ is the Euclidean norm, $T$ is the simulation end time (i.e. when the muscle reaches back its resting length according to the previously described protocol), and $\mathrm{avg}_S(\*V)(t)$ and $\mathrm{avg}_S(\depsilon)$ are respectively the average (mean) muscle velocity and fibre strain rate in the middle section of the muscle block as described in Section \ref{sec:flexodeal-gearing-related-info}, that is:
 \begin{equation}
     \mathrm{avg}_\mathrm{S}(\*V_{mus})(t) = \dfrac{1}{|\mathrm{slab}(\B_t)|} \int_{\mathrm{slab}(\B_0)} \*V(\*X,t) J(\*X,t) \ d\*X,
 \end{equation}
@@ -4192,13 +4225,93 @@ where
 \begin{equation}
     \mathrm{slab}(\B_0) := \left\{ \*X = (x_1,x_2,x_3) \in \B_0 : \dfrac{3}{8}L_{mus} \leq x_1 \leq \dfrac{5}{8} L_{mus} \right\}
 \end{equation}
-and $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$, with $\bm{\varphi}$  the deformation that maps $\B_0$ into $\B_t$. Note that the minus sign in \eqref{eq:def_gearing} is to obtain a positive quantity since when the muscle actively shortens, so do the fibres, and therefore we expect that $\depsilon < 0$. We also note that, in \eqref{eq:def_gearing}, one could have alternatively considered the $x$ component of the velocity field $\*V$, or even the prescribed muscle velocity at the $+x$ face as the numerator for $G$. However, computing gearing using $|\*V|$ rather than a singular component gave better results when compared to the values in \cite{Holt2016}, as we will see next.
+and $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$, with $\bm{\varphi}$  the deformation that maps $\B_0$ into $\B_t$. Note that the minus sign in \eqref{eq:def_gearing} is to obtain a positive quantity since when the muscle actively shortens, so do the fibres, and therefore we expect that $\depsilon < 0$. We also note that, in \eqref{eq:def_gearing}, one could have alternatively considered the $x$ component of the velocity field $\*V$, or even the prescribed muscle velocity at the $+x$ face as the numerator for $G$. However, computing gearing using $|\*V|$ rather than a singular component gave better results when compared to the values in \cite{Holt2016}, as we will see next. 
 
 \section{Results}
 
+\begin{table}
+    \centering
+  \begin{tabular}{|l|ccccccc|}
+    \hline
+    Variable (Units) & \multicolumn{7}{c|}{Values} \\
+    \hline
+    PSR   (\unit{s^{-1}}) & 0.50 & 1.00  & 2.00  & 3.00  & 4.00  & 5.00  & 6.00   \\
+    PV   (\unit{mm \ s^{-1}}) & 9.30 & 18.60 & 37.20 & 55.80 & 74.40 & 93.00 & 111.60 \\
+    MMV   (\unit{mm \ s^{-1}}) & 4.65 & 9.30  & 18.60 & 27.90 & 37.20 & 46.50 & 55.80  \\
+    \hline
+  \end{tabular}\\[1em]
+  \begin{tabular}{|l|ccccccc|}
+    \hline
+    Variable (Units) & \multicolumn{7}{c|}{Values} \\
+    \hline
+     PSR  (\unit{s^{-1}}) & 7.00   & 8.00   & 9.00   & 10.00  & 11.00   & 12.00   & 13.00   \\
+    PV  (\unit{mm \ s^{-1}}) & 130.20 & 148.80 & 167.40 & 186.00 & 204.60  & 223.20  & 241.80  \\
+    MMV  (\unit{mm \ s^{-1}}) & 65.10  & 74.40  & 83.70  & 93.00  & 102.29  & 111.58  & 120.88  \\
+    \hline
+  \end{tabular}
+  \caption{Range of prescribed strain rates (PSR) $\depsilon_M^*$ at the +x end of the domain for the shortening phase of the experiment. Each PSR can be multiplied by the initial length of the muscle $L_{mus}$ to obtain a prescribed (shortening) velocity (PV). Furthermore, we compare these values with the computed mean muscle velocity (MMV), where we observe $\mathrm{MMV} \approx \frac{1}{2} \mathrm{PV}$.
+  \label{tab:prescribed_strain_rate_mmv}}
+\end{table}
+
+Of the 140 computational experiments performed, 37 of them were physiologically \textit{not} reasonable since the mean fibre strain rate $\mathrm{avg}_S(\depsilon)$ exceeded 1, that is, the (unnormalized) speed at which fibres were shortening was higher than their maximum unloaded strain rate $\depsilon_0$. These experiments were therefore discarded from the study and therefore not shown in any of the Figures presented below.
+
+First, in Table \ref{tab:prescribed_strain_rate_mmv}, we show the full list of prescribed strain ranges $\depsilon_M^*$ (in \unit{s^{-1}}) and their equivalent in \unit{mm \ s^{-1}}, which we call the ``prescribed (shortening) velocity'' and can be computed as $L_{mus} \, \depsilon_M^*$, where $L_{mus}$ is the initial length of the muscle block. Furthermore, we compare these values with the mean muscle velocity (MMV) $-|\mathrm{avg}_S(\*V)|$, where we observe that  $|\mathrm{avg}_S(\*V)| \approx \frac{1}{2} L_{mus} \, \depsilon_M^*$, which allows us to replace the prescribed strain rate by the MMV as one of the independent variables of the problem (the other one being activation).
+
+In Figure \ref{fig:g_mfv_force} (left), we show how the mean fibre velocity (MFV) and muscle force (x component, measured at the +x end of the muscle block) vary with activation and MMV. For a given maximum activation level, we observe how MFV increases with increasing MMV at a ratio that is not constant. Then, In Figure \ref{fig:g_mfv_force} (right), we observe how muscle force (x component, measured at the +x end of the muscle block) increases with increasing activation but decreases with increasing MMV, which is expected given the force-velocity relationship of muscle fibres (see, for example, Figure \ref{fig:FL_curves_diff_act}). 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.49\textwidth]{01_vmuscle_activation_vfibre.eps}
+    \includegraphics[width=0.49\textwidth]{02_vmuscle_activation_force.eps}
+    \caption{Mean fibre velocity (left) and normalized muscle force (right) as functions of MMV and maximum activation. 
+    \label{fig:g_mfv_force}}
+\end{figure}
+
+Then, in Figure \ref{fig:g_pennation} we show the computed (mean) pennations angles (according to \eqref{eq:def_mean_fibre_pennation}) and their rates of change (computed from the mean pennation values using a first-order time difference formula). In particular, we observe how as fibres shorten they rotate to higher pennation angles, which is the expected behaviour in pennate muscle \cite{Eng2018,MaganarisEtAl1998,Muhl1982,ZuurbierHuijing1992}. Furthermore, the rate of pennation at which fibres rotate increases with increasing MMV. This behaviour, as well as the magnitudes of pennation angle rate for maximum activation levels below 50\%, align with previous observations in cycling experiments \cite{DickWakeling2017ShiftingGears}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.49\textwidth]{12_vmuscle_activation_pennation.eps}
+    \includegraphics[width=0.49\textwidth]{13_vmuscle_activation_ratepennation.eps}
+    \caption{Mean pennation angle (left) and its rate of change (right) as functions of MMV and maximum activation.
+    \label{fig:g_pennation}}
+\end{figure}
+
+Next, we compute muscle gearing as described in \eqref{eq:def_gearing} and display first this quantity as a function of force and MMV in Figure \ref{fig:g_elevated}, and as a function of force only for different maximum activation levels in Figure \ref{fig:g_gearing_v_force}. The results aligned with the well-established fact that muscle gearing decreases with increasing contractile force \cite{Eng2018} and that in general, muscle gearing is higher during faster contractions and lower during forceful contractions \cite{Azizi2008VariableGearing,Eng2018,Holt2016,RobertsEtAl2019MutiScale3DNature}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.80\textwidth]{05_vmuscle_force_gearing_elevated.pdf}
+    \caption{Muscle gearing as a function of (normalized) muscle force and MMV.
+    \label{fig:g_elevated}}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{07_force_gearing.eps}
+    \caption{Muscle gearing as a function of (normalized) muscle force for different maximum activation levels.
+    \label{fig:g_gearing_v_force}}
+\end{figure}
+
+
+As muscles contract to generate force, the muscle fibres (and consequently, the muscle as a whole) must deform transversally as well to keep its volume (nearly) constant \cite{BaskinPaolini}. In Figure \ref{fig:g_bulging} we show how the muscle width and thickness vary in the midsection of the muscle block in an asymmetric fashion, For instance, when the MMV is small, the width of the midsection increases and its thickness decreases with increasing activation. This asymmetrical deformation is consistent with the early findings of Azizi et al. \cite{Azizi2008VariableGearing}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.49\textwidth]{10_vmuscle_activation_Y-bulging.eps}
+    \includegraphics[width=0.49\textwidth]{11_vmuscle_activation_Z-bulging.eps}
+    \caption{Muscle width and thickness at the end of the active shortening phase, shown here as a function of maximum activation level and MMV.
+    \label{fig:g_bulging}}
+\end{figure}
+
 \section{Discussion}
 
-
+\begin{itemize}
+    \item tell how gearing arises from the physics of the problem
+    \item mention the extensive discussion on the factors that influece gearing and how not all of them are necessary to explain why gearing occurs (e.g. fluid blood pressure, which is not present in the model)
+    \item mention that other tissues such as fat and aponeurosis are not required to explain gearing.
+    \item mention how these computations explain results from 100\% activation experiments, as well as in vivo experiments where the activation is submaximal.
+\end{itemize}
 
 
 \chapter{Conclusions and future work}
