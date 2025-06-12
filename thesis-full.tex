@@ -4073,8 +4073,6 @@ Finally, we show in Figure \ref{fig:mri_displacement_3d} snapshots of the displa
 \end{figure}
 
 
-
-
 \chapter{Gearing in muscle tissues: a first-of-its-kind computational study} \label{ch:gearing}
 
 %Parts of this study are intended to be published in the review article:
@@ -4082,35 +4080,33 @@ Finally, we show in Figure \ref{fig:mri_displacement_3d} snapshots of the displa
 %\medskip
 %\noindent \bibentry{GearingReviewPaper}
 %\medskip
-In this chapter...
+In this chapter, we study a particular mechanism by which fibres in pennate muscle modulate their performance upon contraction, known as muscle gearing. This is an inherently dynamic, three-dimensional phenomenon \cite{RobertsEtAl2019MutiScale3DNature} for which the computation of reliable fibre and muscle velocities is essential. Consequently, the framework developed in Chapters \ref{ch:lagrangian_formulation} and \ref{ch:flexodeal} allows us to study this problem from a completely novel perspective that we hope inspires further research in this area.
 
+We begin in Section \ref{sec:gearing_introduction} with an introduction to the concept of gearing from a historical perspective, including a discussion on different modelling approaches. Then, in Section \ref{sec:gearing_setup}, we explain the computational setup for this problem, which is inspired by an earlier study on rats. Furthermore, we provide a definition of gearing suitable for our 3D context. Finally, in Section \ref{sec:gearing_results} we present the results of this study (which have been computed using \texttt{Flexodeal Lite}) and discuss their validity and implications on the physiological elements that are necessary to describe gearing.
 
-As an inherently dynamic, three-dimensional phenomenon \cite{RobertsEtAl2019MutiScale3DNature}, ...
-
-\section{Introduction}
+\section{Introduction} \label{sec:gearing_introduction}
 
 % Write about modelling of gearing, stuff like mckibben actuators, some computational modelling, showing that our approach is truly unique and it does represent the first of its kind in this area.
 
-Muscle gearing represents a fundamental mechanism by which muscles adapt their mechanical output under varying contractile demand \cite{Azizi2008VariableGearing}. Unlike static architectural descriptors that are typically derived from resting muscle morphology \cite{LieberFriden2000}, gearing encapsulates the \textit{dynamic} relationship between muscle and fibre velocities during contraction \cite{Azizi2008VariableGearing,DickWakeling2017ShiftingGears}. It allows muscles to alter their functional output, shifting between force production and fibre shortening velocity, by modulating fibre orientation and muscle shape \cite{Eng2018,WakelingEtAl2011MovementMechanics}, much like a transmission system in a car. This capacity for variable gearing is particularly important in pennate muscles, since in this case muscle fibres tend to be shorter (so they have less sarcomeres in series to generate force) and the space in which they can contract is limited by other musculoskeletal elements (such as bones, aponeurosis, or other muscles) \cite{Eng2018}. As such, understanding muscle gearing is essential for explaining how muscles adapt their function \textit{in vivo}, and for predicting performance in both healthy and pathological states, particularly during dynamic tasks involving non-isometric contractions.
+Muscle gearing represents a fundamental mechanism by which muscles adapt their mechanical output under varying contractile demand \cite{Azizi2008VariableGearing}. Unlike static architectural descriptors that are typically derived from resting muscle morphology \cite{LieberFriden2000}, gearing encapsulates the \textit{dynamic} relationship between muscle and fibre velocities during contraction \cite{Azizi2008VariableGearing,DickWakeling2017ShiftingGears}. It allows muscles to alter their functional output, shifting between force production and fibre shortening velocity (much like a transmission system in a car or the gears in a bicycle), by modulating fibre orientation and muscle shape \cite{Eng2018,WakelingEtAl2011MovementMechanics}. This capacity for variable gearing is particularly important in pennate muscles, since in this case muscle fibres tend to be shorter (so they have less sarcomeres in series to generate force) and the space in which they can contract is limited by other musculoskeletal elements (such as bones, aponeurosis, or other muscles) \cite{Eng2018}. As such, understanding muscle gearing is essential for explaining how muscles adapt their function \textit{in vivo}, and for predicting performance in both healthy and pathological states, particularly during dynamic tasks involving non-isometric contractions.
 
 The idea that fibre and muscle velocities are decoupled from one another has been around for 100 years. In 1925, Beritoff \cite{Beritoff1925} observed from different frog muscles that, as muscle fibres contracted, their pennation angle rose significantly, meaning the fibres did not shorten as much as the overall muscle-tendon unit. These experimental findings were confirmed (and published in English) much later by Muhl \cite{Muhl1982} in 1982. It was also around this time in the work by Huijing \& Woittiez \cite{HuijingWoittiez1983PlanimetricModel} that geometrical arguments were used to explain the relationship between whole muscle length, fibre length, and pennation angle (see also Otten \cite{Otten1984}, Woittiez \& Huijing \cite{WoittiezHuijing1984Notes}, and Woittiez et al. \cite{WoittiezEtAl1984ThreeDimensional}).
 
 Studies about gearing continue to be carried out in isolated muscle preparations \cite{Azizi2008VariableGearing,AziziRoberts2014,EngRoberts2018,Holt2016}, \textit{in vivo} for instance, using ultrasound \cite{BohmEtAl2019, DickWakeling2017ShiftingGears, RandhawaJackmanWakeling2013,WakelingEtAl2011MovementMechanics} or microcomputed tomography \cite{LeavyRichardsPorro2025}, and using bioinspired actuators, most commonly McKibben actuators \cite{AziziRoberts2013McKibben,Liu2021BioinspiredActuators, SlebodaRobertsAzizi2024, Wang2022LoadDependentVariableGearing}. In particular, Wang \cite{Wang2022LoadDependentVariableGearing} in 2022 studied the importance of pennation angle and number of contractile units in a Himisk actuator based on experimental testing and finite element simulations of the fluid dynamics within the actuators. To date, no studies in the literature have employed three-dimensional continuum mechanics models of skeletal muscle tissue to investigate muscle gearing.
 
-According to the above, ...
+According to the above, the primary goal of this study is to demonstrate that it is feasible to study muscle gearing using a 3D dynamic musculoskeletal model, and that using \texttt{Flexodeal} is a trustworthy way of doing so by analyzing the qualitative agreement of the outputs with well-established literature results. To do this, we must develop a computational setup that is simple (yet realistic) enough to capture the physics of gearing. This includes the description of an appropriate domain for the nonlinear elastodynamic system \eqref{eq:LF_main_system}, a testing protocol, and more importantly, the definition of gearing as a function that depends on spatio-temporal quantities. This is the main focus of the next Section.
 
+\section{Computational setup and main definitions} \label{sec:gearing_setup}
 
-\section{Computational setup and main definitions}
-
-
+In this section, we develop a new setup to study gearing on the basis of the concepts and tools developed in Chapters \ref{ch:lagrangian_formulation} and \ref{ch:flexodeal} of this thesis. Let us first define a domain that captures the main physiological characteristics of a rat medial gastrocnemius.
 
 \subsection{Computational domain and architecture}
 
-We considered a block of muscle tissue with dimensions and architecture that mimiced the the average medial gastrocnemius (MG) from a young population of rats, as described by Holt et al. \cite{Holt2016}. First, to define an appropriate muscle block height $H_{mus}$, we notice that the pennation angle and initial fibre length for this population was $\beta_0 = 26.1^\circ$ and $L_f^0 = 15.8$ mm, respectively. Assuming the fibres are oriented parallel to the XZ plane and that $L_f^0$ corresponds to the longest possible fibre length within the geometry, we set the height of the block to
+We considered a block of muscle tissue with dimensions and architecture that mimiced the average medial gastrocnemius (MG) from a young population of rats, as described by Holt et al. \cite{Holt2016}. First, to define an appropriate height $H_{mus}$, we notice that the pennation angle and initial fibre length for this population were $\beta_0 = 26.1^\circ$ and $L_f^0 = 15.8$ mm, respectively. Assuming the fibres are oriented parallel to the XZ plane and that $L_f^0$ corresponds to the longest possible fibre length within the geometry, we set the height of the block to
 \begin{equation}
     H_{mus} = L_f^0 \sin(\beta_0) = 6.95 \ \unit{mm}.
 \end{equation}
-Next, Holt et al. \cite{Holt2016} report a maximum isometric stress of $\sigma_0 = 47.9$ \unit{N \ cm^{-2}} and a maximum isometric force of $F_0 = 24.4$ N. Thus, we estimate the physiological cross sectional area (PCSA) at:
+Next, Holt et al. \cite{Holt2016} report a maximum isometric stress of $\sigma_0 = 47.9$ \unit{N \ cm^{-2}} and a maximum isometric force of $F_0 = 24.4$ N. Thus, we estimate the physiological cross-sectional area (PCSA) at:
 \begin{equation}
     PCSA = \dfrac{F_0}{\sigma_0} = 0.509 \ \unit{cm^2}.
 \end{equation}
@@ -4131,7 +4127,7 @@ Finally, given that the initial pennation angle was measured at 26.1$^\circ$, we
 
 \subsection{Muscle model}
 
-We chose the muscle model implemented in \texttt{Flexodeal Lite}, as described at the beginning of Chapter \ref{ch:flexodeal}. That is, we consider muscle tissue described as a fibre-reinforced composite material containing a Hill-type fibre contribution:
+We chose the muscle model implemented in \texttt{Flexodeal Lite} as described at the beginning of Chapter \ref{ch:flexodeal}. That is, we consider muscle tissue described as a fibre-reinforced composite material containing a Hill-type fibre contribution:
 \begin{equation}
     \*S_{fibre}(\bar{\lambda}, \bar{\depsilon}) = \dfrac{1}{\bar{\lambda}^2} \sigma_0 \left( a(t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right) \*a_0 \otimes \*a_0,
 \end{equation}
@@ -4139,7 +4135,7 @@ and a Yeoh base material contribution:
 \begin{equation}
     \bar{\*S}_{bm} = s_{bm} \sigma_{0} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I,
 \end{equation}
-where $\bar{\*S}_{fibre}$ and $\bar{\*S}_{bm}$ are the modified second Piola-Kirchhoff (PK2) tensors defined in \eqref{eq:def_S_fibre} and \eqref{eq:def_S_bar_bm}, respectively. Differently from Holt et al. \cite{Holt2016}, we set the maximum isometric stress to a more standard value of $\sigma_0 = 20.0$ \unit{N \ cm^{-2}}. Furthermore, we set the scaling factor $s_{bm} = 1$ and we also assumed that the maximum unloaded strain rate was $\depsilon_0 = 5$ \unit{s^{-1}}.
+where $\bar{\*S}_{fibre}$ and $\bar{\*S}_{bm}$ are the modified second Piola-Kirchhoff (PK2) tensors defined in \eqref{eq:def_S_fibre} and \eqref{eq:def_S_bar_bm}, respectively. Differently from Holt et al. \cite{Holt2016}, we set the maximum isometric stress to a more standard value of $\sigma_0 = 20.0$ \unit{N \ cm^{-2}}. Furthermore, we set the scaling factor $s_{bm} = 1$ and we also assumed that the maximum unloaded fibre strain rate was $\depsilon_0 = 5$ \unit{s^{-1}}.
 
 \subsection{Testing protocol}
 
@@ -4147,9 +4143,9 @@ Let $\depsilon_M^* > 0$ and $0 < a_{max}\leq 1$ be a prescribed whole-muscle sho
 \begin{enumerate}
     \item Starting from its rest state with the $-x$ face fixed (clamped), passively lengthen the muscle at a speed of 1 \unit{s^{-1}} until it reaches a whole-muscle strain of $\varepsilon_M = 0.1$ (i.e. 110\% of its resting length),
     \item Perform an isometric contraction (in the sense of Defintion \ref{def:isometric_contraction_3d}) where the activation is linearly ramped up to $a_{max}$ over 0.1 s,
-    \item Shorten the muscle block at a speed of $\depsilon_M^*$ (measured at the +x face) until it reaches back its resting length.
+    \item Shorten the muscle block at a speed of $\depsilon_M^*$ (prescribed at the +x face) until it reaches back its resting length.
 \end{enumerate}
-The procedure above thus yields the following boundary condition:
+The procedure above yields the following boundary condition:
 \begin{equation}
     \varepsilon_M(t) = \left\{
         \begin{aligned}
@@ -4159,24 +4155,24 @@ The procedure above thus yields the following boundary condition:
         \end{aligned}
     \right.
 \end{equation}
-where $T := 0.2 + 0.1/\depsilon_M^*$ \unit{s}, as well as the activation profile:
+where $T := 0.2 + 0.1/\depsilon_M^*$, as well as the activation profile:
 \begin{equation}
     a(t) = \left\{
         \begin{aligned}
             &0, &&0 \leq t < 0.1, \\
-            &5\, a_{max} \, (t-0.1), &&0.1 \leq t < 0.2, \\
+            &10\, a_{max} \, (t-0.1), &&0.1 \leq t < 0.2, \\
             &a_{max}, && 0.2 \leq t \leq T.\\
         \end{aligned}
     \right.
 \end{equation}
 
-Several quantities of interest were measured at the end of the simulation time, including values of mean muscle velocity, mean fibre velocity (necessary to compute gearing), muscle force (x component, at the +x end of the muscle block), and mean pennation angle. We also measured the bulging in the midsection of the muscle block perpendicular to the x-axis by computing, in the current configuration, the distance between the midpoints that defined the width and height of the block in the reference configuration (see Figure \ref{fig:bulging_diagram}), that is, if $\*U = \langle U_1,U_2,U_3 \rangle$ is the computed displacement vector field, the height $H_{mus}^T$ and the width $W_{mus}^T$ in the deformed configuration are given respectively by: 
+Several quantities of interest were measured at the end of the simulation time, including values of mean muscle velocity, mean fibre velocity (necessary to compute gearing), muscle force (x component, at the +x end of the muscle block), and mean pennation angle, all of them computed as described in Section \ref{sec:flexodeal_outputs}. We also measured the bulging in the midsection of the muscle block perpendicular to the x-axis by computing, in the current configuration, the distance between the midpoints that defined the width and height of the block in the reference configuration (see Figure \ref{fig:bulging_diagram}), that is, if $\*U = \langle U_1,U_2,U_3 \rangle$ is the computed displacement vector field, the height $H_{mus}^T$ and the width $W_{mus}^T$ in the deformed configuration are given respectively by: 
 \begin{equation}
-    W_{mus}^T = W_{mus} + U_2(\*X_R, T) - U_2(\*X_L, T),
+    H_{mus}^T = H_{mus} + U_3(\*X_T, T) - U_3(\*X_B, T),
 \end{equation}
 and
 \begin{equation}
-    H_{mus}^T = H_{mus} + U_3(\*X_T, T) - U_3(\*X_B, T),
+    W_{mus}^T = W_{mus} + U_2(\*X_R, T) - U_2(\*X_L, T),
 \end{equation}
 where $\*X_L, \*X_R, \*X_T,$ and $\*X_B$ are the left, right, top, and bottom midpoints of the muscle block's midsection in the reference configuration (see Figure \ref{fig:bulging_diagram}).
 
@@ -4187,7 +4183,7 @@ where $\*X_L, \*X_R, \*X_T,$ and $\*X_B$ are the left, right, top, and bottom mi
 \end{figure}
 
 
-We implemented this contraction in \texttt{Flexodeal Lite} for multiple whole-muscle shortening speeds $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments. A sample of one of these experiments is portrayed in Figure \ref{fig:traces_s2_a10}. The time step size $\Delta t$ (in s) was set to:
+We implemented this contraction in \texttt{Flexodeal Lite} for multiple whole-muscle shortening strain rates $\depsilon_M^* = 0.5, 1, 2, 3, 4, \dots, 13$ \unit{s^{-1}} and multiple maximum activation levels $a_{max} = 0.1, 0.2, \dots, 1.0$. This resulted in 140 computational experiments. A sample of one of these experiments is portrayed in Figure \ref{fig:traces_s2_a10}. The time step size $\Delta t$ (in s) was set to:
 \begin{equation}
     \Delta t = \left\{
         \begin{aligned}
@@ -4197,19 +4193,17 @@ We implemented this contraction in \texttt{Flexodeal Lite} for multiple whole-mu
         \end{aligned}
     \right.
 \end{equation}
-so that we compute 4 time steps of passive lengthenting, 8 time steps of isometric activation, and 16 time steps of active shortening
+so that we compute 4 time steps of passive lengthening, 8 time steps of isometric activation, and 16 time steps of active shortening
 
 \begin{figure}
     \centering
     \includegraphics[width=0.99\textwidth]{gearing_full_page.pdf}
-    \caption{Representative computational experiment used to compute muscle gearing ($\depsilon_M^* = 2$ \unit{s^{-1}}, $a_{max} = 1.0$). Left column: Evolution of the activation, muscle force (x component, computed at the +x face), mean muscle and fibre velocities, muscle thickness and width, and pennaion angle throughout the experiment. Right column: Evolution of the fibre stretch $\lambda(\*X,t)$ at four different times: initial state at $t=0$ s (A), end of the passive stretch phase at $t=0.1$ s (B), end of activation ramp at $t = 0.2$ s (C), and end state at $t=0.2 + 0.1/\depsilon_M^*$. \label{fig:traces_s2_a10}}
+    \caption{Representative computational experiment used to compute muscle gearing ($\depsilon_M^* = 2$ \unit{s^{-1}}, $a_{max} = 1.0$). Left column: Evolution of the activation, muscle force (x component, computed at the +x face), mean muscle and fibre velocities, muscle thickness and width, and pennation angle throughout the experiment. Right column: Evolution of the fibre stretch $\lambda(\*X,t)$ at four different times: initial state at $t=0$ s (A), end of the passive stretch phase at $t=0.1$ s (B), end of activation ramp at $t = 0.2$ s (C), and end state at $t=0.2 + 0.1/\depsilon_M^*$. \label{fig:traces_s2_a10}}
 \end{figure}
 
 \subsection{Gearing in the Flexodeal framework}
 
-The term ``gearing'' was introduced by Brainerd \& Azizi \cite{BrainerdAzizi2005} in 2005 in the form ``architectural gear ratio'' can corresponded to the ratio of whole muscle strain to fibre strain. It was studied in aquatic salamanders using sonomicrometry and the results were compared to a geometrical model showing qualitatively similar results. However, the work of Azizi et al. \cite{Azizi2008VariableGearing} in 2008 defined gearing as the ratio of whole muscle \textit{velocity} to fibre velocity, a definition that is now agreed upon in the literature due to its functional and physiological importance (see, for instance, the review by Pinto et al. \cite{PintoEtAl2023Nomenclature}). However, in our modelling framework, neither the muscle velocity nor the fibre strain rate are constant, scalar quantities, so we must derive a new expression to account for our three-dimensional variations.
-
-According to the above, we define the muscle gearing $G$ as:
+The term ``gearing'' was introduced by Brainerd \& Azizi \cite{BrainerdAzizi2005} in 2005 as ``architectural gear ratio'' and corresponded to the ratio of whole muscle strain to fibre strain. It was studied in aquatic salamanders using sonomicrometry and the results were compared to a geometrical model showing modest resemblence. However, the work of Azizi et al. \cite{Azizi2008VariableGearing} in 2008 defined gearing as the ratio of whole muscle \textit{velocity} to fibre velocity, a definition that is now agreed upon in the literature due to its functional and physiological importance (see, for instance, the review by Pinto et al. \cite{PintoEtAl2023Nomenclature}). However, in our modelling framework, neither the muscle velocity nor the fibre strain rate are constant, scalar quantities, so we must derive a new expression to account for our three-dimensional variations. According to this, we define the muscle gearing $G$ as:
 \begin{equation} \label{eq:def_gearing}
     G = \dfrac{\text{Mean Muscle Velocity (MMV)}}{\text{Mean Fibre Velocity (MFV)}}:= \dfrac{-\left|\mathrm{avg}_S(\*V)(t=T) \right|}{L_f^0 \, \depsilon_0 \, \mathrm{avg}_S(\depsilon)(t=T)},
 \end{equation}
@@ -4227,7 +4221,7 @@ where
 \end{equation}
 and $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$, with $\bm{\varphi}$  the deformation that maps $\B_0$ into $\B_t$. Therefore, $G>1$ implies that the speed at which fibres shorten is smaller than the speed at which muscle does, and viceversa if $G < 1$. Note that the minus sign in \eqref{eq:def_gearing} is to obtain a positive quantity since when the muscle actively shortens, so do the fibres, and therefore we expect that $\depsilon < 0$. We also note that, in \eqref{eq:def_gearing}, one could have alternatively considered the $x$ component of the velocity field $\*V$, or even the prescribed muscle velocity at the $+x$ face as the numerator for $G$. However, computing gearing using $|\*V|$ rather than a singular component gave better results when compared to the values in \cite{Holt2016}, as we will see next. 
 
-\section{Results}
+\section{Results} \label{sec:gearing_results}
 
 \begin{table}
     \centering
@@ -4255,9 +4249,9 @@ and $\mathrm{slab}(\B_t) = \bm{\varphi} \left(\mathrm{slab}(\B_0), t \right)$, w
 
 Of the 140 computational experiments performed, 37 of them were physiologically \textit{not} reasonable since the mean fibre strain rate $\mathrm{avg}_S(\depsilon)$ exceeded 1, that is, the (unnormalized) speed at which fibres were shortening was higher than their maximum unloaded strain rate $\depsilon_0$. These experiments were therefore discarded from the study and therefore not shown in any of the Figures presented below.
 
-First, in Table \ref{tab:prescribed_strain_rate_mmv}, we show the full list of prescribed strain ranges $\depsilon_M^*$ (in \unit{s^{-1}}) and their equivalent in \unit{mm \ s^{-1}}, which we call the ``prescribed (shortening) velocity'' and can be computed as $L_{mus} \, \depsilon_M^*$, where $L_{mus}$ is the initial length of the muscle block. Furthermore, we compare these values with the mean muscle velocity (MMV) $-|\mathrm{avg}_S(\*V)|$, where we observe that  $|\mathrm{avg}_S(\*V)| \approx \frac{1}{2} L_{mus} \, \depsilon_M^*$, which allows us to replace the prescribed strain rate by the MMV as one of the independent variables of the problem (the other one being activation).
+First, in Table \ref{tab:prescribed_strain_rate_mmv}, we show the full range of prescribed strain rates $\depsilon_M^*$ (in \unit{s^{-1}}) and their equivalent in \unit{mm \ s^{-1}}, which we call the ``prescribed (shortening) velocity'' and can be computed as $L_{mus} \, \depsilon_M^*$, where $L_{mus}$ is the initial length of the muscle block. Furthermore, we compare these values with the mean muscle velocity (MMV) $-|\mathrm{avg}_S(\*V)|$, where we observe that  $|\mathrm{avg}_S(\*V)| \approx \frac{1}{2} L_{mus} \, \depsilon_M^*$, which allows us to replace the prescribed strain rate by the MMV as one of the independent variables of the problem (the other one being activation).
 
-In Figure \ref{fig:g_mfv_force} (left), we show how the mean fibre velocity (MFV) and muscle force (x component, measured at the +x end of the muscle block) vary with activation and MMV. For a given maximum activation level, we observe how MFV increases with increasing MMV at a ratio that is not constant. Then, In Figure \ref{fig:g_mfv_force} (right), we observe how muscle force (x component, measured at the +x end of the muscle block) increases with increasing activation but decreases with increasing MMV, which is expected given the force-velocity relationship of muscle fibres (see, for example, Figure \ref{fig:FL_curves_diff_act}). 
+In Figure \ref{fig:g_mfv_force}, we show how the mean fibre velocity (MFV) and muscle force (x component, measured at the +x end of the muscle block) vary with activation and MMV. For a given maximum activation level, we observe how MFV increases with increasing MMV at a ratio that is not constant (Figure \ref{fig:g_mfv_force} (left)). This is the first indication of variable gearing. Then, in Figure \ref{fig:g_mfv_force} (right), we observe how muscle force increases with increasing activation but decreases with increasing MMV, which is expected given the force-velocity relationship of muscle fibres (see, for example, Figure \ref{fig:FL_curves_diff_act}). 
 
 \begin{figure}
     \centering
@@ -4267,7 +4261,7 @@ In Figure \ref{fig:g_mfv_force} (left), we show how the mean fibre velocity (MFV
     \label{fig:g_mfv_force}}
 \end{figure}
 
-Then, in Figure \ref{fig:g_pennation} we show the computed (mean) pennation angles (according to \eqref{eq:def_mean_fibre_pennation}) and their rates of change (computed from the mean pennation values using a first-order time difference formula). In particular, we observe how as fibres shorten they rotate to higher pennation angles, which is the expected behaviour in pennate muscle \cite{Eng2018,MaganarisEtAl1998,Muhl1982,ZuurbierHuijing1992}. Furthermore, the rate of pennation at which fibres rotate increases with increasing MMV. This behaviour, as well as the magnitudes of pennation angle rate for maximum activation levels below 50\%, align with previous observations in cycling experiments \cite{DickWakeling2017ShiftingGears}.
+Then, in Figure \ref{fig:g_pennation} we show the computed (mean) pennation angles and their rates of change, which have been computed from the mean pennation values using a first-order time difference formula. In particular, we observe how as fibres shorten they rotate to higher pennation angles, which is the expected behaviour in pennate muscle \cite{Eng2018,MaganarisEtAl1998,Muhl1982,ZuurbierHuijing1992}. Furthermore, the rate of pennation at which fibres rotate increases with increasing MMV. This behaviour, as well as the magnitudes of pennation angle rate for maximum activation levels below 50\%, align with previous observations in cycling experiments \cite{DickWakeling2017ShiftingGears}.
 
 \begin{figure}
     \centering
@@ -4277,7 +4271,7 @@ Then, in Figure \ref{fig:g_pennation} we show the computed (mean) pennation angl
     \label{fig:g_pennation}}
 \end{figure}
 
-Next, we compute muscle gearing as described in \eqref{eq:def_gearing} and display first this quantity as a function of force and MMV in Figure \ref{fig:g_elevated}, and as a function of force only for different maximum activation levels in Figure \ref{fig:g_gearing_v_force}. We notice in particular how gearing decreases with increasing force, but increases with MMV and activation. The gearing observed in this case align well with those presented in Holt et al. \cite{Holt2016}. Finally, in Figure \ref{fig:g_bulging} we show how the muscle width and thickness vary in the midsection of the muscle block in an asymmetric fashion, For instance, when the MMV is small, the width of the midsection increases and its thickness decreases with increasing activation. Furthermore, there is a clear inverse relationship between muscle force increases (Figure \ref{fig:g_mfv_force}) and muscle thickness (Figure \ref{fig:g_bulging}). The results are consistent with previous literature findings \cite{Azizi2008VariableGearing}. All simulation shown here had volume changes of < 1\%, consistent with the (nearly) incompressible nature of skeletal muscle tissue \cite{BaskinPaolini}.
+Next, we compute muscle gearing as described in \eqref{eq:def_gearing} and display first this quantity as a function of force and MMV in Figure \ref{fig:g_elevated}, and as a function of force only for different maximum activation levels in Figure \ref{fig:g_gearing_v_force}. We notice in particular how gearing decreases with increasing force, but increases with MMV and activation. The gearing values observed in this case align well with those observed by Holt et al. \cite{Holt2016}. Finally, in Figure \ref{fig:g_bulging} we show how the muscle width and thickness vary in the midsection of the muscle block in an asymmetric fashion, For instance, when the MMV is small, the width of the midsection increases and its thickness decreases with increasing activation. Furthermore, there is a clear inverse relationship between muscle force (Figure \ref{fig:g_mfv_force}) and muscle thickness (Figure \ref{fig:g_bulging}), which is consistent with previous literature findings \cite{Azizi2008VariableGearing}. All simulation shown here had volume changes of < 1\%, consistent with the (nearly) incompressible nature of skeletal muscle tissue \cite{BaskinPaolini}.
 
 \begin{figure}
     \centering
@@ -4301,7 +4295,7 @@ Next, we compute muscle gearing as described in \eqref{eq:def_gearing} and displ
     \label{fig:g_bulging}}
 \end{figure}
 
-\section{Discussion}
+%\section{Discussion} \label{sec:gearing_discussion}
 
 %\begin{itemize}
 %    \item tell how gearing arises from the physics of the problem
@@ -4310,10 +4304,10 @@ Next, we compute muscle gearing as described in \eqref{eq:def_gearing} and displ
 %    \item mention how these computations explain results from 100\% activation experiments, as well as in vivo experiments where the activation is submaximal.
 %\end{itemize}
 
-The results above show how Flexodeal can reproduce the variable gearing observed in skeletal muscle tissue \cite{Azizi2008VariableGearing}. Morever, not only we can perform experiments with maximal activation (as those performed \textit{in vitro} or \textit{in situ}) but also with lower levels of activation, similar to those seen \textit{in vivo}. In particular, the results aligned with the well-established fact that muscle gearing decreases with increasing contractile force \cite{Eng2018} and that in general, muscle gearing is higher during faster contractions and lower during forceful contractions \cite{Azizi2008VariableGearing,Eng2018,Holt2016,RobertsEtAl2019MutiScale3DNature}. Furthermore, the fact that the gearing values are close to those reported by Holt et al. \cite{Holt2016} suggest that the inclusion of mass (and therefore, inertia) in the system is necessary.
+The results above show how \texttt{Flexodeal} can reproduce the variable gearing observed in skeletal muscle tissue \cite{Azizi2008VariableGearing}. Moreover, not only we can perform experiments with maximal activation (as those performed \textit{in vitro} or \textit{in situ}) but also with lower levels of activation, similar to those seen \textit{in vivo}. In particular, the results aligned with the well-established fact that muscle gearing decreases with increasing contractile force \cite{Eng2018} and that in general, muscle gearing is higher during faster contractions and lower during forceful contractions \cite{Azizi2008VariableGearing,Eng2018,Holt2016,RobertsEtAl2019MutiScale3DNature}. Furthermore, the fact that the gearing values are close to those reported by Holt et al. \cite{Holt2016} suggest that the inclusion of mass (and therefore, inertia) in the system is necessary.
 
 Muscle gearing is a multifactorial phenomenon and these results show how it emerges as an intrinsic property of active, fibre-reinforced composites. Extensive discussions exist in the literature as to what are the factors that influence muscle gearing the most \cite{Eng2018}.
-Although it is out of the scope of this thesis to answer such question, we must emphasize that the muscle model used in these experiment does not have aponeurosis, intramuscular fat, or fluid contributions, which are factors typically thought to influence gearing \cite{AziziGillisBrainerd2002,BrainerdAzizi2005,Eng2018,Holt2016}. These factors are not necessary to explain why gearing occurs, but their consideration would certainly affect the overall material properties of muscle tissue, and therefore, the gearing values that could be obtained.
+Although it is out of the scope of this thesis to answer such question, we must emphasize that the muscle model used in these experiment does not have aponeurosis, intramuscular fat, or fluid contributions, which are factors typically thought to influence gearing \cite{AziziGillisBrainerd2002,BrainerdAzizi2005,Eng2018,Holt2016}. These factors are not necessary to explain why gearing occurs, but their consideration would certainly affect the overall material properties of muscle tissue, and may, therefore, modify the gearing characteristics of muscle. Further computational studies are needed in this area.
 
 
 \chapter{Conclusions and future work}
