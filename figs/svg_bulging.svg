@@ -389,7 +389,10 @@
     <path
        style="fill:none;stroke:#000000;stroke-width:0.35277778;stroke-opacity:1;stroke-dasharray:none"
        d="M 54.999999,40.000002 V 70 H 85 V 40.000002 Z"
-       id="path3" />
+       id="path3"
+       inkscape:export-filename="gearing_bulging_markers.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.352778;stroke-dasharray:none;stroke-opacity:1"
        d="m 132.14778,46.373003 c 0,0 -4.42693,8.628634 0,17.257267 0,0 13.28081,8.628633 30.98855,0 0,0 4.42693,-8.628632 0,-17.257265 0,0 -15.06283,-8.628636 -30.98855,-2e-6 z"
