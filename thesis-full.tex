@@ -361,8 +361,8 @@ Consider, for instance, the protocol developed by Chen \cite{EvanThesis} to reco
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{mtu_sketch.jpeg}
-    \caption{Sketch of an MTU (nicer version to come).}
+    \includegraphics[width=0.95\textwidth]{sketch_mtu_nice_version.pdf}
+    \caption{Sketch of an MTU with dimensions characterized by the muscle and tendon lengths, respectively $L_M$ and $L_T$. Left: initial state ($t=0$). Right: deformed state after shortening ($t>0$).}
     \label{fig:mtu_sketch}
 \end{figure}
 
@@ -738,7 +738,7 @@ These results show that the tendon acts as a strut when $s=1$, but it is no long
 
 The phenomenon in the previous subsection is a strong indication that, in certain scenarios, the number of masses in the model might need to be modified from the standard $N=16$ suggested by Ross et al. \cite{Ross2018-1D}. To view this in more detail, we performed a homogenization study by varying the number of masses from 0 (i.e., a simulation using the massless model) to 128 masses. We portray these results in Figure \ref{fig:multibody-homog-study}. Here, we observe how it is only when using $N=128$ masses that we do not observe any unphysical oscillations. However, simulating 18 seconds of data took about 42 hours of computational time and a significant amount of memory, so this is not a feasible approach for studying multiple muscle-task combinations. 
 
-{\color{blue}In general, we observed that the number of masses needed to fully resolve the traces depended on the scale, task, and muscle in study. This effect can be seen from Figure \ref{fig:multibody_predicted_forces_1_10}B. In particular, for scale $s=10$, the traces for the VM-running and ST-running combination show some spurious oscillations that are not present in the traces for the MG. This also suggests that the problem could be better approached using a one-dimensional \textit{continuum} model (see next chapter), that is, a model derived from an infinitely large number of masses (i.e. $N \to \infty$). This would open the door to the development of efficient numerical solvers using techniques such as the finite element method.}
+In general, we observed that the number of masses needed to fully resolve the traces depended on the scale, task, and muscle in study. This effect can be seen from Figure \ref{fig:multibody_predicted_forces_1_10}B. In particular, for scale $s=10$, the traces for the VM-running and ST-running combination show some spurious oscillations that are not present in the traces for the MG. This also suggests that the problem could be better approached using a one-dimensional \textit{continuum} model (see next chapter), that is, a model derived from an infinitely large number of masses (i.e. $N \to \infty$). This would open the door to the development of efficient numerical solvers using techniques such as the finite element method.
 
 \begin{figure}
     \centering
@@ -970,7 +970,7 @@ We show these results in Figure \ref{fig:hill_only_unstable}. Here, we see that 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{05_no_bm_unstable.png}
+    \hspace*{-1.9em}\includegraphics[width=1.1\textwidth]{05_no_bm_unstable.png}
     \caption{Stability of an isometric contraction according to the system of ODEs \eqref{eq:odes_hill_only}. The elements (as well as the muscle) are stretched initially at around 85\% (left), 115\% (middle), and 145\% (right) of the muscle's optimal length. At an initial stretch of 115\%, the descending limb instability causes the segments to bifurcate to two different lengths.}
     \label{fig:hill_only_unstable}
 \end{figure}
@@ -1098,7 +1098,7 @@ First, we portray the resulting forces in Figure \ref{fig:forces_stabilized} whe
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{06_with_bm_stable.png}
+    \hspace*{-1.9em}\includegraphics[width=1.1\textwidth]{06_with_bm_stable.png}
     \caption{Stability of an isometric contraction according to the system of ODEs \eqref{eq:odes_hill_stabilized}. As before, the elements (as well as the muscle) are stretched initially at around 85\% (left), 115\% (middle), and 145\% (right) of the muscle's optimal length. In all cases, the contractions are stable since the derivative of the total force (made of active, passive, and base material components) is always positive.}
     \label{fig:hill_plus_nh_stable}
 \end{figure}
@@ -2065,8 +2065,8 @@ First, we introduce some concepts of continuum mechanics that are required to un
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.50\textwidth]{placeholder-img.jpg}
-    \caption{TBD \label{fig:potato_B0_Bt}}
+    \includegraphics[width=0.6\textwidth]{potato_1_continuum_mechanics.pdf}
+    \caption{Deformation of a body from its reference configuration $\B_0$ to a current configuration $\B_t = \bm{\varphi}(\B_0, t)$, showing also the displacement $\*U(\*X,t)$ of a typical particle from $\*X \in \B_0$ to $\*x \in \B_t$. The motion $\bm{\varphi}$ also maps the Dirichlet boundary $\Gamma_{D,0}$ to $\Gamma_{D,t}$ (solid curves), as well as the Neumann boundary $\Gamma_{N,0}$ to $\Gamma_{N,t}$ (dashed curves). \label{fig:potato_B0_Bt}}
 \end{figure}
 
 Let $\B_0 \subset \R^3$ denote the \textit{reference} configuration of a deformable body with a smooth boundary $\partial \B_0$. For each time $t > 0$, we consider an invertible motion $\bphi(\cdot, t):\B_0 \to \R^3$ that maps \textit{material} coordinates $\*X \in \B_0$ into \textit{spatial} coordinates $\*x \in \B_t$ (see Figure \ref{fig:potato_B0_Bt}), as follows:
@@ -2081,7 +2081,7 @@ We now define the \textit{material} and \textit{spatial displacements fields} $\
 \begin{equation}\label{eq:displacements}
 \*U(\*X,t) := \*x - \*X = \bphi(\*X,t) - \*X, \quad \*u(\*x,t) := \*x - \*X = \*x - \bphi^{-1}(\*x,t), \quad t \geq 0.
 \end{equation}
-Note that, magnitude-wise, these displacement fields coincide (i.e. $|\*U|=|\*u|$). They are just observed in different reference frames. We refer to a system described in $\*X \in \B_0$ coordinates as the material or \textit{Lagrangian} description, whereas to one described in $\*x \in \B_t$ coordinates as the spatial or \textit{Eulerian} description. In addition, we define the \textit{material velocity} field $\*V$ and the \textit{spatial velocity} field $\*v$ as
+Note that, magnitude-wise, these displacement fields coincide (i.e. $|\*U|=|\*u|$). They are just observed in different reference frames (see Figure \ref{fig:potato_B0_Bt}). We refer to a system described in $\*X \in \B_0$ coordinates as the material or \textit{Lagrangian} description, whereas to one described in $\*x \in \B_t$ coordinates as the spatial or \textit{Eulerian} description. In addition, we define the \textit{material velocity} field $\*V$ and the \textit{spatial velocity} field $\*v$ as
 \begin{equation}\label{eq:velocities}
 \*V(\*X,t) := \pder{\bphi(\*X,t)}{t}, \quad \*v(\*x,t) := \*V\big(\bphi^{-1}(\*x,t), t\big).
 \end{equation}
@@ -2157,18 +2157,6 @@ J(\*X,t) := \det \*F(\*X,t).
 \end{equation}
 Note that as long as the motion $\bphi$ is invertible, $\det \*F \neq 0$. Also, because volume elements cannot have negative volumes, we cannot have $\det \*F < 0$. Hence, we will always have $\det \*F > 0$. 
 
-Sometimes we refer to the volume ratio $J$ as the \textit{Jacobian determinant} because it provides a way to map infinitesimal elements in the reference configuration to the current configuration. Indeed, given infinitesimal elements $dV$, $dS$ in the interior and boundary of the reference configuration $\B_0$ respectively; and $dv$, $ds$ in the interior and boundary of the current configuration $\B_t$, we have 
-\begin{equation} \label{eq:differentials}
-dv = J(\*X,t) \, dV, \quad \*n \, ds = J \*F^{-T} \*N \, dS, 
-\end{equation}
-where $\*n$, $\*N$ denote the normal vectors on the surface of the current and reference configurations, respectively (see Figure \ref{fig:potato_dv_ds}). The last equality in this equation is the well-known \textit{Nanson's formula}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth]{placeholder-img.jpg}
-    \caption{Transformation of volume and surface elements.\label{fig:potato_dv_ds}}
-\end{figure}
-
 Instead of referring to the deformation gradient by its definition \eqref{eq:def_F}, we will often use its expression in terms of the displacement gradient, i.e.,
 \begin{equation} \label{eq:real_def_of_F}
 \*F(\*X,t) = \*I + \nabla_0 \*U(\*X,t) , \quad \*F^{-1}(\*x,t) = \*I - \nabla \*u(\*x,t),
@@ -2180,6 +2168,19 @@ where $\*I$ is the standard second-order identity tensor. In addition, the defor
 \label{eq:transform_3}\divt{\*A} &= \nabla_0 \*A : \*F^{-T} = \pder{A_{ab}}{X_B} F^{-1}_{Bb},
 \end{align}
 where the tensorial divergence is given by $\divt{\*A} := \pder{A_{ab}}{x_b}$ (the notation here follows Remark \ref{re:subscript_notation}).
+
+Sometimes we refer to the volume ratio $J$ as the \textit{Jacobian determinant} because it provides a way to map infinitesimal elements in the reference configuration to the current configuration. Indeed, given infinitesimal elements $dV$, $dS$ in the interior and boundary of the reference configuration $\B_0$ respectively; and $dv$, $ds$ in the interior and boundary of the current configuration $\B_t$, we have 
+\begin{equation} \label{eq:differentials}
+dv = J(\*X,t) \, dV, \quad \*n \, ds = J \*F^{-T} \*N \, dS, 
+\end{equation}
+where $\*n$, $\*N$ denote the normal vectors on the surface of the current and reference configurations, respectively (see Figure \ref{fig:potato_dv_ds}). The last equality in this equation is the well-known \textit{Nanson's formula}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{potato_2_normals_cauchy.pdf}
+    \caption{Transformation of surface elements. In the reference configuration $\B_0$, we observe a surface element $dS$ (with unit normal $\*N$) and a traction vector $\*T$. Similarly, in the current configuration $\B_t$, we have a surface element $ds$ (with unit normal $\*n$) and a traction vector $\*t$.
+    \label{fig:potato_dv_ds}}
+\end{figure}
 
 \subsection{Rates of deformation tensors}
 
@@ -2213,8 +2214,8 @@ is the \textit{rate of rotation tensor} or \textit{vorticity tensor}. %Note that
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{placeholder-img.jpg}
-    \caption{Deformation of a line element. \label{fig:potato_line_element}}
+    \includegraphics[width=0.85\textwidth]{fibres_orientation_pennation.pdf}
+    \caption{Fibre orientations fields $\*a_0$ in the reference configuration and $\*a = \*F \*a_0$ in the deformed configuration. A fibre can be represented as an infinitely small line element $dl$ with orientation $\*a_0$ that that passes through $\*X \in \B_0$ and deforms to an element of length $\lambda \, dl$ with orientation $\*a$, where $\lambda$ is the fibre stretch field. The angle between the orientation $\*a$ and the line of action vector $\widehat{\bm{\ell}}$ is called the \textit{pennation} angle and is denoted by $\beta$. The initial pennation angle $\beta_0$ is simply the angle between $\*a_0$ and $\widehat{\bm{\ell}}$. \label{fig:potato_line_element}}
 \end{figure}
 
 In elasticity, one of the primary focuses is determining the distribution of strains and stresses throughout the entire body. However, when analyzing skeletal muscle deformation, an additional key aspect is the deformation along the muscle fibres. This along-fibre deformation is critical for understanding muscle function, as it directly influences force transmission, tissue mechanics, and physiological behaviour. 
@@ -2228,7 +2229,7 @@ and
     \*b = \*F \*F^\T \quad \text{or} \quad b_{ab} = F_{aA} F_{bA}.
 \end{equation}
 %They represent strain measures in \textit{material} and \textit{spatial} coordinates, respectively. 
-Let $d\bm{\ell}_0 = d\epsilon \*a_0$ be a line element in the reference configuration $\B_0$ with unit orientation vector $\*a_0$. Furthermore, let $d\bm{\ell} = \lambda d\epsilon \*a$ be the deformed version of $d\bm{\ell}$ in the current configuration $\B_t$ with unit orientation vector $\*a$ (see Figure \ref{fig:potato_line_element}). The quantity $\lambda$, known as the \textit{stretch}, characterizes how a material line element changes in length from the reference to the current configuration:
+Let $d\ell \,\*a_0$ be a line element in the reference configuration $\B_0$ with unit orientation vector $\*a_0$. Furthermore, let $\lambda \, d\ell \, \*a$ be the deformed version of $d\ell \,\*a_0$ in the current configuration $\B_t$ with unit orientation vector $\*a = \*F \*a_0$ (see Figure \ref{fig:potato_line_element}). The quantity $\lambda$, known as the \textit{stretch}, characterizes how a material line element changes in length from the reference to the current configuration:
 \begin{equation} \label{eq:def_lambda}
 \lambda(\*X,t) := |\*F(\*X,t) \*a_0| = \sqrt{\*a_0^\T \*C \*a_0},
 \end{equation}
@@ -2246,7 +2247,7 @@ Consider surface elements $ds$ with normal $\*n$ in the current configuration an
 \begin{equation}
     \*t(\*x,t,\*n) = \bsigma(\*x,t) \*n \quad \text{and} \quad  \*T(\*X,t,\*N) = \*P(\*X,t)\*N.
 \end{equation}
-Here, $\bsigma$ is called the \textit{Cauchy stress tensor}, while $\*P$ is called the \textit{first Piola-Kirchhoff tensor} (PK1). Notice that $\bsigma$ describe the stresses in the body in the \textit{current} configuration, while $\*P$ describes them in the \textit{reference} configuration. Both measures of stress are related through the so-called \textit{Piola transformation}:
+We show these quantities in Figure \ref{fig:potato_dv_ds}. Here, $\bsigma$ is called the \textit{Cauchy stress tensor}, while $\*P$ is called the \textit{first Piola-Kirchhoff tensor} (PK1). Notice that $\bsigma$ describe the stresses in the body in the \textit{current} configuration, while $\*P$ describes them in the \textit{reference} configuration. Both measures of stress are related through the so-called \textit{Piola transformation}:
 \begin{equation} \label{eq:def_PK1}
     \*P = J \bsigma \*F^{-\T}.
 \end{equation}
@@ -2504,7 +2505,7 @@ In the next sections, we describe the SEF for each one of the components, as wel
     \caption{Hill's model depicted as a manifold in which the fibre stretch $\lambda$ and the fibre strain rate $\depsilon$ can vary simultaneously according to \eqref{eq:def_hill_stress_sigma}. We also show the curves $\sigma_{Hill}(\lambda,0)/\sigma_0$ (red) and $\sigma_{Hill}(0,\depsilon)/\sigma_0$ (black), which correspond to the total force-length (FL) and force-velocity (FV) relationships in Figure \ref{fig:plot_FL_FV}. \label{fig:plot_FLV}}
 \end{figure}
 
-{\color{red}We assume that the SEF $\Psi_{fibre}$ is given implicitly by the equation:}
+We assume that the SEF $\Psi_{fibre}$ is given implicitly by the equation:
 \begin{equation} \label{eq:ode_fibre_sef}
     2 \I_4 \pder{\Psi_{fibre}}{\I_4} = \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}),
 \end{equation}
@@ -2550,11 +2551,11 @@ where $s_{bm}$ is a scaling factor, $\sigma_{0,bm}$ a normalizing constant stres
 
 Similarly to the computation of $\bar{\*S}_{fibre}$ and $\bar{\btau}_{fibre}$, the fictitious PK2 and Kirchhoff stresses in this case are:
 \begin{equation} \label{eq:def_S_bar_bm}
-    \bar{\*S}_{bm} = s_{bm} \sigma_{0,bm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I,
+    \bar{\*S}_{bm} = 2s_{bm} \sigma_{0,bm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I,
 \end{equation}
 and
 \begin{equation}
-    \bar{\btau}_{bm} = s_{bm} \sigma_{0,bm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
+    \bar{\btau}_{bm} = 2s_{bm} \sigma_{0,bm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
 \end{equation}
 
 In the work by Konno et al. \cite{KonnoNigamWakeling2021_ECM}, the base material is considered as a weighted combination of ECM and cellular material contributions to study muscle affected by cerebral palsy. More precisely, the expression for the SEF $\Psi_{bm}$ takes the form:
@@ -2573,13 +2574,13 @@ The constants $c_k \in \R$ in these models have been computed by Konno et al. \c
 
 In this case, the fictitious stress tensors for each one of these SEFs are given by:
 \begin{gather}
-    \bar{\*S}_{ecm} = s_{ecm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, \\
-    \bar{\btau}_{ecm} = s_{ecm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b},
+    \bar{\*S}_{ecm} = 2s_{ecm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, \\
+    \bar{\btau}_{ecm} = 2s_{ecm} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b},
 \end{gather}
 and
 \begin{gather}
-    \bar{\*S}_{cell} = s_{cell} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, \\
-    \bar{\btau}_{cell} = s_{cell} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
+    \bar{\*S}_{cell} = 2s_{cell} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, \\
+    \bar{\btau}_{cell} = 2s_{cell} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
 \end{gather}
 
 The constants $\sigma_{0,base}$, $s_{base}$, $s_{ecm}$, $s_{cell}$, as well as $c_k$ (which are local to each SEF), are given in Table \ref{tab:constants_base_material_muscle}. Note that the bulk modulus $\kappa$ used to define the volumetric component $\Psi_{vol}$ of the SEF $\Psi$ now takes the form
@@ -2622,11 +2623,11 @@ Following \cite{KonnoEtAl2022_CP}, we consider the following SEF to model intram
 \end{equation}
 where $s_{fat}$ is a scaling factor and the constants $c_k$ are computed so that the expression above fits the data by Alkhouli et al. \cite{Alkhouli2013}. The values for these constants are listed in Table \ref{tab:constants_fat}. Thus, the expressions for the fictitious stress tensors become:
 \begin{equation}
-    \bar{\*S}_{fat} = s_{fat} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, 
+    \bar{\*S}_{fat} = 2s_{fat} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \*I, 
 \end{equation}
 and
 \begin{equation}
-    \bar{\btau}_{fat} = s_{fat} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
+    \bar{\btau}_{fat} = 2s_{fat} \left( 3c_3(\I_1-3)^2 + 2c_2 (\I_1-3) + c_1 \right) \bar{\*b}.
 \end{equation}
 The bulk modulus for the volumetric SEF $\Psi_{vol}$ now takes the form:
 \begin{equation} \label{eq:def_kappa_bm_fat}
@@ -2635,6 +2636,19 @@ The bulk modulus for the volumetric SEF $\Psi_{vol}$ now takes the form:
 where $\kappa_{bm}$ and $\kappa_{fat}$ are the bulk moduli for the base material and fat components. In particular, $\kappa_{bm}$ can be taken as a single constant or as the homogenized version in Equation \eqref{eq:def_kappa_ecm_cell}.
 
 \section{Extending the SEF to the muscle-tendon unit} \label{sec:extension_sef_mtu}
+
+\begin{table}
+    \centering
+    \begin{tabular}{|c|c|}\hline
+        & Value in $\Psi_{tis}$ \eqref{eq:def_Psi_tis_bm} \\\hline
+        $s_{tis}$ & 1 \\\hline
+        $\sigma_{0,tis}$ & 200,000 \si{Pa} \\\hline
+        $c_1$ & 4.6896264975 \\\hline
+        $c_2$ & -3.45514101975 \\\hline
+        $c_3$ & $4.8492055395 \cdot 10^2$ \\\hline
+    \end{tabular}
+    \caption{Constants in the SEF defining tendon and aponeurosis. \label{tab:constants_ten_apo}}
+\end{table}
 
 The expressions in the previous section are only applicable to geometries made entirely of muscle tissue, without internal or external tendons. To create a SEF for the whole muscle-tendon unit, let us consider a partition of the domain of interest into three parts $\B_0 = \B_0^M \cup \B_0^A z \cup \B_0^T$, where $\B_0^M$, $\B_0^A$, and $\B_0^T$ represent the parts of $\B_0$ made of muscle tissue, aponeurosis, and tendon. Thus, a SEF for the MTU reads:
 \begin{equation}
@@ -2674,18 +2688,7 @@ we obtain the following stress tensors:
 \end{align}
 Following \cite{Seba} we assume that the constants $c_k$, $k=1,2,3$, are identical for tendon and aponeurosis. These have been fitted in \cite{Seba} from wild turkey gastrocnemii data \cite{Azizi2009} and are listed in Table \ref{tab:constants_ten_apo}.
 
-\begin{table}
-    \centering
-    \begin{tabular}{|c|c|}\hline
-        & Value in $\Psi_{tis}$ \eqref{eq:def_Psi_tis_bm} \\\hline
-        $s_{tis}$ & 1 \\\hline
-        $\sigma_{0,tis}$ & 200,000 \si{Pa} \\\hline
-        $c_1$ & 4.6896264975 \\\hline
-        $c_2$ & -3.45514101975 \\\hline
-        $c_3$ & $4.8492055395 \cdot 10^2$ \\\hline
-    \end{tabular}
-    \caption{Constants in the SEF defining tendon and aponeurosis. \label{tab:constants_ten_apo}}
-\end{table}
+
 
 %Furthermore, the bulk modulus $\kappa$ takes the form
 %\begin{equation}
@@ -2710,11 +2713,12 @@ Following \cite{Seba} we assume that the constants $c_k$, $k=1,2,3$, are identic
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{placeholder-img.jpg}
-    \caption{Continuum representation of the muscle-tendon unit.\label{fig:continuum_mtu}}
+    \includegraphics[width=0.75\textwidth]{sketch_mtu_3D.pdf}
+    \caption{Three-dimensional continuum representation of the muscle-tendon unit showing its main three components: muscle tissue, aponeurosis, and tendon.
+    \label{fig:continuum_mtu}}
 \end{figure}
 
-Let $\B_0 \subset \R^3$ be a region in three-dimensional space representing the undeformed muscle-tendon unit (MTU), potentially containing a combination of muscle, aponeurosis, and tendon, as described in Section \ref{sec:extension_sef_mtu}. The boundary of this body, $\partial \B_0$, can be subdivided into two parts: $\partial \B_0 = \Gamma_{0,D} \cup \Gamma_{0,N}$, with $\Gamma_{0,D} \cap \Gamma_{0,N} = \emptyset$. They represent respectively the Dirichlet and Neumann parts of the boundary in the reference configuration. Let also $\B_t$ denote the deformed MTU at time $t > 0$ (see Figure \ref{fig:continuum_mtu}).
+Let $\B_0 \subset \R^3$ be a region in three-dimensional space representing the undeformed muscle-tendon unit (MTU), potentially containing a combination of muscle, aponeurosis, and tendon, as described in Section \ref{sec:extension_sef_mtu}. The boundary of this body, $\partial \B_0$, can be subdivided into two parts: $\partial \B_0 = \Gamma_{0,D} \cup \Gamma_{0,N}$, with $\Gamma_{0,D} \cap \Gamma_{0,N} = \emptyset$. They represent respectively the Dirichlet and Neumann parts of the boundary in the reference configuration (see Figure \ref{fig:continuum_mtu}). Let also $\B_t$ denote the deformed MTU at time $t > 0$.
 
 The elastodynamic deformation of the MTU can be modelled using a system of PDEs in which, given an initial displacement $\*U_0 \in \*H^1(\B_0)$, an initial velocity $\*V_0 \in \*H^1(\B_0)$, an initial pressure $p_0 \in L^2(\B_0)$, a body force $\*f_0(\cdot, t) \in \*L^2(\B_0)$, a prescribed traction $\*T(\cdot,t) \in \*H^{-1/2}(\Gamma_{N,0})$, and a prescribed displacement $\*U_D(\cdot, t) \in \*H^{1/2}(\Gamma_{D,0})$, we want to find large (material) displacements $\*U(\cdot,t) \in \*H^1(\B_0)$, a (material) velocity $\*V \in \*H^1(\B_0)$, a (material) internal pressure $p(\cdot,t) \in L^2(\B_0)$, and a (material) dilation $D(\cdot, t) \in L^2(\B_0)$ such that:
 \begin{subequations} \label{eq:LF_main_system}
@@ -3078,6 +3082,7 @@ where $\bar{\*a}_k^{n+1} = \bar{\*F}_k^{n+1} \*a_0$.
 \end{remark}
 
 {\color{blue}
+\begin{remark}
 Although the expressions for the modified strain rate \eqref{eq:strain_rate_bar_newton_iteration} and its derivative with respect to the modified stretch \eqref{eq:d_strain_rate_bar_d_lambda_bar} may seem like a minor detail in the discretization of the Lagrangian formulation \eqref{eq:LF_main_system}, they constitute elements of the numerical method that can ``make or break'' the code for fully active, fully dynamic simulations. First, Dominguez \cite{Seba} suggested the following expression for the fibre strain rate:
 \begin{equation}
     \bar{\depsilon}_k^{n+1} = \*V^n \cdot (\bar{\*F}_k^{n+1} \*a_0),
@@ -3086,7 +3091,7 @@ with no information about what the expression for $\partial_{\bar{\lambda}_k^{n+
 \begin{equation}
     \bar{\depsilon}_k^{n+1} = \dfrac{(\bar{\*F}^{n}\*a_0)^\T (\p : \*d^{n}) (\bar{\*F}^{n} \*a_0)}{\bar{\lambda}^{n+1}_k}, \quad \pder{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}} = -\dfrac{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}},
 \end{equation}
-with the latter being an expression that implicitly assumes that the strain rate $\bar{\depsilon}_k^{n+1}$ does depend on the current deformation tensor $\bar{\*F}_k^{n+1}$ in the numerator, but keeps the deviatoric part of the rate of strain tensor (i.e. $\p:\*d^n$) constant for the current time step and the current Newton iteration. While this work does contain fully active, fully dynamic contractions, Tam \cite{Cassidy} would later find that the FV properties in this work where not implemented properly, as any contraction would lead to the strain-rate-dependent stress $\widehat{\sigma}_V(\depsilon)$ in \eqref{eq:def_hill_stress_sigma} default to its maximum value of 1.5950. To remediate this, Tam \cite{Cassidy} made use of the following expressions:
+with the latter being an expression that implicitly assumes that the strain rate $\bar{\depsilon}_k^{n+1}$ does depend on the current deformation tensor $\bar{\*F}_k^{n+1}$ in the numerator, but keeps the deviatoric part of the rate of strain tensor (i.e. $\p:\*d^n$) constant for the current time step and the current Newton iteration. While this work does contain fully active, fully dynamic contractions, Tam \cite{Cassidy} would later find that the FV properties in this work where not implemented properly, as any contraction would lead to the strain-rate-dependent stress $\widehat{\sigma}_V(\depsilon)$ in \eqref{eq:def_hill_stress_sigma} default to its maximum value of 1.5950. To remediate this, Tam \cite{Cassidy} used the following expressions:
 \begin{equation}
     \bar{\depsilon}_k^{n+1} = \dfrac{(\bar{\*F}_k^{n+1}\*a_0)^\T (\p : \*d^{n}) (\bar{\*F}_k^{n+1} \*a_0)}{\bar{\lambda}^{n+1}_k}, \quad \pder{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}} = +\dfrac{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}}.
 \end{equation}
@@ -3094,6 +3099,7 @@ This resulted in successful dynamic contractions but only to a maximum of 50\% a
 \begin{equation}
     \dfrac{c \Delta t}{h} < 1, \quad c := \sqrt{\dfrac{\kappa}{\rho_0}}.
 \end{equation}
+\end{remark}
 }
 
 \subsection{Base material and other components of the MTU}
@@ -3238,7 +3244,7 @@ where $\mathbb{M}_0 := \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0$. Consequ
     D_{\*F}^2 W(\*F).(\*H, \*H) = \dfrac{1}{\I_4} \sigma_{Hill}(\I_4) \ \*a_0 \otimes \*a_0 : \*H^\top \*H \\
     + \left( - \dfrac{1}{2\I_4^2} \sigma_{Hill}(\I_4) + \dfrac{1}{2\I_4} \dfrac{d \sigma_{Hill}(\I_4)}{d\I_4} \right) (\*F^\top \*H + \*H^\top \*F) : \mathbb{M}_0 : (\*F^\top \*H + \*H^\top \*F).
 \end{multline}
-If in particular, $\*H = \*a_0 \otimes \*a_0$ (one of the many possible choices in Definition \ref{def:def_ellipticity}), we first have:
+{\color{blue}If in particular, $\*H = \*a_0 \otimes \*a_0$ (one of the many possible choices in Definition \ref{def:def_ellipticity}), we first have:
 \begin{equation}
     \*a_0 \otimes \*a_0 : \*H^\top \*H = \norm{\*a_0}^6.
 \end{equation}
@@ -3266,7 +3272,7 @@ assuming that muscle is (for example) parallel-fibred, i.e. $\*a_0 = \langle 1,0
 \begin{equation}
     D_{\*F}^2 W(\*F).(\*H, \*H)  = \left(\dfrac{1}{\I_4} - \dfrac{\upsilon(\lambda_u)}{2\I_4^2} \right)\sigma_{Hill}(\I_4)  + \dfrac{\upsilon(\lambda_u)}{2\I_4} \dfrac{d \sigma_{Hill}(\I_4)}{d\I_4}.
 \end{equation}
-Because muscle is parallel-fibred, we may consider $\bar{I_4} \approx \lambda_u^2$, In this case, the first term is negative for physiologically relevant values of $\lambda_u$ (for instance, $0 < \lambda_u < 2$), while the second term  is negative along the descending limb of the total force-length curve (see Figure \ref{fig:ascending_descending_limbs}). By Lemma \ref{le:poly_elliptic}, we cannot guarantee the polyconvexity of $\Psi_{fibre}$.
+Because muscle is parallel-fibred, we may consider $\bar{I_4} \approx \lambda_u^2$, In this case, the first term is negative for physiologically relevant values of $\lambda_u$ (for instance, $0 < \lambda_u < 2$), while the second term  is negative along the descending limb of the total force-length curve (see Figure \ref{fig:ascending_descending_limbs}). By Lemma \ref{le:poly_elliptic}, we cannot guarantee the polyconvexity of $\Psi_{fibre}$.}
 
 This lack of polyconvexity can directly hinder the convergence of the algorithm at all for certain types of simulations. Indeed, not having the ellipticity condition \eqref{eq:ellipticity_cond} can be a sign that the bilinear form associated to the (1,1) block of the tangent matrix in \eqref{eq:LF_linear_system} may not be coercive whenever the simulations take place along the descending limb of the force-length curve. In fact, ascending limb computations will not suffer from this lack of coercivity, as we will see in Section \ref{sec:flexodeal_fl_curves}. A full numerical analysis which accounts for the lack of polyconvexity is outside the scope of this thesis.
 

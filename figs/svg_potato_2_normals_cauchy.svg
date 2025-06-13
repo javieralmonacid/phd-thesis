@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="7in"
+   height="5in"
+   viewBox="0 0 177.80001 127"
+   version="1.1"
+   id="svg884"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="svg_potato_2_normals_cauchy.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview886"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     units="in"
+     inkscape:snap-global="false"
+     inkscape:zoom="1"
+     inkscape:cx="310.5"
+     inkscape:cy="231.5"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer3">
+    <inkscape:grid
+       type="xygrid"
+       id="grid945" />
+  </sodipodi:namedview>
+  <defs
+     id="defs881">
+    <marker
+       style="overflow:visible;"
+       id="marker8766"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path8418" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mstart"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path8415" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path8436" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Lstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lstart"
+       inkscape:isstock="true">
+      <path
+         transform="scale(1.1) translate(1,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round"
+         id="path8427" />
+    </marker>
+    <inkscape:path-effect
+       effect="simplify"
+       id="path-effect5990"
+       is_visible="true"
+       lpeversion="1"
+       steps="1"
+       threshold="9.90099e-05"
+       smooth_angles="360"
+       helper_size="0"
+       simplify_individual_paths="false"
+       simplify_just_coalesce="false" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2099" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker4510"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4508" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker4514"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4512" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2099-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker4625"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4623" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker4629"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4627" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Lend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:0.625;stroke-linejoin:round"
+         id="path2111" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#000000;fill-opacity:0.09;stroke:#000000;stroke-width:0.3175px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 61.688849,13.938814 c 0,0 -44.449999,3.175 -44.449999,25.399999 0,22.225 47.624999,15.875001 47.624999,15.875001"
+       id="path980"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:0.3175px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 60.601315,14.119514 c -6.095573,1.3167 -13.233197,3.699593 -13.233197,13.224591 0,9.525 2.085164,6.005441 6.814062,18.379202 4.533767,11.863177 10.464253,9.966915 16.268189,8.187061 5.030386,-1.542637 4.522935,-4.255512 7.697935,-13.780512 3.174999,-9.525 -0.170106,-15.809133 -4.977099,-21.284857 -2.953111,-3.363936 -8.19454,-5.670602 -12.56989,-4.725485 z"
+       id="path1095"
+       sodipodi:nodetypes="assasaa"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:#000000;fill-opacity:0.09;stroke:#000000;stroke-width:0.3175px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 128.00129,54.343191 c 0,0 -26.25783,2.751027 -33.72853,37.440893 -5.207927,24.182826 53.64991,-1.354532 53.64991,-1.354532"
+       id="path2716"
+       sodipodi:nodetypes="csc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:0.3175px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 128.16073,54.339337 c 7.41034,-0.966473 12.23818,3.669522 20.4474,17.444042 3.27742,5.499314 5.96262,14.776156 -0.67121,18.637628 -7.65661,4.456815 -20.67465,-1.1526 -23.80201,-10.679219 -6.52311,-19.870726 -3.18899,-24.461481 4.02582,-25.402451 z"
+       id="path3153"
+       sodipodi:nodetypes="sssss"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
+       d="m 43.561256,61.616495 c 0,0 3.843992,29.893578 43.345536,28.693761"
+       id="path3981"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="7.0243897"
+       height="8"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image12133"
+       x="58.593933"
+       y="73.27639"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       style="display:inline" />
+    <path
+       style="fill:#969696;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 60.947783,28.349179 c 0.696984,-1.195181 2.660894,-1.097878 4.037738,-0.9617 0.240651,0.0238 0.45081,0.180279 0.659132,0.303083 0.309835,0.182647 0.949458,0.827839 1.095799,1.024744 0.714703,0.961639 0.17908,4.62697 -0.839224,5.332233 -0.630595,0.43674 -1.288373,0.476594 -1.977917,0.273111 -0.566052,-0.167045 -0.857148,-0.329321 -1.365299,-0.635235 -0.339513,-0.204396 -0.713887,-2.464401 -0.873071,-2.783089 -0.789604,-1.580808 -1.183395,-1.787945 -0.737158,-2.553147 z"
+       id="path6226"
+       sodipodi:nodetypes="aassssssa"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:#969696;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 132.97228,71.628692 c 0.24689,-0.647933 0.89165,-1.163378 1.54658,-1.391054 0.9036,-0.314123 2.65586,0.05896 2.86418,0.181768 0.30983,0.182647 0.94946,0.827839 1.0958,1.024744 0.7147,0.961639 -0.28316,2.540858 -1.30147,3.246121 -0.63059,0.43674 -1.16462,1.808305 -1.82572,2.090831 -0.56341,0.327793 -1.78041,-0.620708 -1.90292,-0.846037 -0.78961,-1.580808 -0.99068,-2.956807 -0.47645,-4.306373 z"
+       id="path6226-3"
+       sodipodi:nodetypes="aassscca"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="normals">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker8766);marker-start:url(#Arrow1Mstart);stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 87.273939,23.678409 64.658866,30.704467 76.96287,13.609239"
+       id="path8325"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker8766);marker-start:url(#Arrow1Mstart);stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 152.03877,63.616723 135.6137,73.311717 154.37154,51.618202"
+       id="path8327"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="9.3626375"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
++KTAv8gAAAAASUVORK5CYII=
+"
+       id="image8685"
+       x="55.161377"
+       y="36.783562"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="7.2705879"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image8697"
+       x="89.041786"
+       y="20.202913"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="6.4285712"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABUCAYAAAACoiByAAAABHNCSVQICAgIfAhkiAAABHVJREFU
+eJztne1t1EAQhl9H9x/nUgFHBUiUEFFBRAmIChBUAKICoAQUKuDSQZQOSAnJVZDww/bdeLIzO7te
+JlIyj2QpZ89++M16dmd3z9cB6DDQA/iKA/eY0ynXLHYdNzTmZ62DtVypLM2uptwLAOfThxW58AbA
++4oMOSH0wAmI0EfkQi9UIKhjpicVeuNckafOTE/qOtawP8IU66OpPXI1+VkfdQ2rXU3exzRduI7/
+x0xP2qJbuI4dgD8ArsfjZjyH8W9KqhNZj+mXco75CIrCW+d6/HuDQZwNhoHB6wb16DHeP3cdNWwx
+3NivMdMlI4hWT9UNgCvhWslI6BTAGeajsRLWODQ0dONxC+BOOe7JcYdB2A1JPx1WUml6Vs5UVqoO
+mt2PRL1S9ZNsUvfxsbAOdxj+UQ8Ks97ULc9AqXzpTfWJymo3Ih3flfpZ65Q6jgFcKuXyup5NBdHO
+0MIOg//aFqZ7KpTe/77fO+InMpxi6OSeO28h9wGUfb83CW3phN4ZM38unIJ0dAJ7Xa0t+hwkbg8A
+DCLnRiMPXMfUxKnjp479S2VltF6c5q9htbOOHqRr2miCHjT9b+iutMh1bBEuQ+Obcq2oM9QyCoCf
+kH31Ax+tRYXPdShXQlYj3qK5L7pAPuLjPlHybRqlgUMrny/5Xu1I3dc2kfdk/wpAl/PR0ZptaDr1
+QN51hNA2riH76Q2QH3XEaMPOpXB+DQxCSyLnop5gjjSe7oFhPvol0h3IX+F8DmlV2LJ6nCpPmj/O
+zSVb6l6zsi9xJdjtXYfkn6VHIUgjteis64hZujIkvfYtWooKw0eXofpozXVEi27D3nVILTq1am1Z
+F1w6K6dFbJqdtVxrXa33S+2mAQTNb9+iY3jXDtF9rAB8KkwUyHzAoeHSJ2G3QkR/LaGNc+ZyVvwE
+IeU7LXYSlkG/NCtnseWBTZc4X1KnmkBJDIBKtxsElYTQToTQToTQTqxQPztmsdNYWi5HStfiPqzl
+inbRop0IoZ0IoZ0IoZ1YKde0pSetA6hZHqJLWVp+GnzZbPpcFckp6awR84xo0U6E0E6E0E5wH60N
+4JcGKZb8LPv8UulTdpY6anlYAyrJLmbvHoMQ2okQ2okQ2gneGbbu5FrTIu+aGbvFs4bRop0IoZ0I
+oZ0IoZ3QZu841tmsmo3oWn6WNLl0ljQtluREokU7EUI7EUI7wffe1eyjs862caQvBlkDoNzMm7TC
+UtM3WNKrRIt2IoR2IoR2IoR2gu+9o2idUk3HYQlEuoydlHdJnaxBSk2nF3vvHpsQ2okQ2okQ2omS
+yFCyq+2UpL131k64RcRXs4+lajktWrQTIbQTIbQTJfujKUtn/Hi6TrDJ5aHZLf3mbE0a0edHi3Yi
+hHYihHaC7yOu8bcvIL9RrMaf8Tfi1KxU73B4g87SVfVzAJ+N5Yp11b45W/KlHctvBLRYorLS4/CC
+kqVC96gLbGaE63AihHYihHaiZEtYDv7jY/wtY7fs833CJsfSVQ/+RrQT9nm6Pv3kYLNfxPsHPlpt
+yXsRa10AAAAASUVORK5CYII=
+"
+       id="image8709"
+       x="76.646614"
+       y="5.8226786"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="7.8620691"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image8721"
+       x="130.62753"
+       y="78.618423"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="6.4285712"
+       height="5"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAA4CAYAAABez76GAAAABHNCSVQICAgIfAhkiAAAA/ZJREFU
+aIHtm+1xEzEQhp/L5H/sUAFOB4EOSDqAFkgoAGjBUAGmhAQaSCgh0EFMB7Yr4Phxd1her7Sr80cS
+Ru/MjWVJq12/3tVKursKqGhwBBy35UFbHrTfj4FhpL0OymH7AauoSKMOyqfAS+AMOFHsmQMzYNGW
+fwF37ec0Mm6l1Lnsu2gF/hhXHbli/TUDUtcZcOXUm2q/Bz7S/KHhjw51aYjZ9eAEXbQ/Kkevx64a
+mDwUQVq9rJPGSANPacLC+6P72jej8c4YGUkCD1Uud48x8MHos6AhcNqWa2AEvM7UNQBugEvga6Ys
+sH8Puk3I3wFvaSbmNVcPMM6wL7w6T3J7EMAbmjmgu+bYLq7Vy/5S2bAdXxv7libkNGhGV8CnhP5U
+uJ4Yetb+mFjDkMa7OsI2Jein0uceeKEQ4CGoYnVy9xI0QUc2Qd11vgWCbpT2a2lID4IuehDUzWVu
+glJGddcmBGnzhTZBW3+UZnS3UM21b2IRYEEaJNcpXoLOWSdn7NTpIQiWoZtj3zwylhvbIkjKfcnQ
+6SXomnyCusnaJOggolSLW898Ecq/B54HMr+Bd4p8GMbdFRtTa7/L6Bu2v0JPJqFNldxQbhMylC53
+pGfRUy62rFjBLgkK8Q34saOxZz3lju0uq1uNWOjU4lOiUtrDsWqa3bUmE0NsLK2uW6dJnZZ93W6/
+Fv1WsA8P0s5oHgO0tdAa9kHQ1R509IE7xDQXk+6Yyl5a6IV13xXZnBCydMaykGVfmJ2jNu3ag6Y8
+zvByYx8EPWkcYru4tejS5Lu+U6UuJpMDzb5cGVlW23ftQX0XcY8GJcQMeLIYSnsITb4rz7GzXGrM
+mN4c+zTIo5yozn1tNZ4sCkEGCkEGPGle+661xeYNz2bW0uGBJ9XL/nKTu4biQQYKQQbCNJ+C7ONN
+0+Eq1zqvscay+vXZ4FpLm+JBFgpBBnKOXGNIZSlPWOVmH01/6rxJ0+lG8SADhSADYYhtw9XlWDlh
+lZOFchDb7MqF4oOcBz15FIIMhHsxKxz6Hpl6F3jWka7nTkVKZ+o+vZQp50FeFIIMxI5cNeQsJL1h
+Ycl7oN3V8IyZOnL9h+JBBgpBBjxZDKVdQyzzeY87tJt5sfY+6HXiWTzIQCHIgCeLuU/fhEwoK2U8
+zwN423MeLE3Vq+NXNG/PjA0l8mksb2pesHyGUCNoQfNmoUTY99bQ/4zlm4gpaPqnpAn6fEjzpNWI
+vLWHFwOWxscIsjAiTdAmdo9IEzTKOe5Q9yqsZiyt3YucLJqTZTfZy+30Oen/AoUgA/KVzG5OmCnf
+Y/OGdNdB0Dd8kvQoqKvwTawx2yphxyywQ9onw3EQ9A1fYw+/D7vOfwFHAEDbheXq1AAAAABJRU5E
+rkJggg==
+"
+       id="image8733"
+       x="153.85237"
+       y="61.092426"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="4.0250006"
+       height="7"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAABQCAYAAABmkUeGAAAABHNCSVQICAgIfAhkiAAAA6JJREFU
+aIHtWu1x00AQfcqoACd0oA4wUEGSDkILoQPTAnQAlJAZKgglkA5wSjCuwOKHdOPV6u2ePs5CmtGb
+0di6j9W71d7e3mmBCll9Qd3LMgbd7gCgrK+TuKw+1jNlHW1/FSHWF5vE8kykJj4ZUhKfTNsAkKv7
+YEMlmjamyzRKADdEVqlkQJR5z5T9aPuUGt8mlBVFSuLvE8qKYrEa1/B8t+fbMwB/cfbhwY+H/7Id
+kxdbL1rcUmm8wMReJRXxx0RyBmOoqezRNJOLm0oK4ltC+uLE9QIkG+nFw1qAHsEXD/mf1ek2sh2r
+c+FFbfo/UE3IEAGyqDBcTKteWbT92Mn5ZWT/ZOij8QJNrU6qcYCTjAX4GYDnCFk5UbsQiU3U1qCG
+EP+KtgeZPfGP4K5v1sTvCenZE/9kkP6vxL0OAPAE7jmsgeiV05rgXQZjDcAlvkN15GC5vFkR36Ja
+WLzX35d4rJ0nX9YXgWsO4K7W7A2At2SEs0SOahS3pE6/plgwxF4726Gznb9+RqbuW1gPhKZGjspr
+vJI6/Sqv62sIgnxmKswcoqYiG7FyeRXo70H0aS1bcLxnm3W5uJHQWy6NLjsTa7fDJrEH6iQWa+Mr
+8amRg+/QrRihLzx79k4RvNOADFiwxlfiU2OxxHPYy3Cf6K1rJMjkxpZ8utgtVuMr8amhj5k9m+0b
+fsYWNi+wiy52i9X4SnxqWEEW29FnpJ2sY35cw5snLACT5Y2+i9X4SnxqLJZ4WICY4/d28mySdj2y
+s+R6E7eFxWp8JT41vJMsjVgQ5C1KXpDlHV/fovo0qWX8sJIQ5oINzilTknixWFNZiU8NvcsP8I7K
+ZJnVJ7TRkV/XHb33rBJAuViNz524ztcNOPQhzr4TXRpWLuPxCvyTNcBPkY7OQ/T3nwxtGdbCpU+4
+Qtkbg9trX1MZqvViYD8rX3f2xFmG9BEDiD8NJHA3oM8W3MZ/yZtYOgZEmUwDsbIcdNmeyI2leHwD
+/3b6YAy0JUQ+IAPwnQiLZQidENe6/hjMZB4iMlzi1+C54jHif3oQ/23I3I0hnqGdCdeF+KkmZPnm
+oJRnQ15s4J2Ia5PpSjy87h2ak68A8BnnN8nktTwTm5hdExNk4qSXqsoG0TWRoUT1hlu8xhCXZnMp
+4vcWr7HEg22GBLRUxF8AvPN4pSAe2m9Q2erLCOJ7NE2D8vJI9jpZEu1lkPaAalJ9qH9Dss6mbndE
+FUYcUHmTn4iHFSUA/APQ7gV9KZi89wAAAABJRU5ErkJggg==
+"
+       id="image8745"
+       x="156.41936"
+       y="45.044121"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path8796"
+       cx="64.42746"
+       cy="30.797344"
+       rx="1.1416615"
+       ry="1.1492839"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path8796-5"
+       cx="135.60748"
+       cy="73.427048"
+       rx="1.1416615"
+       ry="1.1492839"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="4.7058821"
+       height="4"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+7wGA2f8Gu2kylrgpBQAAAABJRU5ErkJggg==
+"
+       id="image9001"
+       x="56.394493"
+       y="23.292635"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="3.8727276"
+       height="3"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAA3CAYAAABeklfeAAAABHNCSVQICAgIfAhkiAAABRtJREFU
+aIHtm+1xGzcQhp/L+H9IpQJTqcBsQXYDsVqwO7BbiDsQW6AqiJQS6FQguYNQdAG5y487zOGg/QDA
+48gaa2cwJPGx++57wOKDuAZogC3wB3Cgl4fkcz/UC+WSdMPnYqh7puQthrwzR58m/w2fBwVnKGOw
+GWMLWIJ9Cds74G+AV4nh0HApKG2wRapb0r5UFsg4Y5FwWPUm8ksFqJ9G0p4TxGPaKw8SP5HOyPPa
+lMixPbQLdl96jiGh5+yBb07d8yPsHIB/h+/HPtkDY2ycQw6MmPZapSZKUt4F0A6pc1KbpK2gW7Op
+laf1VsBn4F6wl+J8ADbAJbCmD+SabTHfIwfgQyU5LfBlZnJC+UaxF3BuFD2zkwPwp0BGDjkd8DEH
+iFIu1Xtr2GvJI6aaHK38BrsHScMv5F0o+j2baVo7drShLOkvApJTvqOOnD19vCjFFKdz+jii2blJ
+2nv6i4DklC8GgKXktMAdeTOORMySPghrdnZCe09/FRCPsDcKwJw4tEt05dq8E3TFpKcz0ewxJxco
+jFN8TZDeFpITYp2UwnAtJeak5AB8qiSnpZ/9csjZGjpaxjh2EnK0CrlEXQmAPcJC+pih2yJ87eD0
+iCiS2l6Udvtccjr6NYuk+5OhqwXeZ+D8IciBacAsIeeBx/u3946uDw5eyR/JT1W8cWcpkOqd0wfH
+0iGWTvEXQnkaq3KffG38mZ2chukUXzrV76L2GjlXBvYSnE9CDkyHRO1Ur20LLOwlOLNDRkmjXKUh
+mMaOeoRZO+yvJQ5lyJOSA+P65Fhy7tFXv7Xy5OTAdJNaQ84ee1tQK3PqeqTUMxSStFksIefC0V+b
+LN+qiSolp+HxMUMJOXdHEPAsyGmYHlCVxpzbSgJmIUfK9GJOiYQ2l+RP3ylpV4pOzY8aQp6UnAa4
+po6clnHLoOF41uSsqe85cYDWcJycnFylWnstb4V+tJo71YcUb1JrnffIrVLgAZDyFvTrlZJthFXv
+nnGT+uzJCUcZc5HTMZ5Dn4ycuZy30i16fLmnPwm0Npva9iPdiGo4a3ybFNQoyCHGmpnCAVeDfOKX
+Q07LeA5tOlro26SgRoFHzAbbqXWiMz0rziWnpT8iMR0t9E11sEiBIvFxhRQ/wplxqtP6+0Wb9sPv
+N4o/XqxRy09BTnrQlZJzadhcYP9xZ5GzZxymPyQ58T0eyZHPGTZXyOfQHjktfYCfjZxc53NITM9+
+U0c2hs40L92kWtN7WucGXXI7gwu0RGn8tCXQ10Ib7yl6w9MK0ukmNdcPt1Gp0jROpKB3im6PHOin
+6RpyWvpJocQPVXLHp9TmqwI6LPKWQpuShxDWShop1vT/Nsd5D18tObcK8I5+kbdM2teQoz2A3FV1
+7mUpFV8NOdoTDcScC+1ryYnPoUvJ2ZN/PXeCr2oMYl+czF2QSaBUoJQfecQkSf95aXbEglxyvCu3
+0lJ+DnJgvEFaSk7HOGOehJwF00tEErh4LXMKchr6XXwNOR3jfegicjQyVvQ95ZrHXVoCsh/AW7fE
+LfGIDL+/KPa9ab9jellKfSAN/Up0OzSC6UtaaaNUOiEvrfsN+N2oa7WN5S/GO39BXlfqCriCxNhC
+m39e0ZOxIh98qZRMo56elJxjMMe4JHIO2vtWXi9phHo1QEt6o4VDK/d0mcP95X0rQ17IMSQeVuGN
+2j3wPfoe5CH6HrpjHLSXUV7D9E3gOSXG2TB9wzj89WO9dRxj+m34/HX4PBt0LgD+B3R52K+d9niC
+AAAAAElFTkSuQmCC
+"
+       id="image9013"
+       x="128.98436"
+       y="67.601044"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.15;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 60.693969,37.096184 2.4722,-4.096907"
+       id="path9050"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.15;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 135.5726,79.235474 -0.51263,-3.922242"
+       id="path9052"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Axis"
+     style="display:inline">
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3)"
+       d="m 24.323089,101.09119 2e-6,-13.758319"
+       id="path1968"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3)"
+       d="m 24.323089,101.09119 13.229168,2e-5"
+       id="path1968-6"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3)"
+       d="m 24.323089,101.09119 -9.260415,6.08543"
+       id="path1968-7"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="8.3999996"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 +wAAAABJRU5ErkJggg== "
+       id="image11701"
+       x="6.6255016"
+       y="107.62749"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="8.5600004"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGsAAABLCAYAAAB3E3k6AAAABHNCSVQICAgIfAhkiAAACENJREFU eJztXe1VWzkQvd6T/7HpYE0HkBKgggVKwFtBONsBbAWwJQAVhGwHhm0gJh3YVBDvD1lYHo80M5r3 /IXvOTokSBrN6Gr0rUcHQAdzTFFGR4in+Q8BnADoJ6EL4GD2M6Z/BfAGYJz8fAHw7yyuKVD9qD2S /RKs9SOlX0rcJFmfAVwAOAPwBUBPSK8p7w3AEMB3AI/wkbfVZMUMlDRN2jScAngC8IuEqRBoek3+ BwDHBV1KQbLHC2/5Yn4PWacAnpGv/DbIiuFpVv6HIYsK0Cp8AuAawBH5vaYbid1aHKeAMH71ESrf in8A/JmJs3ZrUrfojW8UGoZvYPeUMYBbLJPLlX8M4K5QBheeEcZHr6d4PbFpTy2iRFIPi12elqyv leX3EMYnLWETLHeLVuwEWccIlWEZg34gdG3e8q8U5aYhnXxYsfVkncI+IRiB75ZqjfmqKDvtcrsG +xqbAKygvGLiQ9hnbxPoiLK2vGtF+TEMMzJ2lqwegodYybKsgaz4odAhhktvZRjsWDtZT7Cvi+6c xkk4UehQ6g63niwuc+xyLAP7FP4JhQZD6BfRN4J8b2NaNZlLkd2C8aXwoDBOUlaDkndx0/mdJuu2 YHwp1Ow+1HaLlu2pQUH+VpOVepWVLEtl55TV4h56sp4L8reOrBSpV1nCqqbKEWewNaYedOV59Zfg kvcp+XcX/HRXg++V+WrxYkx/gbDh2wa6CONoesgaD1fpgep/CHU1xHwTuwqxtdaEHMltdgsWz7pj 8nPlWfQ5R3lmKnXTI4TxNN1AUCM3DmjCSUZmm2QNoSdrpCxPo88A880Caz2VGtMhUz6rDBDc9DMT r8EXhK5pKuT3xqe4B/CHSruA35jfSfal+nQR7oQckfg3zLu2n5if0/UR6rOP0A0fMeVRe/8C8HdJ oQ7CFhHXUlY9gEvxabhj9C0FbsGu9eQThMZMZ5lnBnu6WD4L5Or7GcHLWH06mB9D1JLVFBlSfBqu GH2tXbWGrHQRHhfaA9Tbc4j5uWCuvifgCXtvpdtG1oDRtxSoF0jyOwhdVypjhMVK9NjzwOhId18W CIv9uHVPL4VrCrpCHFTkSZckrwhj82sz6uAC5SVPF8A3LiJOQS07Fh5P1Oa3yi95Fne9oOQJ10Q2 2y0JkDy3h8UTeE7vayp0rKyMbSZLc74V0SflDZi0TZDVQVivSfovXDRqq7I3iSzuZlWu8tMjohGT rkmyOpDXbfep0F0na6kryVRmRDyRjnInCIex55n0OWjJGgj6/4rCEP/DKDBlCqfxcQFYm78UT2FN DyxOgDT5+whk5ZBeKqXyKDT6AWEyEddxufwX8R+5MUvT8sdEeFtT9Zr0NfnT21y5cJyR59FvhHJ9 38Wpe1rhVuSufW0rNMuY2tOJEqSThH4kq6m1wy5A0/hq1mwSJIfpf0JwwZ+zn9YxhkKKp7COUVK8 V98OymNcRJy9NVk/IyHvu2dZD/OWBDnzbxLu5SStHLZK3voWyfIWvkvj1hvKxxSPaIcsqQ7HwHw2 MoF93VPaHeDgnb1Z5XvyX2E+S86t17yz3xTfUK7/pzTxLeQpa46824xyTU+9m576a/IfonC+ZERJ N85ZsnubR6gnK+4O7yJZbXp+DLnD34XtsvR20wvCFL5mspC7g7EuxJtaBwg23WOzj3Kk+nsDMwmM e1Q1e3tn2BzPoq9f4jMkCevyLGkj92tOgOaFI0fWvcIYb7ekib8EP0DTTdh1dKNc+tJjxfj79/xU oMW7qPBNICt9w5Xqyn2GQZK3CrKkT1Ncpfk5odJD75zwK9gqw2q8FJ96FT3i0FbeKslKDx65+nym +Tmh9HmqlqwpyjdM2yTrEMvroqgnfae1KWTRIYfWJ10yZFF7nVqzXZMzzhqf4gf4xpS+gFxHN5eL l25An1j1o92KNnDXvjg0RVZc/XNkpbpsClmSI1wK+bOwvJKnLUOCl6wuFh8HULKol28CWfFUWLNT YSYLqH+0IHmYh6wz5MeoKcLgLMlbB1mllyf0ulwVWYDtwyFpuIX+IyKa+CPwm54pWfGjKZK8VZNV avSWq3Iq5Y6QX8eUFnVxRibNbnKV0AP/Hoorf4jmGkeT4SZTP+k3p1zIGRdbiIWstHu6Qaj8+BnW tLweAqnns3RPBvm5K2eSPbn4Joni9JfuzptQMu4M8hdoatZpNeknCOR67OHimySK6j/E8meTXNAY Fz+5ui6y7pB/H1ZjT1tEpfrnzv9csBh3DPn7gF5yYhgjdHlSy/SSY0WJqGjPZSa9u/xaY88RiJO2 UyxkjRHGynT9ZtVPq7+XLI6oCZbv25vKlxSi8VNjfiBMIL7MFP0di58f6GBxghEPCF9nYYTQt8eD Ua9+Vv1pegkdBI+n66UXhEY2abP8pvt4a/6m9Wu6fArOox6aLN9jrDe9Vd4m68Oto6QdCXNj25Pl 14dbR9W8YebSp7sye7Kc+tB11Bj5T6Jb7Ym3nqaY3Rvck1WvDx2jpC9uW+1Jr1jcUQFe4RLaruya bqY2PSUq94cAPM6Q/jGCAc3gNUbCrpBFiXpQyKohK70Lc0ozeI2RsAtkUaIsH3G22Bf/vlgMPZrB a4yEbSeLEkVvczVJ1mVSzoSJNxvjDd7ypfRW+aV4uo7S3DPx1E36xngILH7Jc4884hZS3P55RNgu k546aXuf9E8rHiBM/ftJebnP2i4V9tE9K3cepQnSRrV2I/sS4D+YuMcc3KbsOsBtYi/B25KbbulS +ib15fb6JM/xel4uneoZ8EclK3dnYl1kqfARyar5e2FtkvU+udiPWcuQ/i7lqrEnq4A2vh7jwfvk 4n99xQ5199WemQAAAABJRU5ErkJggg== "
+       id="image11713"
+       x="39.821487"
+       y="97.790634"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="8.4155846"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image11725"
+       x="20.382683"
+       y="79.848511"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="11.376147"
+       height="10"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 3cSzD/ytVOkAAAAASUVORK5CYII= "
+       id="image11443"
+       x="20.557194"
+       y="34.077206"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="10.462963"
+       height="10"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 SUVORK5CYII= "
+       id="image11455"
+       x="97.96286"
+       y="89.236626"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/potato_2_normals_cauchy.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

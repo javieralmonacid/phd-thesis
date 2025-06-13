@@ -1,0 +1,1588 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   sodipodi:docname="svg_fibres_orientation_pennation.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   id="svg5"
+   version="1.1"
+   viewBox="0 0 177.8 127"
+   height="5in"
+   width="7in"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     units="in"
+     width="7in"
+     inkscape:zoom="0.55"
+     inkscape:cx="-0.90909091"
+     inkscape:cy="360.90909"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:snap-global="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid824" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="StopL"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="StopL"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8)"
+         style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,5.65 L 0.0,-5.65"
+         id="path4741" />
+    </marker>
+    <marker
+       inkscape:stockid="DistanceEnd"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="DistanceEnd"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <g
+         id="g2301">
+        <path
+           id="path2316"
+           d="M 0,0 L -2,0"
+           style="fill:none;stroke:context-fill;stroke-width:1.15;stroke-linecap:square" />
+        <path
+           id="path2312"
+           d="M 0,0 L -13,4 L -9,0 -13,-4 L 0,0 z "
+           style="fill:context-stroke;fill-rule:evenodd;stroke:none" />
+        <path
+           id="path2314"
+           d="M 0,-4 L 0,40"
+           style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:square" />
+      </g>
+    </marker>
+    <marker
+       inkscape:stockid="DistanceStart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="DistanceStart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <g
+         id="g2300">
+        <path
+           id="path2306"
+           d="M 0,0 L 2,0"
+           style="fill:none;stroke:context-fill;stroke-width:1.15;stroke-linecap:square" />
+        <path
+           id="path2302"
+           d="M 0,0 L 13,4 L 9,0 13,-4 L 0,0 z "
+           style="fill:context-stroke;fill-rule:evenodd;stroke:none" />
+        <path
+           id="path2304"
+           d="M 0,-4 L 0,40"
+           style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:square" />
+      </g>
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4572" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="marker16788"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path16786" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Send"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.2) rotate(180) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4587" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4581" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4575" />
+    </marker>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4302">
+      <path
+         style="display:inline;fill:none;stroke:#000000;stroke-width:0.705554;stroke-dasharray:none;stroke-opacity:1"
+         d="m 39.958326,37.197467 c 0,0 20.215097,19.539857 50.000008,-0.1558 v -10 c 0,0 -24.000007,-22.0958301 -50.000008,-0.04792 z"
+         id="path4304"
+         sodipodi:nodetypes="ccccc" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4306">
+      <path
+         style="display:inline;fill:none;stroke:#000000;stroke-width:0.706078;stroke-dasharray:none;stroke-opacity:1"
+         d="m 33.179287,32.070148 c 0,0 7.933971,27.258063 41.1026,17.491874 l 4.429906,-10.297515 c 0,0 -9.907879,-31.2263291 -41.012352,-17.701659 z"
+         id="path4308"
+         sodipodi:nodetypes="ccccc" />
+    </clipPath>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-1"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-1-9"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-2-2" />
+    </marker>
+    <path
+       id="path10"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path11"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1-9" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6-8-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1-9-6" />
+    </marker>
+    <path
+       id="path16254-7"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path16256-8"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <marker
+       style="overflow:visible"
+       id="marker16788-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path16786-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6-8-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1-9-63" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6-8-3-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1-9-6-0" />
+    </marker>
+    <path
+       id="path16254-5"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path16256-6"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path16720-4"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path16722-3"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath17737">
+      <rect
+         style="fill:none;fill-opacity:0.2;stroke:#000000;stroke-width:0.988088;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect17739"
+         width="33.973713"
+         height="50.456184"
+         x="45.910992"
+         y="31.055176" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath17737-6">
+      <rect
+         style="fill:none;fill-opacity:0.2;stroke:#000000;stroke-width:0.988088;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect17739-8"
+         width="33.973713"
+         height="50.456184"
+         x="45.910992"
+         y="31.055176" />
+    </clipPath>
+    <path
+       id="path16254-0"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path16256-68"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath17737-6-6">
+      <rect
+         style="fill:none;fill-opacity:0.2;stroke:#000000;stroke-width:0.988088;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect17739-8-6"
+         width="33.973713"
+         height="50.456184"
+         x="45.910992"
+         y="31.055176" />
+    </clipPath>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6-8-3-4"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1-9-6-9" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Send-6-8-5"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path4587-1-9-0" />
+    </marker>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath17737-4">
+      <rect
+         style="fill:none;fill-opacity:0.2;stroke:#000000;stroke-width:0.988088;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect17739-87"
+         width="33.973713"
+         height="50.456184"
+         x="45.910992"
+         y="31.055176" />
+    </clipPath>
+    <path
+       id="path16254-1"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path16256-0"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path17899-1"
+       d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+       transform="scale(0.015625)" />
+    <path
+       id="path17901-1"
+       d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+       transform="scale(0.015625)" />
+    <marker
+       style="overflow:visible"
+       id="Arrow2Lend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:0.625;stroke-linejoin:round"
+         id="path2111" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.11666, 2.11666;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 15.874998,105.83338 66.145832,92.604182"
+       id="path880"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.11666, 2.11666;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 133.35009,105.83338 165.87571,80.794238"
+       id="path882"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#StopL);marker-end:url(#StopL)"
+       d="M 129.43772,100.82143 157.16259,79.375007"
+       id="path882-7"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
+       d="m 24.870831,44.979173 15.875001,-3.96875"
+       id="path12039"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-1)"
+       d="m 134.67301,44.979173 6.61458,-5.291666"
+       id="path12039-7"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-1-9)"
+       d="m 161.13134,84.40209 6.61458,-5.291666"
+       id="path12039-7-0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="8.727272"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image12507"
+       x="32.018559"
+       y="31.041677"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="14.264153"
+       height="8"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image12599"
+       x="129.38127"
+       y="27.78126"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       id="path13128"
+       style="fill:none;fill-opacity:0.2;stroke:#000000;stroke-width:0.264929"
+       d="m 60.728892,94.059688 a 2.6443551,1.3229519 75.173207 0 1 -0.602218,2.89485 2.6443551,1.3229519 75.173207 0 1 -1.955588,-2.217768 2.6443551,1.3229519 75.173207 0 1 0.602217,-2.894849 2.6443551,1.3229519 75.173207 0 1 1.955589,2.217767 z M 58.695523,91.862119 16.492859,103.03367 c -1.316471,2.26438 -0.586753,3.9871 1.354127,5.11551 L 60.049649,96.977593"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       id="path13128-2"
+       style="fill:none;fill-opacity:0.2;stroke:#000000;stroke-width:0.234316"
+       d="m 162.14758,83.77954 a 2.6613138,1.0282725 54.682795 0 1 0.73516,2.789398 2.6613138,1.0282725 54.682795 0 1 -2.36675,-1.53531 2.6613138,1.0282725 54.682795 0 1 -0.73517,-2.78939 2.6613138,1.0282725 54.682795 0 1 2.36676,1.535302 z m -2.41654,-1.497523 -26.92058,20.691893 c -0.0558,2.39234 1.19365,3.78144 3.10367,4.32713 L 162.8347,86.609142"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.175, 3.175;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 5.0270831,105.83338 H 80.43333"
+       id="path4463-0"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path8796-59"
+       cx="15.97959"
+       cy="105.84768"
+       rx="1.1416615"
+       ry="1.1492839"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="4.7058821"
+       height="4"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 7wGA2f8Gu2kylrgpBQAAAABJRU5ErkJggg== "
+       id="image9001-2"
+       x="13.814954"
+       y="109.77079"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <g
+       id="figure_1"
+       transform="matrix(0.30037008,0,0,0.2394636,67.837702,91.777946)"
+       style="stroke-linecap:butt;stroke-linejoin:round"
+       clip-path="url(#clipPath17737)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <g
+         id="patch_1">
+        <path
+           d="M 0,125.28 H 126 V 0 H 0 Z"
+           style="fill:none"
+           id="path1-5" />
+      </g>
+      <g
+         id="axes_1">
+        <g
+           id="text_1">
+          <!-- $\widehat{\ell}$ -->
+          <g
+             style="fill:#333333"
+             transform="matrix(0.4,0,0,-0.4,54.6,75.32125)"
+             id="g3">
+            <defs
+               id="defs2-9">
+              <path
+                 id="path16254"
+                 d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="path16256"
+                 d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <path
+               id="use2"
+               d="M 46.61845,87.104962 H 41.89286 L 25.964166,97.870085 10.035472,87.104962 h -4.72559 l 18.879306,15.709708 h 3.549956 z"
+               style="stroke-width:0.0115258;stroke-linecap:butt;stroke-linejoin:round" />
+            <path
+               id="use3"
+               d="m 14.84375,13.609375 q 2,-9.765625 6.25,-9.765625 2.828125,0 6.5,5.609375 h 6.484375 q -2.921875,-4.984375 -6.34375,-7.5625 -3.703125,-2.796875 -7.125,-2.796875 -7.625,0 -10.703125,6.796875 L 6.25,0.515625 h -7.625 q 5.28125,7.171875 9.1875,13.875 -0.484375,3.796875 -0.484375,7.953125 0,7.421875 1.515625,14.84375 5.703125,27.875 10.78125,33.59375 3.515625,3.953125 9.53125,3.953125 6.09375,0 6.09375,-8.453125 Q 35.203125,62.484375 34.328125,57.9375 30.8125,39.328125 14.84375,13.609375 Z m -0.04687,12.78125 q 9.125,17 11.90625,30.578125 1.46875,7.171875 1.46875,9.03125 0,3.359375 -1.21875,3.359375 -5.328125,-4.25 -10.0625,-29.53125 -1.3125,-7.078125 -2.09375,-13.4375 z"
+               style="stroke-width:0.015625;stroke-linecap:butt;stroke-linejoin:round" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.175, 3.175;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 112.18338,105.83338 h 75.40627"
+       id="path4463-2-9"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="15.523255"
+       height="5"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image1"
+       x="5.3788295"
+       y="16.695816"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="15.000003"
+       height="5"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image1-9"
+       x="170.15302"
+       y="16.813416"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-6)"
+       d="M 60.854164,93.92709 76.729165,89.95834"
+       id="path12039-8"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-6-8)"
+       d="m 68.314705,105.89817 13.303197,0.0102"
+       id="path12039-8-7"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-6-8-3)"
+       d="m 173.07964,105.82619 13.3032,0.0102"
+       id="path12039-8-7-0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="8.727272"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image12507-7"
+       x="81.231079"
+       y="84.666679"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="14.264153"
+       height="8"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image12599-2"
+       x="170.39148"
+       y="74.083344"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path8796"
+       cx="24.481009"
+       cy="44.864616"
+       rx="1.1416615"
+       ry="1.1492839"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="4.7058821"
+       height="4"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 7wGA2f8Gu2kylrgpBQAAAABJRU5ErkJggg== "
+       id="image9001"
+       x="17.519114"
+       y="38.333344"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path8796-5"
+       cx="134.77744"
+       cy="44.894768"
+       rx="1.1416615"
+       ry="1.1492839"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="3.8727276"
+       height="3"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAA3CAYAAABeklfeAAAABHNCSVQICAgIfAhkiAAABRtJREFU aIHtm+1xGzcQhp/L+H9IpQJTqcBsQXYDsVqwO7BbiDsQW6AqiJQS6FQguYNQdAG5y487zOGg/QDA 48gaa2cwJPGx++57wOKDuAZogC3wB3Cgl4fkcz/UC+WSdMPnYqh7puQthrwzR58m/w2fBwVnKGOw GWMLWIJ9Cds74G+AV4nh0HApKG2wRapb0r5UFsg4Y5FwWPUm8ksFqJ9G0p4TxGPaKw8SP5HOyPPa lMixPbQLdl96jiGh5+yBb07d8yPsHIB/h+/HPtkDY2ycQw6MmPZapSZKUt4F0A6pc1KbpK2gW7Op laf1VsBn4F6wl+J8ADbAJbCmD+SabTHfIwfgQyU5LfBlZnJC+UaxF3BuFD2zkwPwp0BGDjkd8DEH iFIu1Xtr2GvJI6aaHK38BrsHScMv5F0o+j2baVo7drShLOkvApJTvqOOnD19vCjFFKdz+jii2blJ 2nv6i4DklC8GgKXktMAdeTOORMySPghrdnZCe09/FRCPsDcKwJw4tEt05dq8E3TFpKcz0ewxJxco jFN8TZDeFpITYp2UwnAtJeak5AB8qiSnpZ/9csjZGjpaxjh2EnK0CrlEXQmAPcJC+pih2yJ87eD0 iCiS2l6Udvtccjr6NYuk+5OhqwXeZ+D8IciBacAsIeeBx/u3946uDw5eyR/JT1W8cWcpkOqd0wfH 0iGWTvEXQnkaq3KffG38mZ2chukUXzrV76L2GjlXBvYSnE9CDkyHRO1Ur20LLOwlOLNDRkmjXKUh mMaOeoRZO+yvJQ5lyJOSA+P65Fhy7tFXv7Xy5OTAdJNaQ84ee1tQK3PqeqTUMxSStFksIefC0V+b LN+qiSolp+HxMUMJOXdHEPAsyGmYHlCVxpzbSgJmIUfK9GJOiYQ2l+RP3ylpV4pOzY8aQp6UnAa4 po6clnHLoOF41uSsqe85cYDWcJycnFylWnstb4V+tJo71YcUb1JrnffIrVLgAZDyFvTrlZJthFXv nnGT+uzJCUcZc5HTMZ5Dn4ycuZy30i16fLmnPwm0Npva9iPdiGo4a3ybFNQoyCHGmpnCAVeDfOKX Q07LeA5tOlro26SgRoFHzAbbqXWiMz0rziWnpT8iMR0t9E11sEiBIvFxhRQ/wplxqtP6+0Wb9sPv N4o/XqxRy09BTnrQlZJzadhcYP9xZ5GzZxymPyQ58T0eyZHPGTZXyOfQHjktfYCfjZxc53NITM9+ U0c2hs40L92kWtN7WucGXXI7gwu0RGn8tCXQ10Ib7yl6w9MK0ukmNdcPt1Gp0jROpKB3im6PHOin 6RpyWvpJocQPVXLHp9TmqwI6LPKWQpuShxDWShop1vT/Nsd5D18tObcK8I5+kbdM2teQoz2A3FV1 7mUpFV8NOdoTDcScC+1ryYnPoUvJ2ZN/PXeCr2oMYl+czF2QSaBUoJQfecQkSf95aXbEglxyvCu3 0lJ+DnJgvEFaSk7HOGOehJwF00tEErh4LXMKchr6XXwNOR3jfegicjQyVvQ95ZrHXVoCsh/AW7fE LfGIDL+/KPa9ab9jellKfSAN/Up0OzSC6UtaaaNUOiEvrfsN+N2oa7WN5S/GO39BXlfqCriCxNhC m39e0ZOxIh98qZRMo56elJxjMMe4JHIO2vtWXi9phHo1QEt6o4VDK/d0mcP95X0rQ17IMSQeVuGN 2j3wPfoe5CH6HrpjHLSXUV7D9E3gOSXG2TB9wzj89WO9dRxj+m34/HX4PBt0LgD+B3R52K+d9niC AAAAAElFTkSuQmCC "
+       id="image9013"
+       x="126.83145"
+       y="40.656258"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path8796-5-3"
+       cx="133.45459"
+       cy="105.74892"
+       rx="1.1416615"
+       ry="1.1492839"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="3.8727276"
+       height="3"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAA3CAYAAABeklfeAAAABHNCSVQICAgIfAhkiAAABRtJREFU aIHtm+1xGzcQhp/L+H9IpQJTqcBsQXYDsVqwO7BbiDsQW6AqiJQS6FQguYNQdAG5y487zOGg/QDA 48gaa2cwJPGx++57wOKDuAZogC3wB3Cgl4fkcz/UC+WSdMPnYqh7puQthrwzR58m/w2fBwVnKGOw GWMLWIJ9Cds74G+AV4nh0HApKG2wRapb0r5UFsg4Y5FwWPUm8ksFqJ9G0p4TxGPaKw8SP5HOyPPa lMixPbQLdl96jiGh5+yBb07d8yPsHIB/h+/HPtkDY2ycQw6MmPZapSZKUt4F0A6pc1KbpK2gW7Op laf1VsBn4F6wl+J8ADbAJbCmD+SabTHfIwfgQyU5LfBlZnJC+UaxF3BuFD2zkwPwp0BGDjkd8DEH iFIu1Xtr2GvJI6aaHK38BrsHScMv5F0o+j2baVo7drShLOkvApJTvqOOnD19vCjFFKdz+jii2blJ 2nv6i4DklC8GgKXktMAdeTOORMySPghrdnZCe09/FRCPsDcKwJw4tEt05dq8E3TFpKcz0ewxJxco jFN8TZDeFpITYp2UwnAtJeak5AB8qiSnpZ/9csjZGjpaxjh2EnK0CrlEXQmAPcJC+pih2yJ87eD0 iCiS2l6Udvtccjr6NYuk+5OhqwXeZ+D8IciBacAsIeeBx/u3946uDw5eyR/JT1W8cWcpkOqd0wfH 0iGWTvEXQnkaq3KffG38mZ2chukUXzrV76L2GjlXBvYSnE9CDkyHRO1Ur20LLOwlOLNDRkmjXKUh mMaOeoRZO+yvJQ5lyJOSA+P65Fhy7tFXv7Xy5OTAdJNaQ84ee1tQK3PqeqTUMxSStFksIefC0V+b LN+qiSolp+HxMUMJOXdHEPAsyGmYHlCVxpzbSgJmIUfK9GJOiYQ2l+RP3ylpV4pOzY8aQp6UnAa4 po6clnHLoOF41uSsqe85cYDWcJycnFylWnstb4V+tJo71YcUb1JrnffIrVLgAZDyFvTrlZJthFXv nnGT+uzJCUcZc5HTMZ5Dn4ycuZy30i16fLmnPwm0Npva9iPdiGo4a3ybFNQoyCHGmpnCAVeDfOKX Q07LeA5tOlro26SgRoFHzAbbqXWiMz0rziWnpT8iMR0t9E11sEiBIvFxhRQ/wplxqtP6+0Wb9sPv N4o/XqxRy09BTnrQlZJzadhcYP9xZ5GzZxymPyQ58T0eyZHPGTZXyOfQHjktfYCfjZxc53NITM9+ U0c2hs40L92kWtN7WucGXXI7gwu0RGn8tCXQ10Ib7yl6w9MK0ukmNdcPt1Gp0jROpKB3im6PHOin 6RpyWvpJocQPVXLHp9TmqwI6LPKWQpuShxDWShop1vT/Nsd5D18tObcK8I5+kbdM2teQoz2A3FV1 7mUpFV8NOdoTDcScC+1ryYnPoUvJ2ZN/PXeCr2oMYl+czF2QSaBUoJQfecQkSf95aXbEglxyvCu3 0lJ+DnJgvEFaSk7HOGOehJwF00tEErh4LXMKchr6XXwNOR3jfegicjQyVvQ95ZrHXVoCsh/AW7fE LfGIDL+/KPa9ab9jellKfSAN/Up0OzSC6UtaaaNUOiEvrfsN+N2oa7WN5S/GO39BXlfqCriCxNhC m39e0ZOxIh98qZRMo56elJxjMMe4JHIO2vtWXi9phHo1QEt6o4VDK/d0mcP95X0rQ17IMSQeVuGN 2j3wPfoe5CH6HrpjHLSXUV7D9E3gOSXG2TB9wzj89WO9dRxj+m34/HX4PBt0LgD+B3R52K+d9niC AAAAAElFTkSuQmCC "
+       id="image9013-7"
+       x="132.12311"
+       y="110.77079"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="15.167998"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image14120"
+       x="53.885456"
+       y="99.227219"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="16.032"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image14224"
+       x="156.97539"
+       y="95.91053"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker16788)"
+       d="m 50.916296,105.95906 c 0,0 0.331507,-6.279837 -5.670458,-7.622432"
+       id="path16784"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker16788-3)"
+       d="m 156.23715,105.80107 c 0,0 -0.24398,-9.247472 -8.82459,-10.574567"
+       id="path16784-1"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <g
+       id="figure_1-8"
+       transform="matrix(0.30037008,0,0,0.2394636,172.15169,91.893277)"
+       style="stroke-linecap:butt;stroke-linejoin:round"
+       clip-path="url(#clipPath17737-6)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <g
+         id="patch_1-4">
+        <path
+           d="M 0,125.28 H 126 V 0 H 0 Z"
+           style="fill:none"
+           id="path1-5-3" />
+      </g>
+      <g
+         id="axes_1-1">
+        <g
+           id="text_1-4">
+          <!-- $\widehat{\ell}$ -->
+          <g
+             style="fill:#333333"
+             transform="matrix(0.4,0,0,-0.4,54.6,75.32125)"
+             id="g3-9">
+            <defs
+               id="defs2-9-2">
+              <path
+                 id="path17899"
+                 d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="path17901"
+                 d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <path
+               id="use2-9"
+               d="M 46.61845,87.104962 H 41.89286 L 25.964166,97.870085 10.035472,87.104962 h -4.72559 l 18.879306,15.709708 h 3.549956 z"
+               style="stroke-width:0.0115258;stroke-linecap:butt;stroke-linejoin:round" />
+            <path
+               id="use3-2"
+               d="m 14.84375,13.609375 q 2,-9.765625 6.25,-9.765625 2.828125,0 6.5,5.609375 h 6.484375 q -2.921875,-4.984375 -6.34375,-7.5625 -3.703125,-2.796875 -7.125,-2.796875 -7.625,0 -10.703125,6.796875 L 6.25,0.515625 h -7.625 q 5.28125,7.171875 9.1875,13.875 -0.484375,3.796875 -0.484375,7.953125 0,7.421875 1.515625,14.84375 5.703125,27.875 10.78125,33.59375 3.515625,3.953125 9.53125,3.953125 6.09375,0 6.09375,-8.453125 Q 35.203125,62.484375 34.328125,57.9375 30.8125,39.328125 14.84375,13.609375 Z m -0.04687,12.78125 q 9.125,17 11.90625,30.578125 1.46875,7.171875 1.46875,9.03125 0,3.359375 -1.21875,3.359375 -5.328125,-4.25 -10.0625,-29.53125 -1.3125,-7.078125 -2.09375,-13.4375 z"
+               style="stroke-width:0.015625;stroke-linecap:butt;stroke-linejoin:round" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <g
+       id="figure_1-1"
+       transform="matrix(0.30037008,0,0,0.2394636,68.019227,38.779875)"
+       style="stroke-linecap:butt;stroke-linejoin:round"
+       clip-path="url(#clipPath17737-4)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <g
+         id="patch_1-7">
+        <path
+           d="M 0,125.28 H 126 V 0 H 0 Z"
+           style="fill:none"
+           id="path1-5-2" />
+      </g>
+      <g
+         id="axes_1-7">
+        <g
+           id="text_1-2">
+          <!-- $\widehat{\ell}$ -->
+          <g
+             style="fill:#333333"
+             transform="matrix(0.4,0,0,-0.4,54.6,75.32125)"
+             id="g3-2">
+            <defs
+               id="defs2-9-6">
+              <path
+                 id="path18084"
+                 d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="path18086"
+                 d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <path
+               id="use2-6"
+               d="M 46.61845,87.104962 H 41.89286 L 25.964166,97.870085 10.035472,87.104962 h -4.72559 l 18.879306,15.709708 h 3.549956 z"
+               style="stroke-width:0.0115258;stroke-linecap:butt;stroke-linejoin:round" />
+            <path
+               id="use3-1"
+               d="m 14.84375,13.609375 q 2,-9.765625 6.25,-9.765625 2.828125,0 6.5,5.609375 h 6.484375 q -2.921875,-4.984375 -6.34375,-7.5625 -3.703125,-2.796875 -7.125,-2.796875 -7.625,0 -10.703125,6.796875 L 6.25,0.515625 h -7.625 q 5.28125,7.171875 9.1875,13.875 -0.484375,3.796875 -0.484375,7.953125 0,7.421875 1.515625,14.84375 5.703125,27.875 10.78125,33.59375 3.515625,3.953125 9.53125,3.953125 6.09375,0 6.09375,-8.453125 Q 35.203125,62.484375 34.328125,57.9375 30.8125,39.328125 14.84375,13.609375 Z m -0.04687,12.78125 q 9.125,17 11.90625,30.578125 1.46875,7.171875 1.46875,9.03125 0,3.359375 -1.21875,3.359375 -5.328125,-4.25 -10.0625,-29.53125 -1.3125,-7.078125 -2.09375,-13.4375 z"
+               style="stroke-width:0.015625;stroke-linecap:butt;stroke-linejoin:round" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-6-8-5)"
+       d="m 68.49623,52.9 13.303197,0.0102"
+       id="path12039-8-7-5"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send-6-8-3-4)"
+       d="m 173.26119,52.82803 13.3032,0.0102"
+       id="path12039-8-7-0-9"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <g
+       id="figure_1-8-4"
+       transform="matrix(0.30037008,0,0,0.2394636,172.33324,38.895206)"
+       style="stroke-linecap:butt;stroke-linejoin:round"
+       clip-path="url(#clipPath17737-6-6)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <g
+         id="patch_1-4-9">
+        <path
+           d="M 0,125.28 H 126 V 0 H 0 Z"
+           style="fill:none"
+           id="path1-5-3-0" />
+      </g>
+      <g
+         id="axes_1-1-9">
+        <g
+           id="text_1-4-1">
+          <!-- $\widehat{\ell}$ -->
+          <g
+             style="fill:#333333"
+             transform="matrix(0.4,0,0,-0.4,54.6,75.32125)"
+             id="g3-9-7">
+            <defs
+               id="defs2-9-2-7">
+              <path
+                 id="path18099"
+                 d="m -1024,3546 h -410 l -1382,934 -1382,-934 h -410 l 1638,1363 h 308 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="path18101"
+                 d="m 950,838 q 128,-625 400,-625 181,0 416,359 h 415 Q 1994,253 1775,88 1538,-91 1319,-91 831,-91 634,344 L 400,0 H -88 q 338,459 588,888 -31,243 -31,509 0,475 97,950 365,1784 690,2150 225,253 610,253 390,0 390,-541 -3,-243 -59,-534 Q 1972,2484 950,838 Z m -3,818 q 584,1088 762,1957 94,459 94,578 0,215 -78,215 -341,-272 -644,-1890 -84,-453 -134,-860 z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <path
+               id="use2-9-5"
+               d="M 46.61845,87.104962 H 41.89286 L 25.964166,97.870085 10.035472,87.104962 h -4.72559 l 18.879306,15.709708 h 3.549956 z"
+               style="stroke-width:0.0115258;stroke-linecap:butt;stroke-linejoin:round" />
+            <path
+               id="use3-2-9"
+               d="m 14.84375,13.609375 q 2,-9.765625 6.25,-9.765625 2.828125,0 6.5,5.609375 h 6.484375 q -2.921875,-4.984375 -6.34375,-7.5625 -3.703125,-2.796875 -7.125,-2.796875 -7.625,0 -10.703125,6.796875 L 6.25,0.515625 h -7.625 q 5.28125,7.171875 9.1875,13.875 -0.484375,3.796875 -0.484375,7.953125 0,7.421875 1.515625,14.84375 5.703125,27.875 10.78125,33.59375 3.515625,3.953125 9.53125,3.953125 6.09375,0 6.09375,-8.453125 Q 35.203125,62.484375 34.328125,57.9375 30.8125,39.328125 14.84375,13.609375 Z m -0.04687,12.78125 q 9.125,17 11.90625,30.578125 1.46875,7.171875 1.46875,9.03125 0,3.359375 -1.21875,3.359375 -5.328125,-4.25 -10.0625,-29.53125 -1.3125,-7.078125 -2.09375,-13.4375 z"
+               style="stroke-width:0.015625;stroke-linecap:butt;stroke-linejoin:round" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#StopL);marker-end:url(#StopL)"
+       d="m 14.287497,99.218757 43.65625,-11.90625"
+       id="path880-7"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="5.4063654"
+       height="5.0037637"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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
+"
+       id="image18670"
+       x="-6.4912724"
+       y="93.499626"
+       transform="rotate(-21.635501)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="21.983999"
+       height="6"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcoAAAB9CAYAAAAiJCOlAAAABHNCSVQICAgIfAhkiAAAIABJREFU
+eJztXUt2XDlyvazueSe1g07VCqjqUR+PmqoVSPIKLGkDprQESkOPKHkHKm3AKk49MqmhRxS9ApP0
+yB6RHrxEE4nEJwAEEPFe4p6DUyqJzIwIfALxxQHqccDwGUvCQ6PPPd7895z481rmpZU89hkcc8sx
+Lz3pWAM4AvC1ER0cGGt9G2NeLByMsTW4sQLwDcD9ZqyIvycth1byGNAzLz3puMC0/q8wKUxuOrTI
+dEmQng+2efmJ40MGmuEIwDUerclrAHdy5AwMiOFi89/15s+vBWkZGMiG9G1B2+DCCzxakeYmTbUm
+kUHvXOQx8Agt89Kbji/Y3hNnjHRokemSID0fquZFWgjaBgdeY/tAuEGekkQGvXOQx8A2tMyLBB2u
+svzCRIcWmS4J0vOhal6khaBt1MJVkvfYjclQIC0HVYt0YdAyL1J0mHilGb8x0aJBpkuC9HyompfF
+MMKEGjm8w5ShZR8CLwTo0DYv0huNUx7SPCxhbg8B/MC0V8x++SZAx1gf84AKeaggQhFKZfAS2xv/
+HsCJAB0a50X60OCUhzQPS5nbpwBusb1fzlAOLTKVXhfa1gcHquXBIZBPAF5hiqHdYcrMvNn8+Xwz
+rhOfoaLOhQklMj3G9o34AcBnAG870+FCy7xo2bhaag85sIS5PcLkhrV5eQ/gY2c6DMb6iGOFKWv5
+yea/q8ifgUl3/MrwvbZMzeen6DA0fMWk36rxQBg/MLkVx+3FfzN25VXrRiqhQ/O8SN+uh8XQDrV8
+vMRuTL+kdESLTKXXBRcvJ5jOsQtMhpM7R9SxLvz+FSYPwwW23fQlg2VuXwL4nfiFt5uf17ppOZCz
+GA/x6D6yZZSb4VpLx9IPUy2Hx9J44QAHL2eoT4DTIlPpdcHBi90gpWbcVNBgJ3zVKMlLMM2tLdzn
+oGnvT+CbFG3IWYy+C8ZLATr24TDVIg9pHpY4t8Cu1ZJbUqVFptLrgoOXGgvSLf0phf05NYryA5jm
+1ifkSwIBdkr3kkBdiCbD1SeTnnTsy2GqRR7SPCxxboEpzu8etDkhDC0ylV4XHLxwWZQ13Ze4LMrn
+wJTM02LTrDAl8KRudCbwriUI3osOk4Rg4w6TP56rRZ0WmXJACy9a6ODAEnk5w+7hSk3u0cZLDTTw
+sgbwp82fTXLME0xnn0n+TOFnAP9VScMKk0xtGo5BL7t7gs2Z3OpG4rOYfONZgQB8kL5F5dDhxiWN
+y1XLjTCHF+23W05etNAxeAnzcoWyeKU0D0ufFxsrpN2zJj7Zio514vvvYRkzLZuifwTNOnrfkAaN
+OMPubeoc/ueDBga0Y4XJinuNsg5S3PCVVH3uTsVADKaMMAbqc4KluEZaP23R0PJG8QE0q7I0BZib
+Dw7EPv8Z/PwfMtG/bzfT3rxooUMLL58Qzz2Q4sUXI0s175Cej31bY9T4ZEs6UjQc2z/cUlCHoCnK
+0wgzVMxhkfoygj8kfkcrL1o2XE9etNChgZcvCO/nN8K8HCG/Jk96PvZpja1Ar59sRUdojdhjC62F
+RamxrKmX4eSDA6HPDsVsW1iT+7LhevOihQ5pXkyGKSWjXYoXn1XpJtDZkJ6PfVpj7hOCsfrJVnT4
+Hp8IrpUeDzdT4gMrOGbuwrCG32qmxnEHBjRhDo8m+2KVRyh/ZGCAD6mzvnV8UgsNO6AUoNY0NOZC
+q5uVL5bT0poct9vBS0u0rH/jhPt25T2mrFgfpOdUy9xyIsRjqimN7bpvhZROEjHcfC2mkj5hAbRY
++L5eri1jk9o2rTQPgxdeUGI7GrJfgXAJgE+RS8+phrnlho8/St7KU7SVB6U0RASUzXUPebdIi4X/
+G+ZpTXItUmkeBi+8OIHSQyYAX6zSlxMhPaca5pYbPv7s5wR94xbt5ZEVnwT6xCgB4DvSdTOAHpcN
+F0Ixkc8YscmBeUJlbCcCX47ECjyZ9gP50LB+NNAQxCloViXHyxml4L4dhjJ+nzb4Lq23W2keBi+8
+SO3fmsfGWyEUj7IhPaca5pYbPv5y4pOt5KEyPmlA8QtLJwJwLvhQbPIH8/do37TSPAxe+DCn+KSN
+0CXdPmuk51R6blvA5S03PtlCHtn1k0A/1yswuV6/E35uKe7X0M16tNMamCt+IfwMZY/3RmjPabR+
+l4yUpUZpbdeahuD67XlbojZKL3FNcoDzRljjWl7SzXTwopOXEvjKLeyR86yVQa+zJ/T033PoPD+k
+6WgxQomNsUYV3PJINcDxViP0tCgBujUlnf1ai5BVfI6RxDMwX6hOgkgglLwzrMp+0LB+imnofaug
+tLQrieNxgOtG6HvqJ6f8RcvNlAODF5285IKSY1ASn+x17sTiY08L6G7FixY6uEcoZyPlSeSUR+hR
+Cnt46e9tUQI0q3INnUkBFBwh3Hx5PKU1MFdQMgE1xicN7hCmb+4erDlg1vFJCUVJVRavmlLRDiG6
+h5IcmDM0uM1q8SXw90tJINQMDeunigYJMzwV1PV1aJiLyyJUo5OzGbW4cDgweNHJSy5StWelsb6e
+507M9bYvb+JKjVvk1U+2kEdK5zxHmH4RoT0nEJ0iXOMCe4bwQZKzEbVsOA4MXnTykoNW8Umg/9kT
+OrD35U1ciUGJT4ZaenLJozg+aeiQmljKiyIhV4kPGhbpGXisYw28YGF0DF7KxxvUHTKaRsibFXpV
+pDek5dNirafWT+x85EKqR3HsrVKRGKUBRQnOLcgeik/OIX4zMBCChvgSF0Lnzho87teBXaTWT45B
+1IqG6BqWVJRLq6lcI9xMYE4HycCAi5RbdU7rO0brkh+Pl4SGi9ZsFeXSXhSJTcScDpKBARsrpC2t
+Oa3vO4SbfszlUj4nxAwIg9brhxI/V6soAVrJxDFkXxShIrTJetQHDQy0wtzrJ30IxaOGRcmP1OXj
+Gu27lRXXTxr8kYmQUnwGLa38FfQ3Ew9NRjRI3BBfMC1SswjNY7Wh//fBBNPNReWJ9W/239l/Lln0
+pmP/XYDOg8TnuvS5tP2KeVk9mqDBbcaN7wjzdYT5KX5urAH8DZOMTOzW7Kk7TGfaOWjv6mpYP6ma
+fBIN0tlRF0hnv1KUjWSml/10C6nJboeRamBNGZQSnlSKNwXcdNSUGfXKBOw53iD9DmDPcQvgk5As
+DgC89NBUWw/KBSmZHGJ6tMKsE+oZEZPXAdJr4WWCLg6keOjiSaidoHcERih1iFILzBxE7obL7e/K
+zQulqQP3CNVCpUZrurgUJcfgAId8ay9RHKOEF44Rq+vzvWCheW5r6Vgh/F6nGTeYymdCPaxv4I8D
+UmoXU2dGLY4TvN2Hf/UR0jFKgO5S1ZzUE7uRjPjkgCS0xvcl90UsLrZPccoTTErOZxXeAfgI4GdM
+IYyfN+OnzX8/Wj+7wuT1c5VlSpaziE8C8jFKYBLUOdIMvQDwvj05RYhlVe17vGNAFubAc5PiHgi/
+S6krLFF415DfyxfwnzmrzVjyc3hHmEIzofn9iPj8mPk7xXR2m/PvAtPj3ubM0xCf1EADAB5XwQvQ
+XDUxhSTpTgu5tEq7fXDQ9AlTvCE2auNM7ueVul5TfSBLaDPjB4brtZSOVv1duXkp3R/crnoOtJ7b
+1wjP5xXKWhF+g//Mq41PcshURXwS4JtYiqI8a0xHyXD98Da9JS++9+SF2nOXO5YTGk+xnVCQUoaf
+MG22ZyhX0r0HB3rQ0bK/KzcvJeMdwmvrXeFncqDl3MYS/C5Q56a345enmNZGbXyyVqYs8UkucE0s
+JUvTlA60oqNkuH0MbXpLGy1L0p8zWmX0xm77D5DNmORY67XoQUfM8uA8ZKTmwZf5WnsJ1CIPH2yr
+zx2lF3obrlL6gvge/lHBCxWpJKWupXtcE0vR/jFTWWrDfUBYUZYmIEnzkDNCz+OUjpSVO2cladZ6
+LXrQkbq4chyuXLyUjFhG5mXhZ2qRh4uUJckFVxlz7OMapEoPswwZTRufEqtq4fKrGb879NkTMaeW
+WL4bJ1VZRt9xy4Bdj+obPZont0aLg7AFHam9+K4THa3ksQK/tSx9FvlGrEzsFrzPW7n7N7Z+KPHJ
+2lFzbu3IQ9OmTbnczJBefPZw42ncMZyecG9gVEV5iym+WLM+1ognj3BZMNLgWHOt6aC8H/isAx2t
+5RFTlCXxOumzyB2pWupnkd8thR2rjH1365wCSv5F1hrTtGkpBaq9biPU4dJmb7a5PduzwrayoirK
+B4SzXqnfGypm7h5LaAyONdeaDur7k63paC2P2MWs5JIrfRbZI2V0pPILSmHHBWNnRWv+U+GkXPe6
+uk1LyXj8nYFujnHooY072aE3Yu34UsO3+CiIKckr6C2aLwHHumtNR8oSMfuvNR2t5RGLYZWUDUif
+R2bEEpWoiqoUdq5J6Pt75BlcJmSQlYiooTOPizm9KPIk/SOzw3dMTcRLYAqZc/ANYcv7bkPLkou/
+NUJNkXZjXEf+bW7eIIMV0t3O3jb8/phMDVqvnxUavKGq7XZLiY88oLzWiXP4/OC2JTRnnCDfovTd
+1mJIZVbO9bCKgWPdtaSDGp9sTUcPeZyBKSNyA+nz6AC7yYWl3rhSUCzKucUnVVqUsVpJG6mnU3og
+ZtXO3Qr6iPKnzU6QLo05Qzwr+BeMPrkSWOL7kyFQnm6bE06Qnr/WrQNTl9trtD8bU9UGRRatptvt
+IfJaq9mZlhLwFWVriaNyIVaonBqhTXuS+D13oUvf0iXXmA8teaTGJ5cg01jiSUkZGgdK5UjxBOQk
+sJQi5SWKdVfzoUQWsUqEexS0XtRkUZoO9DnuNukXReZ468zFryi37HyNl18g7tZ6C1qceqAN9iU+
+CcS9V3Pb2xQFVOohyoH0+lkhrUNma1HmWpK+7C0J+Fok1dxItd7UUzWOsWFnraa6L4UUqKQcW8m0
+Bq34y4lPLkGmtmejxvri5KVEhtSyupzYYAko/YFzLyC5sog9yl1cjaDBovRZkuZpoBTWkC3qn9ut
+sxTXKO+yv8bjUzyxpgGfIf/00r5jn+KTwHJilJTEo6+Qjw32iE82sWilFWXI3XoMetaZpPs1Vh5C
+TUqaC76jPIHqCPGmAV/RNmV9gAZpt5kmzKX06wi0C06P9o8a1k8zGqRcJ3Y3FttMtrvupBILHjC1
+T5Ny4fgC14Yu6ebdrZBKxMkdlK47knLsIdNctOKP0t91STK138ENnSu9ecn9TsoZmV0OUUh7aq+X
+9L7OodnXAMZ1vRZ7ICUWutuyLLQRqe8lPi+koxb7qCgB2pNoufHLGCTl2EumOWjBm0R8UlqmsZq/
+OShKas15SaZyLlIPGpTEJ5FJc6gjUVV8EgD+WPqLFnKF6nO3PmByv31wfvZ3TAs2JeB/Ao9Z/8Dw
+GQbSdZQtD6F/xDSHNfHhOwB/AfA/6HNgcs5tDTh45eDFpWPf4pMplB7qtciZ238m/ryxOlsitX5K
+45M5dP8t8PNmXs5ROEe9Y5ShmGQs/kVJaZ7Tc1ZLwTHqGgK8gvxlYuARGuJLmjCHtUnNGRjxyUoa
+eirKkJJMZVRSa3+kaypdzClrrgS1fVhzC48H2kLDQdcbc96j1H7X39FH6Uuvn2b1k0A/RRlSkpTD
+9ho0l8+wKvujtmxkKW9Mzh1rpA/dJSrKOYN63vWYN0oIpjUdTUMHPRRlrOPOK9DcdxTXgcSLIrES
+kLmkl9eipmzkGMOy1IARn5wfqBdUDS7P2dZPGrRWlDEl+RZ04ufqft0XfEV527nXGPMmDWm3mRTm
+WgdNcTMa9Ji71EVZg7JWqyhjSjL3ZYo70BjtfeDOIeDfA0eoc32fodyFO1CPfVWUMWje29S90ssL
+wP72YyaaxieBqTykRdrwCsB/APiz5/O/YqqXtEFJ2f1XxOslHzbf92eUZ2Pmpg77mh0Yfv8E2ZKE
+Xqnqazy+gVeDfwPwM9o9rSVds6cNZr7WSK9VjvkNQXJeTO9TYJe///b8XQ9Q5PGXxM8ZumuUA3Ve
+jiM/y0EHBZTQT9WloYVFuUbYkqyJZ1Fdez2tytitcx9ilMZrwBUb/sb4WQM0pKyTO+xnfFKzRanJ
+7br4+CTAryhjSvIO9e41irLsqSiX9ExPCTiVJPDYQH2gH1J7ktJicK6IKRzNMUqqouwxdxrc9rNS
+lEZJhg7OY9TfLChxzRX6vSgScxMu3aL8hvCGvUZ5k/Mj9CmQHpig4aCTQmyPtgoBcICiKO/QxyqW
+jk/OqrQp9V5hajPm9PMLNW62v6+05CC3H6KvCW91X0EmtOzDGev1eoPHjVzTQJ36egwV3D1KJQcX
+KO8Htr50SsrRxF59bxZK1WVT6E71dr1H/WWTQkeqF3dpf9ccvEZ6DavYcykleUL4jByCPyGtKEuV
+VIkAY3RIul9bLY4z5B2sqZ+PDc7DSvJA5h5cSB0ynO7HFab5dK0hSTnaj8XnXu5boeTM8Z1BlHO3
+lo4PCTquMr+zxBuYeqDhG5EXMw7hb/5fhZSSpFp2OYyEbjEch2zJZnMt3J638RhaHMgpCzF0uHxL
+/F4Pi0byQOYeXKAcMlywXwuyISlHe++6vFPjgNyg0E1RlLWXTAodlwk6cj17Zo3kxFZj+sdcGErW
+hPviSvEie7r5UI5NVrPAQwu9V5zrwvlem6bnGTxxH4TcB7L9dl+O9XeA6ZZm395zxi14Di3JA5l7
+bjkQ2kf2SL0/SYW9dlwrVVKmsfVcgl68pC6XD5jO55brOPT2oz1eZnye/WTYD6I8qKEDKg22EXbp
+/FuRkIyS9Cmoe9DfGTTI/X6fye+jo4fr03Ut2jS9KeCN6zDl3LT2u32hW1uKDnvN5I5cF06MDumh
+BRzvT1JhW5Nu7FlKpiuE13PpeuvFiy3PkKJsvY5Dbz/a4zDj895Zv/cbUR6U+CQyaLD1ygf730qy
+XlPZrbWvSlBAtRZLazZzcB35Nyn3DSeOEPcOfMbUaSmFa4wG6pqQcmlz1U8eY3sfcCdplSK2N2N7
+WgNSZ6uG10KuM+mwP4+apcqdsW17xXZ+N+cW4bMKOGJKJTca15Xnu030qiMKWZT2zai31cFxa0zF
+oCkXlpKbaMhbUNNAvfUNu+fcciCUFGeGG6Mp5cUOTfjWi5RMY6GEXlnzpbykYsu267LVSIVSPmV+
+nv27tts4Bkp8EsTvd13JrjVMZiTkOqPEqVIomSjbVA8pyh7uV9dPbtNUumA5ULsRDhF38VAvIb7P
+TmXLxdZYaTZfi8PiEPmxIC1IJWKk4pMUXo6wPXc+K45jHkpwivDaLm1a0ouXVFJda0VJcdvnxCft
+2OCt828h5JQ2UWh4Y9HgxicPqB8Siy+FYg854JiskvgZF0KKsjRWwIHazXCJsExzYtChz/8NZYry
+HmUuXM6D4hN298MlaMlbWlAbn6TwYluTISuNYz5KEMvELs207sWLewHprSgpezcnPml7N1xLNARq
+fBIFPPkuickPSCVhUF1wMZROmH0rjh3qrWEfCK58SrLPOFCzEUwhtk+eN+BL1EpZNbG5zY3/chwQ
+z5B2OX1IfIYGrJCWee06dQ+y0JrhmJcSxLwlpejJS0xBlF7QKYMSOslV1Paeci+bIaSsajungUJD
+6syOIhWjynHBxVA6aba5XHs7rhkxV2JJiYgk7PiHy8steNPOa8tGcm6tHLSm9kIvL0YtL08T9Nde
+LlfYllXMlckxNyVocZ715CUWp8y16Kh0pCxZV0lRvucZyjxwqfCNfWFNwY5Xe9d+LOs1ld0K8DQ6
+r4GW7NfY5pJsOpCLU8TjzMfgzQisyZBeoW8Px1PQLelT6J73VMed2jn+jEdZfUfe27M9EJubuTSB
+T8mUu9d0zoMFOevHvkTlPP6eWsM5XaVs/ZD1AD3Fkixxf4VQc/Ox+zXGrI+W1kYsuF2S+SoBn8/f
+5iMnOJ87Uj0jY6M0szh3xNz7vtGy4QUHP1S3VS7cdZQ6Izh4yUUs47Wmo01vXkLu4weU13D76FhF
+vss3TL4K5XvssF6O9y3lArb5j8GtpyXrtCPQlCSnJVkzodRyg9IuOdQRciGWBNZ7YoWwG8fwkJvq
+XTKobvSUm6XFMBehHEV5j3YZ1xw8uR2lOJS865qjKB0OXnIRy3itmbPevIQSWh5AK++h0OEqySuk
+XbBURWnv+dxzMpV5S1WU9logXxCpSpL7zcfaxUXp+NLa8ojVpeXGC1pihenW9BrTgRibb9sif1PA
+R+7ILRsJbQzuYSzeXEXZ6m1UDp5iyqLE/eh6oahZ8By85CJ0SaiNzUrw4sveNXuiJp8A2FWS9stA
+sYuWyXBOfYdtXFDKkWK/7w7782Kw1yzJm0BVkjVF3yHULq5U8bQZrQ7SA8Qt21y3ZS2OMC1wM25A
+T0TxbTgOK9k3ft98lj1KFeWD57PcUXpZMsXIufJr1U2IQ/axOrRcheGeHTkWKQcvuUhZQqWQ4MXX
+io/DE+TOqa0kgbj72sx/7PNdD1LJJTx2saYk89jtR0lrnhqT1LrxKQWwra2OWJPg3AVbi1Rv1lpF
+yXXpqFWMucNXSEwdsQcAuBQOFRyyB+KZk1QXpHtg5p4RXLxQEdsbteGk3rwYuHNgr/mSkNM77K5j
+33oIxS1NIk3o893zuuZcDnkT7b3ug+s+Ts499cDq0RapZlBq8lIHZS1auXRycYz2Sodj4+ckCHAo
+/RpF6XaC4pZT68PUB7eMwx4pt/EKu4XnPWLZtfIIuZxbzVWvYXu0Si8Ax9jdk7GLTyxWGfpO152b
+cvPn8O2OUFmg2xuA4mkiZRz2rlmrXSixEXOD1iJWBNvzEeehKPkV5QHKLOAWzx1xInbY+WI2R3h0
+Wdl8lsSYJOQRusz2yp5uOcwZ6OPvDP4zyOQr+PYipR445IK9wW4ZzgvsunNT5yKF79Al9gd295/r
+8r0ETbeRFEzrgn2uQTnIYkq/FrG4T89606Eo2yjKQ6TLkd5hO2auXVEC8fyEG0zKxTdX5jBqnVHO
+KY/Q+mhZ/tRzPEW8PV9sPm0rMqf07xjh9XMF/+XEjXmGQOU7ljX/A36P4w8QDUAj2Jhr8BUyizAF
+QWmSAEz8+JoQPDDQcAF/QfNnAG8ZPp+CY0wHuinkv3H+bOAr9Ldl98T5uyfWn6lPtMVkeoVpzlza
+bLp8f+ciRTMwbYjvAH6JEUvE681Yb77nO6Z5f7+h8wSPiSG/gOe5Khsc69TFChPN1EzdO0wJE5Qn
+1lqDKo9jhF2Jf2CiRQMeMFlv75HX+OIc03yWNPJYYTrjKJmjXzGtM0qjkZyL0BqT5UwxSj7jcb+S
+cIBwk9uWyS+txjPQykV8NwkOhGqbcjpFcEB6HjhlyoGePNvZeC28MS2xwmPpkMmYti2RUzweRNJr
+K1ce7iPrZnxRwEMreawwXdy+YJo/2/K72vz9CfhCQ+b7vmG3/vIL8jtWlfD/FJNn5xKPuuAWk/Hw
+AYX9t80f3uHRdUl9CUHrONzw89tGOJfOCBWocyD2cnpP96v0HHDKlAM9ebZdry1i+1ogvbZy5RFy
+Dx4r4GGJ64MD0rL8u0ylCdA0uBCKEbSoQQ1BWpbcMq1FT55tD82QqY41FioLSZUyzHEsCdKyVCVT
+aSFwCyO1KVPQxEst9pEXO+GnBS/S+2SO8xIKL5lsXS2QnlNtcztgQXpRtFgcoawyivtVGy812Ede
+TFzEV3vck4457ZcaUGhN5SpogfScaptbFaBmLg7kI5QNWPM6wYB+rPCYGHEtScjA3xHac59R9sTb
+wIAIpG9PrW5RoeSBFDTyUop948Vu4OErwu9Fxxz3SylSdIZqX+2MZC2QnlNt8lCBYVG2Rehx1Vav
+SgzIw3at93xYesCPFfzhjnPw17cODDSF9O2p1S0q1Esz1ftVIy+l2Dde7O5QrXiR3idzmpfQCxNu
+fasWSM+pNnkMWJBeFC0XR6j/ayxWqZWXEuwTL/arCKGHc3vQMef9UoIQfaEXfXx9XbVAek61yUMN
+NAh06RPrsypjXfOXJA8tvPSgw36ZoqV7XYtMtSP0Uoivx2hPJTSHta6FFzXQIIylT0qorV2oVGRJ
+8tDCSw867AtRS2iRqWaEOmSFmn70VCBzWOtaeFEDDcLYh0nx1VWGGjQvSR5aeGlNh/3cUOsOTFpk
+qhkhazLU07SnApnDWtfCixpoEMY+TEro3T9fk+AlyUMLL63psC9CuY2fc6FFploRsiZj7yv2VCBz
+WOtaeFEDDcLYl0nxvV7gi1UuSR5aeGlJh21Nxl6E54IWmWqFz5qM5QQAfRXIHNa6Fl7UQIMw9mlS
+fIk9buLHkuShhZdWdLglQDkP3pZCi0w1IvR4esrK76lA5rDWtfCiBhqEsU+T4muYfoPt2MmS5KGF
+l1Z02F6CXq/DaJGpRlxgd3+dRn9jQk8FMoe1roWXAQtaJqXXArLfK4zVdi1BHkuGfelxLzshSB9e
+S14fvuzyVHMPbdAi0yXRoYWXamhhpKfg7Q4uZnA+lq1FHkvFGtsuV2qze+kNv9T1EUrg6eEK54QW
+mS6JDi28VEMLIz0Fb3dxMeOW8fO1yGOJWGE7yzXH5Sq94Ze6PnyPpc/xpR4tMl0SHVp4qYYWRnoL
+/yV2leWHhcljibDjYKlsShfSG36J68POOu4dL+aGFpkuiQ4tvFRDCyMSE+CLV3K4YLXIY2mwLZcr
+0OKSNqQ3/NLWh+/hgdzLiyZokOnS6NDCSzW0MCI1Cb738p4uRB5Lgt004gpl8S/pDb+09eF2vCq5
+vGiCBpkujQ4tvFRDCyOSE3GJbUX5YyHyWBquMFmVpYex9IZf0vpw45I3mF/yjgtpmS6Rjuqh5SDT
+QscDw2eU8rLC5DJaW3ScA/iVgaZSjHnZhhY6BqYYpNuo4xfM/zFmLWts0GHhJwYiBnhwh2mjX1t/
+dwzgiww5AwNqcYJdJfkr5q8kBwaiEDetocdVcIjduItUBp/0fGiaF0107PPwZYo/U0AX1+DAoIOZ
+jmFR6oPPsnwNWhuugYEl4wjbHhazV4YlOdAUf5AmYAOum4MGcPDyfwDhHhxCAAAAfklEQVT+BcBf
+8Zic8FcA/wvg3xk+n4oxL/zQQsfccITtso9rAP8A4D9lyFENLWtsMXQshhEmqAgcY5uOU2y/o/cE
+0026B8a8bEMLHfsIuxznHMAr9NsHPaFljQ06LAzXq368x5SocI3JxbTEw2FgIIWvmNb+W0z7YeyD
+gW74f6TxsMAPCEilAAAAAElFTkSuQmCC
+"
+       id="image18682"
+       x="49.794643"
+       y="151.5741"
+       transform="rotate(-37.186914)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
+       d="m 65.307491,23.601022 c 0,0 28.685116,-15.7553333 51.982349,0.0018"
+       id="path3981"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <image
+       width="7.0243897"
+       height="8"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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 "
+       id="image12133"
+       x="89.673119"
+       y="5.8833489"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="muscles">
+    <path
+       style="display:inline;fill:#ff3e38;fill-opacity:0.2;stroke:#000000;stroke-width:0.4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 15.087491,58.309973 c 0,0 20.215096,19.539857 50.000006,-0.1558 v -10 c 0,0 -24.000006,-22.09583 -50.000006,-0.04792 z"
+       id="path7-7"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <g
+       id="g2560"
+       transform="translate(-24.87084,21.166673)"
+       clip-path="url(#clipPath4302)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <path
+         id="path2558"
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M -23.8125,21.1667 79.375,-5.29167 M -19.4547,23.6569 83.7328,-2.80147 M -15.0968,26.1471 88.0907,-0.311275 M -10.739,28.6373 92.4485,2.17892 M -6.38113,31.1275 96.8064,4.66912 M -2.02329,33.6176 101.164,7.15931 M 2.33456,36.1078 105.522,9.64951 M 6.6924,38.598 109.88,12.1397 M 11.0502,41.0882 114.238,14.6299 M 15.4081,43.5784 118.596,17.1201 M 19.7659,46.0686 122.953,19.6103 M 24.1238,48.5588 127.311,22.1005 M 28.4816,51.049 131.669,24.5907 M 32.8395,53.5392 136.027,27.0809 M 37.1973,56.0294 140.385,29.5711 M 41.5551,58.5196 144.743,32.0613 M 45.913,61.0098 149.1,34.5515 M 50.2708,63.5 153.458,37.0417 M 50.27083,63.500001 153.45833,37.041667 M -23.8125,21.166667 79.375,-5.291667" />
+    </g>
+    <path
+       style="display:inline;fill:#ff3e38;fill-opacity:0.2;stroke:#000000;stroke-width:0.4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 128.85218,58.269575 c 0,0 18.05993,21.90408 44.66943,-0.174651 V 46.884977 c 0,0 -21.44133,-24.76931 -44.66943,-0.05372 z"
+       id="path7-7-5"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <g
+       id="g2560-5"
+       transform="rotate(-23.276978,144.91343,-187.1317)"
+       clip-path="url(#clipPath4306)"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <path
+         id="path2558-3"
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M -23.8125,21.1667 79.375,-5.29167 M -19.4547,23.6569 83.7328,-2.80147 M -15.0968,26.1471 88.0907,-0.311275 M -10.739,28.6373 92.4485,2.17892 M -6.38113,31.1275 96.8064,4.66912 M -2.02329,33.6176 101.164,7.15931 M 2.33456,36.1078 105.522,9.64951 M 6.6924,38.598 109.88,12.1397 M 11.0502,41.0882 114.238,14.6299 M 15.4081,43.5784 118.596,17.1201 M 19.7659,46.0686 122.953,19.6103 M 24.1238,48.5588 127.311,22.1005 M 28.4816,51.049 131.669,24.5907 M 32.8395,53.5392 136.027,27.0809 M 37.1973,56.0294 140.385,29.5711 M 41.5551,58.5196 144.743,32.0613 M 45.913,61.0098 149.1,34.5515 M 50.2708,63.5 153.458,37.0417 M 50.27083,63.500001 153.45833,37.041667 M -23.8125,21.166667 79.375,-5.291667" />
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.175, 3.175;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 5.5562467,52.916673 H 80.962493"
+       id="path4463"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.175, 3.175;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 112.71255,52.916673 h 75.40626"
+       id="path4463-2"
+       inkscape:export-filename="/home/javier/Dropbox/sfu/phd-thesis/thesis/figs/fibres_orientation_pennation.pdf"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>
