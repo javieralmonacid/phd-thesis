@@ -2059,7 +2059,7 @@ First, we introduce some concepts of continuum mechanics that are required to un
 
 \section{Elements of continuum mechanics}
 
-{\color{blue}This section provides a review of concepts in continuum mechanics that will be used throughout this Chapter. The contents are based on the books by Bonet et al. \cite{BonetGillWood2021Book} and Holzapfel \cite{HolzapfelBook}, with some additional, newly-derived expressions to improve our understanding of the along-fibre dynamics}
+This section provides a review of concepts in continuum mechanics that will be used throughout this Chapter. The contents are based on the books by Bonet et al. \cite{BonetGillWood2021Book} and Holzapfel \cite{HolzapfelBook}, with some additional, newly-derived expressions to improve our understanding of the along-fibre dynamics.
 
 \subsection{Kinematics} \label{sec:kinematics}
 
@@ -2513,7 +2513,7 @@ where $\sigma_{Hill}$ is Hill's muscle model written in terms of the maximum iso
 \begin{equation} \label{eq:def_hill_stress_sigma}
     \sigma_{Hill}(\bar{\lambda}, \bar{\depsilon}) = \sigma_{0,mus} \left( a(\*X,t) \widehat{\sigma}_A(\bar{\lambda}) \widehat{\sigma}_V(\bar{\depsilon}) + \widehat{\sigma}_P(\bar{\lambda}) \right).
 \end{equation}
-{\color{blue}In this expression, the active stress-stretch relationship $\sigma_A$, the stress-strain rate relationship $\widehat{\sigma}_V$, and the passive stress-stretch relationship $\widehat{\sigma}_P$ can be taken exactly as the active force-length $F_V$, force-velocity $F_V$, and passive force-length $F_P$ relationships in \eqref{eq:Hill_force}, respectively (all these quantities are dimensionless, see Appendix \ref{app:force_relationships}). Furthermore, we now allow the activation function to also vary in space. For the special case when $a \equiv 1$, we portray this two-dimensional manifold in Figure \ref{fig:plot_FLV}.}
+In this expression, the active stress-stretch relationship $\widehat{\sigma}_A$, the stress-strain rate relationship $\widehat{\sigma}_V$, and the passive stress-stretch relationship $\widehat{\sigma}_P$ can be respectively identified with the active force-length $F_V$, force-velocity $F_V$, and passive force-length $F_P$ relationships in \eqref{eq:Hill_force}, respectively (all these quantities are dimensionless, see Appendix \ref{app:force_relationships}, but we must recast them as stresses for this continuum mechanics framework). Furthermore, we now allow the activation function to also vary in space. For the special case when $a \equiv 1$, we portray this two-dimensional manifold in Figure \ref{fig:plot_FLV}.
 
 %\begin{figure}
 %    \centering
@@ -3081,17 +3081,18 @@ where $\bar{\*a}_k^{n+1} = \bar{\*F}_k^{n+1} \*a_0$.
     \end{align}
 \end{remark}
 
-{\color{blue}
 \begin{remark}
-Although the expressions for the modified strain rate \eqref{eq:strain_rate_bar_newton_iteration} and its derivative with respect to the modified stretch \eqref{eq:d_strain_rate_bar_d_lambda_bar} may seem like a minor detail in the discretization of the Lagrangian formulation \eqref{eq:LF_main_system}, they constitute elements of the numerical method that can ``make or break'' the code for fully active, fully dynamic simulations. First, Dominguez \cite{Seba} suggested the following expression for the fibre strain rate:
+Although the expressions for the modified strain rate \eqref{eq:strain_rate_bar_newton_iteration} and its derivative with respect to the modified stretch \eqref{eq:d_strain_rate_bar_d_lambda_bar} may seem like a minor detail in the discretization of the Lagrangian formulation \eqref{eq:LF_main_system}, they constitute elements of the numerical method that can ``make or break'' the code for fully active, fully dynamic simulations. 
+Fibre strain rates are typically not included in finite element codes for skeletal muscle (see, for instance, \cite{BlemkerDelp2005, Oomens2003}), precisely because it is challenging to identify suitable approximations for them. The inclusion of this term in \texttt{Flexodeal} was preceded a series of developments. A very early iteration of the fibre-reinforced continuum mechanics approach was due to Rahemi \cite{Hadi}, in which the fibre strain rate was always set to 0. This is the approximation made in most muscle codes.
+Next, Dominguez \cite{Seba} suggested the following expression for the fibre strain rate:
 \begin{equation}
     \bar{\depsilon}_k^{n+1} = \*V^n \cdot (\bar{\*F}_k^{n+1} \*a_0),
 \end{equation}
 with no information about what the expression for $\partial_{\bar{\lambda}_k^{n+1}} \bar{\depsilon}_k^{n+1}$ should look like. Later, in Ross et al. \cite{Paper3_RossEtAl2021}, the following expressions were used:
-\begin{equation}
+\begin{equation} \label{eq:depsilon_dlambda_ross}
     \bar{\depsilon}_k^{n+1} = \dfrac{(\bar{\*F}^{n}\*a_0)^\T (\p : \*d^{n}) (\bar{\*F}^{n} \*a_0)}{\bar{\lambda}^{n+1}_k}, \quad \pder{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}} = -\dfrac{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}},
 \end{equation}
-with the latter being an expression that implicitly assumes that the strain rate $\bar{\depsilon}_k^{n+1}$ does depend on the current deformation tensor $\bar{\*F}_k^{n+1}$ in the numerator, but keeps the deviatoric part of the rate of strain tensor (i.e. $\p:\*d^n$) constant for the current time step and the current Newton iteration. While this work does contain fully active, fully dynamic contractions, Tam \cite{Cassidy} would later find that the FV properties in this work where not implemented properly, as any contraction would lead to the strain-rate-dependent stress $\widehat{\sigma}_V(\depsilon)$ in \eqref{eq:def_hill_stress_sigma} default to its maximum value of 1.5950. To remediate this, Tam \cite{Cassidy} used the following expressions:
+with the latter being an expression that implicitly assumes that the strain rate $\bar{\depsilon}_k^{n+1}$ does depend on the current deformation tensor $\bar{\*F}_k^{n+1}$ in the numerator, but keeps the deviatoric part of the rate of strain tensor (i.e. $\p:\*d^n$) constant for the current time step and the current Newton iteration. While this work does contain fully active, fully dynamic contractions, Tam \cite{Cassidy} corrected \eqref{eq:depsilon_dlambda_ross} to:
 \begin{equation}
     \bar{\depsilon}_k^{n+1} = \dfrac{(\bar{\*F}_k^{n+1}\*a_0)^\T (\p : \*d^{n}) (\bar{\*F}_k^{n+1} \*a_0)}{\bar{\lambda}^{n+1}_k}, \quad \pder{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}} = +\dfrac{\bar{\depsilon}_k^{n+1}}{\bar{\lambda}_k^{n+1}}.
 \end{equation}
@@ -3100,7 +3101,7 @@ This resulted in successful dynamic contractions but only to a maximum of 50\% a
     \dfrac{c \Delta t}{h} < 1, \quad c := \sqrt{\dfrac{\kappa}{\rho_0}}.
 \end{equation}
 \end{remark}
-}
+
 
 \subsection{Base material and other components of the MTU}
 
@@ -3244,7 +3245,7 @@ where $\mathbb{M}_0 := \*a_0 \otimes \*a_0 \otimes \*a_0 \otimes \*a_0$. Consequ
     D_{\*F}^2 W(\*F).(\*H, \*H) = \dfrac{1}{\I_4} \sigma_{Hill}(\I_4) \ \*a_0 \otimes \*a_0 : \*H^\top \*H \\
     + \left( - \dfrac{1}{2\I_4^2} \sigma_{Hill}(\I_4) + \dfrac{1}{2\I_4} \dfrac{d \sigma_{Hill}(\I_4)}{d\I_4} \right) (\*F^\top \*H + \*H^\top \*F) : \mathbb{M}_0 : (\*F^\top \*H + \*H^\top \*F).
 \end{multline}
-{\color{blue}If in particular, $\*H = \*a_0 \otimes \*a_0$ (one of the many possible choices in Definition \ref{def:def_ellipticity}), we first have:
+If in particular, $\*H = \*a_0 \otimes \*a_0$ (one of the many possible choices in Definition \ref{def:def_ellipticity}), we first have:
 \begin{equation}
     \*a_0 \otimes \*a_0 : \*H^\top \*H = \norm{\*a_0}^6.
 \end{equation}
@@ -3272,7 +3273,7 @@ assuming that muscle is (for example) parallel-fibred, i.e. $\*a_0 = \langle 1,0
 \begin{equation}
     D_{\*F}^2 W(\*F).(\*H, \*H)  = \left(\dfrac{1}{\I_4} - \dfrac{\upsilon(\lambda_u)}{2\I_4^2} \right)\sigma_{Hill}(\I_4)  + \dfrac{\upsilon(\lambda_u)}{2\I_4} \dfrac{d \sigma_{Hill}(\I_4)}{d\I_4}.
 \end{equation}
-Because muscle is parallel-fibred, we may consider $\bar{I_4} \approx \lambda_u^2$, In this case, the first term is negative for physiologically relevant values of $\lambda_u$ (for instance, $0 < \lambda_u < 2$), while the second term  is negative along the descending limb of the total force-length curve (see Figure \ref{fig:ascending_descending_limbs}). By Lemma \ref{le:poly_elliptic}, we cannot guarantee the polyconvexity of $\Psi_{fibre}$.}
+Because muscle is parallel-fibred, we may consider $\bar{I_4} \approx \lambda_u^2$, In this case, the first term is negative for physiologically relevant values of $\lambda_u$ (for instance, $0 < \lambda_u < 2$), while the second term  is negative along the descending limb of the total force-length curve (see Figure \ref{fig:ascending_descending_limbs}). By Lemma \ref{le:poly_elliptic}, we cannot guarantee the polyconvexity of $\Psi_{fibre}$.
 
 This lack of polyconvexity can directly hinder the convergence of the algorithm at all for certain types of simulations. Indeed, not having the ellipticity condition \eqref{eq:ellipticity_cond} can be a sign that the bilinear form associated to the (1,1) block of the tangent matrix in \eqref{eq:LF_linear_system} may not be coercive whenever the simulations take place along the descending limb of the force-length curve. In fact, ascending limb computations will not suffer from this lack of coercivity, as we will see in Section \ref{sec:flexodeal_fl_curves}. A full numerical analysis which accounts for the lack of polyconvexity is outside the scope of this thesis.
 
@@ -4118,7 +4119,7 @@ In this section, we develop a new setup to study gearing on the basis of the con
 \begin{figure}
     \centering
     \includegraphics[width=0.75\textwidth]{svg_muscle_block_gearing.pdf}
-    \caption{(A) Computational domain in its reference configuration $\B_0$, which corresponds to a muscle block of dimensions $L_{mus} \times H_{mus} \times W_{mus}$, including the line of action vector $\widehat{\bm{\ell}}$ and the region $\mathrm{slab}(\B_0) \subset \B_0$ (in orange) used to compute average quantities in Section \ref{sec:gearing_in_the_flexodeal_framework}. (B) Sagittal ($xz$) plane showing a representative fibre (red line), and the initial pennation angle $\beta_0$.\label{fig:block_gearing}}
+    \caption{(A) Computational domain in its reference configuration $\B_0$, which corresponds to a muscle block of dimensions $L_{mus} \times H_{mus} \times W_{mus}$, including the line of action vector $\widehat{\bm{\ell}} = \langle 1,0,0 \rangle$ and the region $\mathrm{slab}(\B_0) \subset \B_0$ (in orange) used to compute average quantities in Section \ref{sec:gearing_in_the_flexodeal_framework}. (B) Sagittal ($xz$) plane showing a representative fibre (red line), and the initial pennation angle $\beta_0$.\label{fig:block_gearing}}
 \end{figure}
 
 We considered a block of muscle tissue (see Figure \ref{fig:block_gearing}(A)) with dimensions and architecture that mimicked the average medial gastrocnemius (MG) from a young population of rats, as described by Holt et al. \cite{Holt2016}. First, to define an appropriate height $H_{mus}$, we notice that the pennation angle and initial fibre length for this population were $\beta_0 = 26.1^\circ$ and $L_f^0 = 15.8$ mm, respectively. Assuming the fibres are oriented parallel to the XZ plane and that $L_f^0$ corresponds to the longest possible fibre length within the geometry, we set the height of the block to
