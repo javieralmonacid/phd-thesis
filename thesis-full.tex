@@ -328,11 +328,14 @@ This is an optional page. Use your choice of paragraph style for text on this pa
 
 \chapter{Introduction}
 
-Start writing or pasting in your text here. By default, only works cited in the text will be added to the bibliography~\cite{HolzapfelBook}.
+The musculoskeletal system can only be described as a marvel of nature. Its components are not only capable of producing force and sustaining loads but can also adapt to changing environments in remarkable ways. At the core of this system is skeletal muscle: a material that can actively contract, deform nonlinearly, and respond to complex mechanical demands. This makes the elastodynamics of this biological tissue a fascinating area of research at the intersection of applied mathematics, physiology, and scientific computing.
 
 Most of what we know so far about how and why muscles deform comes from tensile experiments using single muscle fibres \cite{Hill1938} and small muscles, such as those from frogs \cite{GordonHuxleyJulian1966,Huxley1957}, 
-rats \cite{GillespieEtAl1987}, and cats \cite{RackWestbury1969}. But as technology develops and computational power increases, researchers have started to use computational models to conduct experiments that may not be feasible to perform \textit{in vivo}. 
+rats \cite{GillespieEtAl1987}, and cats \cite{RackWestbury1969}. 
+But as technology develops and computational power increases, researchers have started to use computational models to conduct experiments that may not be feasible to perform \textit{in vivo}. 
 Nowadays, these models are used in a variety of settings, such as to predict the outcome of surgical procedures \cite{TigueEtAl2022}, to study the stiffness of muscle affected by cerebral palsy \cite{KonnoEtAl2022_CP}, to study muscle energetics \cite{Paper1_WakelingEtAl2020}, to explore motor control \cite{WalterEtAl2014}, among others.
+
+Before diving into the different approaches used to model skeletal muscle tissue and the main contributions of this thesis, let us discuss the main reasons that make skeletal muscle tissue behave in a unique way from a solid mechanics perspective.
 
 \section{Muscle anatomy}
 
@@ -375,7 +378,7 @@ Such dynamic architectural changes profoundly influence muscle function, yet the
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{muscle_shapes.pdf}
+    \includegraphics[width=0.99\textwidth]{muscle_shapes.pdf}
     \caption{Different types of muscle architectures. Source: \cite{AnatomyPhysiologyBook2022} (Access for free at \url{openstax.org}).\label{fig:muscle_architectures}}
 \end{figure}
 
@@ -425,30 +428,59 @@ where $0 \leq a(t) \leq 1$ represents the activation level of the muscle, $\lamb
 
 In silico modelling of skeletal muscle provides a powerful framework for investigating muscle mechanics beyond the limits of experimental observation. By simulating muscle behaviour computationally, these models enable the analysis of important physiological variables (such as fibre stretch, fibre strain rates, and whole muscle forces) that are otherwise difficult to measure in vivo (and even in controlled in situ or in vitro experiments). In addition, computational models can be used to analyze ``what-if'' scenarios in which either the (resting) muscle architecture or its constitutive elements are directly modified.
 
-From the definition of muscle architecture (see Section \ref{sec:intro_muscle_architecture})---and by simply looking at our muscles---we observe that muscle deformation occurs across all three dimensions of Euclidean space. Thus, two categories of computational models are found in the literature: 1D models (such as Hill-type models) based on ordinary differential equations (ODEs) where the focus is on simplicity and macroscopic behaviour, and 3D PDE-based models where the focus is on detailed spatio-temporal information. Two-dimensional (2D) PDE-based models can be seen as simplifications of 3D models in which deformation in the out-of-plane direction is simply neglected. However, the modelling costs of this physiological simplification (mainly, the ``constant area'' assumption as the 2D version of incompressibility \cite{BaskinPaolini,EpsteinHerzog2003}) outweigh the computational benefits this reduction in dimensionality brings, so they will not be discussed any further in this work.
+From the definition of muscle architecture (see Section \ref{sec:intro_muscle_architecture})---and by simply looking at our muscles---we observe that muscle deformation occurs across all three dimensions of Euclidean space. However, neither Huxley nor Hill-type models (as presented in the previous section) account for this behaviour. While there exist geometric models that can explain some of these shape changes (see, e.g., \cite{DickWakeling2018,Siebert20123D}), the focus of this discussion (and this thesis) will be on computational models based on differential equations. Here, two main categories can be distinguished: 1D models (mostly Hill-type models) based on ordinary differential equations (ODEs) where the focus is on simplicity and macroscopic behaviour, and 3D PDE-based models where the focus is on detailed spatio-temporal information. Two-dimensional (2D) PDE-based models can be seen as simplifications of 3D models in which deformation in the out-of-plane direction is simply neglected. However, during contraction, muscles bulge in thickness \textit{and} width in an attempt to conserve volume \cite{BaskinPaolini}. This translates into a ``constant area'' assumption \cite{EpsteinHerzog2003} that brings almost no meaningful advantage over 1D representations, which already encapsulate the primary axial dynamics without excessive computational. Therefore, they will not be discussed any further in this work.
 
 \subsection{One-dimensional models}
 
 Hill-type models can be implemented in a computational setup directly, that is, the force a muscle generates can be estimated given an activation profile, and time traces of muscle length and velocity (unlike Huxley-type models, where an appropriate PDE solver must be considered). This is the basis of OpenSim:
 an open-source musculoskeletal modelling and simulation platform that enables the analysis of movement dynamics and estimation of muscle and joint forces using experimental kinematics, kinetics, and electromyography data \cite{Delp2007OpenSim}. Here, each muscle is modelled as a 1D spring that generates force according to Hill's equation \eqref{eq:hill_in_intro}, and therefore it is simple enough that allows for simulations involving multiple muscles and joints \cite{BishopEtAl2021Dinosaurs, Porsa2016DirectMethodsOpenSim, RajagopalEtAl2016FullBody, StarkEtAl2021Dogs}. OpenSim, along with AnyBody Modeling System\texttrademark, are the prominent software choices for the analysis of skeletal muscle function and animal locomotion \cite{Gautam2024AnybodyOpensim}.
 
-Nevertheless, the accuracy of these simulations decreases as the experiments drift away from the ideal conditions in which the force relationships in \eqref{eq:hill_in_intro} were obtained, namely isokinetic or isometric contractions with maximal activation \cite{Dick2017, Lee2013AccuracyofGastrocForces, MillardEtAl2013, Perreault2003HillErrors}. 
+Nevertheless, the accuracy of these simulations decreases as the experiments drift away from the ideal conditions in which the force relationships in \eqref{eq:hill_in_intro} were obtained, namely isokinetic or isometric contractions with maximal activation \cite{Dick2017, Lee2013AccuracyofGastrocForces, MillardEtAl2013, Perreault2003HillErrors}.  Therefore, researchers continue to modify these 1D models to include many of the missing features from the original model \eqref{eq:hill_in_intro}, such as fatigue \cite{Pereira2011Fatigue1D}, history dependence \cite{McGowanEtAl2013,Ross2018}, mass, and inertial effects \cite{Gunther2012,Ross2018-1D,Ross2018,RossWakeling2016Multibody,Paper4_RossWakeling2021}.
+
+In particular, mass effects were first studied by G\"{u}nther et al. \cite{Gunther2012} in which the mass of the muscle was spread out within a system of interconnected springs with linear dynamics, finding that larger mass slows down contraction times. Then, Ross et al. \cite{Ross2018} developed a muscle model based on a damped harmonic oscillator whose dynamics counteract the action of an actuator that generates force according to \eqref{eq:hill_in_intro}. This idea was later applied by Ross \& Wakeling \cite{RossWakeling2016Multibody} to a multi-body system in which, similar to the work by G\"{u}nther et al, the mass is spread over many individual masses, each one connected to each other by Hill-type actuators. Here, it was shown that the addition of mass affects the speed of contraction, specially during submaximal activation. This multi-body model was also applied to a muscle-tendon unit by Ross \& Wakeling \cite{Paper4_RossWakeling2021} and Chen \cite{EvanThesis}. In particular, Chen evaluated the differences in force prediction between this multibody model (also known as the ``mass-enhanced'' model) and a massless model similar to that of  Millard et al. \cite{MillardEtAl2013} (without damping) for a set of human locomotion experiments, finding differences of up to 8\% when the mass of the system is scaled by a factor of 10 and more pronounced differences for faster locomotion. In all the multibody systems mentioned so far, the number of masses in the system has been kept fixed to 16, given that G\"{u}nther et al. \cite{Gunther2012} reported that for their case (linear dynamics) there was not a significant difference in the outputs when either 16 or 32 masses were considered. 
+
+\subsection{Three-dimensional models}
+
+From the point of view of solid mechanics, skeletal muscle is a fibre-reinforced, visco-hyperelastic, composite biomaterial that can sustain active and passive large deformations that are dynamic in nature \cite{AlmonacidEtAl2022_SIAP_Paper,Paper3_RossEtAl2021,Paper1_WakelingEtAl2020}. Therefore, physiologically-relevant computational models in 3D can be remarkably complex, and a universally accepted framework has yet to be established. While many existing models incorporate a Hill-type contractile component, others adopt alternative approaches, such as including a Huxley-type component \cite{Oomens2003} or omitting both paradigms all together \cite{OdegardEtAl2008,Giantesio2024}. This section, however, is restricted to 3D models that explicitly include a Hill-type component.
+
+The main idea in these models is to use the principles of continuum mechanics to describe the main constitutive parts of skeletal muscle. A first approach consists in solving the so called \textit{quasi-static} problem: find a material displacement $\*U$ such that:
+\begin{equation} \label{eq:intro_quasistatic_problem}
+    \*0 = \Divt{\*P(\*U)},
+\end{equation}
+Here, $\*P$ is the first Piola-Kirchhoff stress tensor which, in this case, it is only assumed to depend on the displacement $\*U$. In particular, $\*P$ is described using a strain-energy function (SEF) $\Psi$, which is further decomposed into volumetric and isochoric parts:
+\begin{equation}
+    \Psi = \Psi_{iso} + \Psi_{vol},
+\end{equation}
+where the volumetric part $\Psi_{vol}$ is represents the near-incompressible behaviour of muscle \cite{BaskinPaolini}. In turn, the isochoric part $\Psi_{iso}$ represents the constitutive elements of muscle, such as muscle fibres (whose response varies according to Hill's equation \eqref{eq:hill_in_intro}) and the base material around them (assumed to be hyperelastic). 
+
+This approach can be first found for active muscle tissue in the works by Blemker \cite{BlemkerThesis,BlemkerDelp2005,BlemkerPinskyDelp2005} in 2004. It differs from previous finite element approaches (such as the one put forth by Johansson \cite{Johansson2000}) in the sense that muscle in 3D is no longer a scaled-up fibre (i.e. the entire volume has fibre properties with no base material around). In this way, many muscle models that follow this approach differ in the choice of force relationships, as well as what type of hyperelastic material (Neo-Hookean, Ogden, Money-Rivlin, Yeoh, etc.) should be used to represent the base material component (see, e.g., \cite{HeidlaufRohrle2013,Tang2007}). Futhermore, Blemker's model is the default in 3D biomechanical modelling software ArtiSynth \cite{Artisynth} and FEBio \cite{FEBio}. Following a similar approach as Blemker, Rahemi et al. \cite{RahemiNigamWakeling2014,RahemiNigamWakeling2015}, Dominguez \cite{Seba}, and Wakeling et al. \cite{Paper1_WakelingEtAl2020} implemented a quasi-static model of skeletal muscle deformation but this time using a three-field variational formulation by Simo et al. \cite{SimoTaylorPister1985} that increases the robustness of the numerical method.
+
+However, \eqref{eq:intro_quasistatic_problem} does not include a velocity term, meaning that force-velocity effects are completely neglected. While it is possible to solve the problem:
+\begin{equation}
+    \*0 = \Divt{\*P(\*U, \*V)},
+\end{equation}
+where $\*V = \dot{\*U}$ is the material velocity (see, for instance, \cite{DiSalvoBlemker2024,HeidlaufRohrle2013,HeidlaufRohrle2014,MarcucciEtAl2017,Tang2009}), the true effects of mass and inertia can only be seen in fully dynamic models, i.e. in the solution to the problem:
+\begin{equation}
+    \rho_0 \ddot{\*U} = \Divt{\*P(\*U, \*V)},
+\end{equation}
+where $\rho_0$ is the density of muscle (at rest). Despite its completeness in describing the 3D active deformation of skeletal muscle, this problem has received much less attention.
+
+One of the first attempts at a fully dynamic 3D model was put forth by Johansson et al. \cite{Johansson2000} and Meier \& Blickhan \cite{MeierBlickhan2000} in 2000. Here, although muscle is considered to have active and passive properties (including force-velocity effects) as those of a fibre, the material is completely isotropic. In particular, \cite{Johansson2000} uses a two-field formulation
 
 
+Then B\"ol \& Reese \cite{BolReese2008} in 2008 used a combined 3D/1D approach, in which the base material is implemented using 3D finite elements, but fibres are implemented as 1D truss elements at the edge of each voxel. Furthermore, only a proportion of the body can be fully activated. However, a dynamic extension to the (now celebrated) work by Blemker et al. \cite{BlemkerPinskyDelp2005} from 2005 only appeared nearly 13 years later, in the works of Ross et al. \cite{Ross2018}, Dominguez \cite{Seba}, and Ross et al. \cite{Paper3_RossEtAl2021}. Here, the three-field formulation from Wakeling et al. \cite{Paper1_WakelingEtAl2020} is extended to include mass, inertial, and force-velocity effects. However, the numerical methods were not sufficiently robust to cover multiple cases of 100\% activation (as noted by Tam \cite{Cassidy}). 
 
-
-
-
-
-These differences may be attributed to features of skeletal muscle that are not present in these 1D models, such as mass and inertia, shape changes (bulging), variable stresses and strains within the muscle-tendon unit, fatigue, and the overall heterogeneity of muscle tissue, to name a few. 
-
-In particular, the effects of mass and inertia have been studied by \dots
-
-Should include some comments on generic deformation $\rho_0 \*u_{tt} = \Divt{\*P} + \*f$ and reduction to 1D if this is left as a section in the Introduction.
+Unaware of the developments by Blemker in the early 2000s, Vavourakis et al. \cite{Vavourakis2014} in 2014 implemented a dynamic 3D finite element muscle model similar to that of Dominguez \cite{Seba} but using a displacement-only formulation (as opposed to a three-field formulation). The numerical experiments in \cite{Vavourakis2014} reflect the challenging scenario when attempting realistic simulations of skeletal muscle. To model the active deformation of a quarter of a squid's tentacle with 477 cells (including 371 hexahedral cells) over 0.07 seconds of simulation time, a time step size of $\Delta t = 0.25 \times 10^{-6}$ seconds were required with an implicit time stepping scheme (using Newmark's average acceleration method \cite{HughesBook}), and $\Delta t = 0.5 \times 10^{-8}$ seconds when using an explicit time stepping scheme.
 
 \section{Stability of computational models}
 
-\section{Outline}
+The \textit{dynamical} stability of Hill-type muscle models has been recently criticized by Yeo et al. \cite{YeoEtAl2023NumericalInstability}. Using a 1D model with actuators connecting multiple masses in series (similar to that of Ross et al. \cite{Ross2018-1D}) the authors show that, the isometric contraction of fully active muscle can lead muscle segments to diverge to two completely different lengths when it is performed along the descending limb of the force-length curve. The latter corresponds to the region of the total force-length relationship that has a negative slope (when it is present, see Figure \ref{fig:fl_curves_wilkie}). The idea is not new, and a mathematical treatment of the problem can be found in the work by Zahalak \cite{Zahalak1997} in 1997. However, because the authors in \cite{YeoEtAl2023NumericalInstability} misnamed this phenomenon as ``numerical'', the idea that Hill-type muscle models can be ``numerically unstable'' has unfortunately gained traction (see, for example, \cite{Mendoza2025,SampaioDeOliveiraUchida2025}). 
+
+Nevertheless, the fact that some force-length curves do have a descending limb is an interesting fact in itself, especially when it has been shown that active stretching can lead to muscle forces larger than its maximum isometric force (i.e., no descending limb). This phenomenon is known as \textit{residual force enhancement} (RFE) \cite{HerzogLeonard2002} and it has been attributed to the protein titin \cite{Herzog2014}. Thus, many muscle models that include titin are considered ``stable'' (see, for example, \cite{HeidlaufEtAl2017,Millard2024,SampaioDeOliveiraUchida2025}). However, the significance of titin is a matter of discussion \cite{Lieber2018NotTitin}, and other factors, such as the extracellular matrix (ECM), are also thought to bring stability to muscles \cite{GilliesLieber2011ECM}.
+
+The question of stability in 3D is much more difficult to answer. For instance, the dynamical stability of models such as Blemker's \cite{BlemkerPinskyDelp2005}, as well as the development of an eigenvalue solver for active muscle deformation are still open problems. In turn, the numerical stability of 3D finite element models is associated to the polyconvexity of the strain-energy function that models the system \cite{SchroderNeff2003}. In particular, Heidlauf et al. \cite{HeidlaufEtAl2017} developed a 3D muscle model that includes actin-titin interactions, and which therefore is stable given that the condition of polyconvexity is satisfied.
+
+\section{Main contributions and outline of this thesis}
 
 
 
@@ -659,7 +691,7 @@ For the model in Figure \ref{fig:muscle_models_1D}A, the muscle force $F_M \equi
 \end{equation}
 This first-order implicit ODE, which we refer to as the \textit{massless} model, represents a model of the MTU in which the mass of the muscle is not taken into consideration. While this may seem like an outrageous simplification of the problem, it is actually what is being solved in the backend of many popular biomechanics software, such as OpenSim \cite{Delp2007OpenSim}. Hence, \textbf{this model's absence of mass raises the question of whether including mass has any effect in the prediction of the dynamics of the system}. 
 
-In an attempt to answer the previous question, based on the work by G\"{u}nther et al. \cite{Gunther2012}, Ross et al. \cite{Ross2018}, and Ross \& Wakeling \cite{RossWakeling2016Multibody, RossPaper4}, Chen \cite{EvanThesis} has put forward a muscle model in which the mass of the muscle is equally distributed into $N$ segments (see Figure \ref{fig:muscle_models_1D}B), forming a multi-body system with $N$ bodies. The dynamics in this model, which we refer to as the \textit{mass-enhanced} model, are given by the set of second-order ODEs:
+In an attempt to answer the previous question, based on the work by G\"{u}nther et al. \cite{Gunther2012}, Ross et al. \cite{Ross2018}, and Ross \& Wakeling \cite{RossWakeling2016Multibody, Paper4_RossWakeling2021}, Chen \cite{EvanThesis} has put forward a muscle model in which the mass of the muscle is equally distributed into $N$ segments (see Figure \ref{fig:muscle_models_1D}B), forming a multi-body system with $N$ bodies. The dynamics in this model, which we refer to as the \textit{mass-enhanced} model, are given by the set of second-order ODEs:
 \begin{subequations} \label{eq:massenhanced_model}
     \begin{align}
         m_1 \ddot{u}_1 &= F_2(\lambda_2, \depsilon_2) - F_1(\lambda_1, \depsilon_1), \\
@@ -792,7 +824,7 @@ Solvers for the massless \eqref{eq:massless_model} and mass-enhanced model \eqre
 
 \subsection*{A convergence test}
 
-To have an idea on what to expect for the general results, and to evaluate the convergence of the solvers, let us perform an experiment using the MTU length and activation data from the ST muscle during running. Here, we fix the scale to $s=10$, the number of masses to $N=16$ (as used in \cite{EvanThesis,RossWakeling2016Multibody,RossPaper4}), the absolute tolerance to $10^{-10}$, and vary the relative tolerance from $10^{-2}$, $10^{-4}$, \dots down to $10^{-10}$. We show the results in Figure \ref{fig:multibody-reltol} for three representative seconds of output. Recall that no exact solution is available for this problem.
+To have an idea on what to expect for the general results, and to evaluate the convergence of the solvers, let us perform an experiment using the MTU length and activation data from the ST muscle during running. Here, we fix the scale to $s=10$, the number of masses to $N=16$ (as used in \cite{EvanThesis,RossWakeling2016Multibody,Paper4_RossWakeling2021}), the absolute tolerance to $10^{-10}$, and vary the relative tolerance from $10^{-2}$, $10^{-4}$, \dots down to $10^{-10}$. We show the results in Figure \ref{fig:multibody-reltol} for three representative seconds of output. Recall that no exact solution is available for this problem.
 
 First, we observe that the muscle stretch $\lambda_M$ and the muscle strain rate $\depsilon_M$ are within the (generally accepted) operating ranges of human muscle, that is $\lambda_M \in [0.85, 1.15]$ and $\depsilon_M \in [-0.3, 0.3]$. Next, we notice that the muscle stretch contains minor oscillations when $\lambda_M < 1$. These are then amplified in the muscle strain rate as it varies from $\depsilon_M < 0$ to $\depsilon_M > 0$. Moreover, reducing the relative tolerance does not yield a better approximation (qualitatively speaking), even though the average time step size is indeed decreasing (see Figure \ref{fig:multibody-reltol-avg-deltat}). This is a sign that the solver is correctly resolving the primary unknowns, and that the apparent stiffness in the system is not tied to the time discretization, as we will see in the next section.
 
