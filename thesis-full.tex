@@ -108,16 +108,16 @@
 % ...
 % ... add your own packages here!
 
-\usepackage{background}
-\backgroundsetup{
-  position=current page.north,
-  angle=0,
-  nodeanchor=north,
-  vshift=-10mm,
-  opacity=1,
-  scale=1.5,
-  contents=Submitted for revision on \today
-}
+%\usepackage{background}
+%\backgroundsetup{
+%  position=current page.north,
+%  angle=0,
+%  nodeanchor=north,
+%  vshift=-10mm,
+%  opacity=1,
+%  scale=1.5,
+%  contents=Submitted for revision on \today
+%}
 
 \usepackage{circuitikz}
 \usetikzlibrary{patterns,
@@ -296,9 +296,9 @@
 %\end{dedication}
 
 
-\begin{acknowledgements}
-This is an optional page. Use your choice of paragraph style for text on this page.
-\end{acknowledgements}
+%\begin{acknowledgements}
+%This is an optional page. Use your choice of paragraph style for text on this page.
+%\end{acknowledgements}
 
 \addtoToC{Table of Contents}%
 \hypersetup{linkbordercolor=black,hidelinks}
@@ -350,14 +350,15 @@ Before exploring the different approaches used to model skeletal muscle tissue a
 \end{figure}
 
 Skeletal muscle is a highly-complex biological tissue that is capable of generating work and power for different tasks, such as postural control, locomotion, stabilization of bones and joints, and heat generation \cite{HillFirstLast1970,Lieber2010Book}.
-The mechanics of its deformation involve several length scales (see Figure \ref{fig:muscle_anatomy}), from cellular units in the scale of micrometres to the size of whole skeletal muscles in the scale of cm, or even metres for larger mammals \cite{Lieber2010Book}.
+The mechanics of its deformation involve several length scales (see Figure \ref{fig:muscle_anatomy}), from sarcomeres in the scale of micrometres to the size of whole skeletal muscles in the scale of cm, or even metres for larger mammals \cite{Lieber2010Book}.
 
 At its core, skeletal muscle tissue is made of tubular muscle cells called \textit{muscle fibres}. These fibres are embedded in a matrix of connective tissue known as the \textit{extracellular matrix} (ECM). 
 This connective tissue matrix not only provides mechanical continuity for force transmission but also plays vital roles in structural integrity and mechanotransduction. Interwoven within this matrix are vascular networks that ensure metabolic support, along with neural components that facilitate activation through motor innervation \cite{GilliesLieber2011ECM,Lieber2010Book, Mahdy2019}. 
 
-Muscle fibres are made of \textit{myofibrils} which are rod-like structures composed by repeating units called \textit{sarcomeres} (see Figure \ref{fig:muscle_anatomy}). At about 2.2 $\mu$m in length \cite{burkholder2001sarcomere}, the sarcomere is the fundamental unit in muscle. Fibrous proteins in its interior (most notably \textit{actin} and \textit{titin}, respectively the thick and thin filaments) slide past each other to generate \textit{active} force. This is the so called \textit{cross-bridge theory} by J. Hanson \& H.E. Huxley \cite{HansonHuxley1953} and A.F. Huxley \& R. Niedergerke \cite{HuxleyNiedergerke1954}.
+Muscle fibres contain many \textit{myofibrils} which are rod-like structures composed by repeating units called \textit{sarcomeres} (see Figure \ref{fig:muscle_anatomy}). At about 2.2 $\mu$m in length \cite{burkholder2001sarcomere}, the sarcomere is the fundamental unit in muscle. Fibrous proteins in its interior (most notably \textit{actin} and \textit{myosin}, respectively the thin and thick filaments) slide past each other (this is the sliding filament theory) to form \textit{cross-bridges} that generate \textit{active} force (this is the cross-bridge theory) \cite{HansonHuxley1953,HuxleyNiedergerke1954}.
+%This is the so called \textit{cross-bridge theory} by J. Hanson \& H.E. Huxley \cite{HansonHuxley1953} and A.F. Huxley \& R. Niedergerke \cite{HuxleyNiedergerke1954}.
 
-Muscle contraction begins with an \textit{activation} phase. It starts with a nerve signal, or action potential, reaching the end of a motor neuron, which causes the depolarization of the cell membrane. This chemical signal triggers an electrical impulse in the muscle fibre, which travels along the surface and down into T-tubules. The signal then reaches the sarcoplasmic reticulum, causing it to release calcium ions into the muscle cell. Calcium binds to troponin, a protein on the thin filament, which causes a shift in the troponin-tropomyosin complex and exposes binding sites on actin. With these sites exposed, the myosin hydrolyzes adenosine triphosphate (ATP), which causes its globular head to attach to the actin to form a \textit{cross-bridge} that ultimately generates \textit{active} force \cite{Ruegg2012Calcium}.
+Muscle contraction begins with an \textit{activation} phase. It starts with a nerve signal, or action potential, reaching the end of a motor neuron, which causes the depolarization of the cell membrane of the muscle fibre. This chemical signal triggers another action potential in the muscle fibre, which travels along the surface and down into T-tubules. The signal then reaches the sarcoplasmic reticulum, causing it to release calcium ions into the muscle cell. Calcium binds to troponin, a protein on the thin filament, which causes a shift in the troponin-tropomyosin complex and exposes binding sites on actin. With these sites exposed, the myosin hydrolyzes adenosine triphosphate (ATP), which causes its globular head to attach to the actin to form a cross-bridge that ultimately generates active force \cite{Ruegg2012Calcium}.
 
 Whether muscle fibres are activated or not, stretching them beyond their resting length generates a \textit{passive} response largely attributed to two additional proteins: titin and nebulin, which contribute to the overall structure and stability of the muscle. Titin is the largest known protein in the human body and spans half the length of the sarcomere, connecting the myosin to the Z-disks (or Z lines in Figure \ref{fig:muscle_anatomy}) \cite{Nishikawa2020, Nishikawa2012WindingFilament}. Functionally, titin acts as a molecular spring, generating passive force when the muscle is stretched, resisting overstretch and helping in the restoration of the original length of sarcomeres following extension.
 
@@ -370,9 +371,10 @@ There exist several types of muscle architectures (see Figure \ref{fig:muscle_ar
     \item Muscle length, which is defined as ``the distance from the origin of the most proximal muscle fibres to the insertion of the most distal fibres'' \cite{Lieber2010Book},
     \item Fibre length, which is obtained from the length of small fibre bundles (given how hard it is to extract a single fibre),
     \item Pennation angle, which is the angle between the fibres and the axis of force generation,
-    \item Physiological cross-sectional area (PCSA), which represents the sum of the cross-sectional areas of all muscle fibres. It is computed as:
+    \item Physiological cross-sectional area (PCSA), which represents the sum of the cross-sectional areas of all muscle fibres. It can be computed as:
     \[
-        \text{PCSA} = \dfrac{\text{muscle mass} \times \cos(\text{pennation angle})}{\text{muscle density} \times \text{fibre length}}.
+        %\text{PCSA} = \dfrac{\text{muscle mass} \times \cos(\text{pennation angle})}{\text{muscle density} \times \text{fibre length}}.
+        \text{PCSA} = \dfrac{\text{muscle mass}}{\text{muscle density} \times \text{fibre length}}.
     \]
 \end{enumerate}
 
@@ -389,7 +391,7 @@ Such dynamic architectural changes profoundly influence muscle function, yet the
 
 %In the biomechanics literature, there are two main variants of muscle models: Huxley-type models and Hill-type models. Huxley-type models, as their name suggests, are based on the original model by Huxley \cite{Huxley1957}: a first order hyperbolic partial differential equation (PDE) that models the distribution of the fraction of cross-bridges that could be attached in a sarcomere. Hill-type models, in turn, are much simpler as they are presented as a single ordinary differential equation (ODE). They model muscle fibres as a damped spring system (we will go into more details about Hill-type models in Section \ref{sec:comp_models}). A schematic view of these models is shown in Figure \ref{fig:huxley-hill}.
 
-Muscles generate force to perform mechanical functions essential for movement, stability, and interaction with the environment. Thus, force is one of the most important physiological quantities used to characterize muscle function. Measuring them in vivo, however, is virtually impossible, as it often involves surgical procedures that implant buckles or transducers in a subject's tendon \cite{Biewener1998KangarooRats,Komi1990}. Therefore, muscle force is instead \textit{estimated} using non-invasive methods such as joint torque measurements via dynamometry, fibre kinematics obtained from ultrasonography, and muscle activation signals from surface electromyography (EMG). The collected data is then used as input for muscle models, which can be broadly categorized into: (a) mechanistic models, which are based on the interaction between actins and myosins, and (b) phenomenological models, which are based on the mesoscopic and macroscopic muscle behaviour.
+Muscles generate force to perform mechanical functions essential for movement, stability, and interaction with the environment. Thus, force is one of the most important physiological quantities used to characterize muscle function. Measuring force in vivo, however, is virtually impossible, as it often involves surgical procedures that implant buckles or transducers in a subject's tendon \cite{Biewener1998KangarooRats,Komi1990}. Therefore, muscle force is instead \textit{estimated} using non-invasive methods such as joint torque measurements via dynamometry, fibre kinematics obtained from ultrasonography, and muscle activation signals from surface electromyography (EMG). The collected data are then used as input for muscle models, which can be broadly categorized into: (a) mechanistic models, which are based on the interaction between actins and myosins, and (b) phenomenological models, which are based on the mesoscopic and macroscopic muscle behaviour.
 
 Mechanistic models are rooted in the work by H. F. Huxley \cite{Huxley1957} in 1957, and therefore they are known as \textit{Huxley-type models}. Here, it is of interest to first find the distribution of the fraction of cross-bridges that could be attached in a sarcomere \cite{GordonHuxleyJulian1966, Huxley1957}. Denoting the latter by $n(x,t)$, the goal is to solve the first-order, hyperbolic partial differential equation (PDE):
 \[
@@ -407,7 +409,7 @@ where the constant $k > 0$ is the stiffness of the cross-bridges.
     \caption{Huxley-type muscle model. The myosin binding site (M) oscillates around the origin (O) and can bind to the actin head (A) for $x>0$.\label{fig:diagram_huxley}}
 \end{figure}
 
-In turn, phenomenological models (the main focus of this thesis) are based on the work by F. E. Zajac \cite{Zajac1989} in 1989, which is further based on the developments by A. V. Hill, primarily from his 1938 article \cite{Hill1938}. Here, the muscle-tendon unit (MTU) is described as an actuator that contains a contractile element (CE) that generates a force $F_{CE}$ and a passive elastic element (PEE) that generates a force $F_{PEE}$. These two elements are connected in parallel, and the combination of them---representing the muscle part of the MTU---is connected to a series elastic element (SEE) which represents the tendon part of the MTU. We show this arrangement in Figure \ref{fig:diagram_hill}. These models are commonly known as \textit{Hill-type muscle models} because, in this case, the force a muscle generates follows Hill's equation:
+In turn, phenomenological models (the main focus of this thesis) are based on the work by F. E. Zajac \cite{Zajac1989} in 1989, which is further based on the developments by A. V. Hill, primarily from his 1938 article \cite{Hill1938}. Here, the muscle-tendon unit (MTU) is described as an actuator that contains a contractile element (CE) that generates a force $F_{CE}$ and a passive elastic element (PEE) that generates a force $F_{PEE}$. These two elements are connected in parallel, and the combination of them---representing the muscle part of the MTU---is connected to a series elastic element (SEE) which represents the tendon part of the MTU. We show this arrangement in Figure \ref{fig:diagram_hill}. These models are commonly known as \textit{Hill-type muscle models} because, in this case, the force a muscle generates follows the equation:
 \begin{equation} \label{eq:hill_in_intro}
     F_M(a,\lambda,\dot{\lambda}) = F_{CE} + F_{PEE} = F_0  \Big[ a(t) \widehat{F}_A(\lambda) \widehat{F}_V(\dot{\lambda}) + \widehat{F}_P(\lambda) \Big], 
 \end{equation}
@@ -434,12 +436,14 @@ In this expression, $F_0$ is called the maximum isometric force and is defined a
 
 In silico modelling of skeletal muscle provides a powerful framework for investigating muscle mechanics beyond the limits of experimental observation. By simulating muscle behaviour computationally, these models enable the analysis of important physiological variables (such as fibre stretch, fibre strain rates, and whole muscle forces) that are otherwise difficult to measure in vivo (and even in controlled in situ or in vitro experiments). In addition, computational models can be used to analyze ``what-if'' scenarios in which either the (resting) muscle architecture or its constitutive elements are directly modified.
 
-From the definition of muscle architecture in Section \ref{sec:intro_muscle_architecture} (and by simply looking at our muscles) we observe that muscle deformation occurs across all three dimensions of Euclidean space. However, neither Huxley nor Hill-type models (as presented in the previous section) account for this behaviour. While there exist geometric models that can explain some of these shape changes (see, e.g., \cite{DickWakeling2018,Siebert20123D}), the focus of this discussion (and this thesis) will be on computational models based on differential equations. Here, two main categories can be distinguished: 1D models based on ordinary differential equations (ODEs) where the focus is on simplicity and macroscopic behaviour, and 3D PDE-based models where the focus is on detailed spatio-temporal information. Two-dimensional (2D) PDE-based models can be seen as simplifications of 3D models in which deformation in the out-of-plane direction is simply neglected. However, during contraction, muscles bulge in thickness \textit{and} width in an attempt to conserve volume \cite{BaskinPaolini}. This translates into a ``constant area'' assumption \cite{EpsteinHerzog2003} that brings almost no meaningful advantage over 1D representations, which already encapsulate the primary axial dynamics without excessive computational cost. Hence, they will not be discussed any further in this work.
+From the definition of muscle architecture in Section \ref{sec:intro_muscle_architecture} (and by simply looking at our muscles) we observe that muscle deformation occurs across all three dimensions of Euclidean space. However, neither Huxley nor Hill-type models (as presented in the previous section) account for this behaviour. While there exist geometric models that can explain some of these shape changes (see, e.g., \cite{DickWakeling2018,Siebert20123D}), the focus of this discussion (and this thesis) will be on computational models based on differential equations. Here, two main categories can be distinguished: 1D models based on ordinary differential equations (ODEs) where the focus is on simplicity and macroscopic behaviour, and 3D PDE-based models where the focus is on detailed spatio-temporal information. 
+
+Two-dimensional (2D) PDE-based models can be seen as simplifications of 3D models in which deformation in the out-of-plane direction is simply neglected. However, during contraction, muscles bulge in thickness \textit{and} width in an attempt to conserve volume \cite{BaskinPaolini}. This translates into a ``constant area'' assumption \cite{EpsteinHerzog2003} that brings almost no meaningful advantage over 1D representations, which already encapsulate the primary axial dynamics without excessive computational cost. Hence, they will not be discussed any further in this work.
 
 \subsection{One-dimensional models}
 
 Hill-type models can be implemented in a computational setup directly, that is, the force a muscle generates can be estimated using \eqref{eq:hill_in_intro}, a given activation profile $a(t)$, and time traces of muscle length and velocity (unlike Huxley-type models, where an appropriate PDE solver must be considered). This is the basis of OpenSim:
-an open-source musculoskeletal modelling and simulation platform that enables the analysis of movement dynamics and estimation of muscle and joint forces using experimental kinematics, kinetics, and electromyography data \cite{Delp2007OpenSim}. Here, each muscle is modelled as a 1D spring that generates force according to Hill's equation \eqref{eq:hill_in_intro}, and therefore it is simple enough that allows for simulations involving multiple muscles and joints \cite{BishopEtAl2021Dinosaurs, Porsa2016DirectMethodsOpenSim, RajagopalEtAl2016FullBody, StarkEtAl2021Dogs}. OpenSim, along with AnyBody Modeling System\texttrademark, are the prominent software choices for the analysis of skeletal muscle function and animal locomotion \cite{Gautam2024AnybodyOpensim}.
+an open-source musculoskeletal modelling and simulation platform that enables the analysis of movement dynamics and estimation of muscle and joint forces using experimental kinematics, kinetics, and electromyography data \cite{Delp2007OpenSim}. Here, each muscle is modelled as a 1D spring that generates force according to \eqref{eq:hill_in_intro}, and therefore it is simple enough that allows for simulations involving multiple muscles and joints \cite{BishopEtAl2021Dinosaurs, Porsa2016DirectMethodsOpenSim, RajagopalEtAl2016FullBody, StarkEtAl2021Dogs}. OpenSim, along with AnyBody Modeling System\texttrademark, are the prominent software choices for the analysis of skeletal muscle function and animal locomotion \cite{Gautam2024AnybodyOpensim}.
 
 Nevertheless, the accuracy of these simulations decreases as the experiments drift away from the ideal conditions in which the force relationships in \eqref{eq:hill_in_intro} were obtained, namely isokinetic or isometric contractions with maximal activation \cite{Dick2017, Lee2013AccuracyofGastrocForces, MillardEtAl2013, Perreault2003HillErrors}.  Therefore, researchers continue to modify these 1D models to include many of the missing features from the original model, such as fatigue \cite{Pereira2011Fatigue1D}, history dependence \cite{McGowanEtAl2013,Ross2018}, mass, and inertial effects \cite{Gunther2012,Ross2018,RossWakeling2016Multibody,Paper4_RossWakeling2021}.
 
@@ -457,7 +461,7 @@ Here, $\*P$ is the first Piola-Kirchhoff stress tensor which, in this case, is o
 \begin{equation}
     \Psi = \Psi_{iso} + \Psi_{vol},
 \end{equation}
-where the volumetric part $\Psi_{vol}$ is represents the near-incompressible behaviour of muscle \cite{BaskinPaolini}. In turn, the isochoric part $\Psi_{iso}$ represents the constitutive elements of muscle, such as muscle fibres (whose response varies according to Hill's equation \eqref{eq:hill_in_intro}) and the base material around them (assumed to be hyperelastic). 
+where the volumetric part $\Psi_{vol}$ is represents the near-incompressible behaviour of muscle \cite{BaskinPaolini}. In turn, the isochoric part $\Psi_{iso}$ represents the constitutive elements of muscle, such as muscle fibres (whose response varies according to \eqref{eq:hill_in_intro}) and the base material around them (assumed to be hyperelastic). 
 
 This approach can be first found for active muscle tissue in the works by Blemker \cite{BlemkerThesis,BlemkerDelp2005,BlemkerPinskyDelp2005} in 2004. It differs from previous finite element approaches (such as the one put forth by Johansson \cite{Johansson2000}) in the sense that muscle in 3D is no longer a scaled-up fibre (i.e. the entire volume has fibre properties with no base material around). In this way, muscle models that follow this approach can differ in the choice of force relationships, as well as what type of hyperelastic material (Neo-Hookean, Ogden, Money-Rivlin, Yeoh, etc.) should be used to represent the base material component (see, e.g., \cite{HeidlaufRohrle2013,Tang2007}). Furthermore, Blemker's model is one of the default choices in 3D biomechanical modelling software ArtiSynth \cite{Artisynth} and FEBio \cite{FEBio}. Following a similar approach as Blemker, Rahemi et al. \cite{RahemiNigamWakeling2014,RahemiNigamWakeling2015}, Dominguez \cite{Seba}, and Wakeling et al. \cite{Paper1_WakelingEtAl2020} implemented a quasi-static model of skeletal muscle deformation but this time using a three-field variational formulation by Simo et al. \cite{SimoTaylorPister1985} that increases the robustness of the numerical method.
 
@@ -486,7 +490,7 @@ The \textit{dynamical} stability of Hill-type muscle models has been recently cr
 %The latter corresponds to the region of the total force-length relationship that has a negative slope (when it is present, see Figure \ref{fig:fl_curves_wilkie}). 
 The idea is not new, and a mathematical treatment of the problem can be found in the work by Zahalak \cite{Zahalak1997} in 1997. However, because the authors in \cite{YeoEtAl2023NumericalInstability} incorrectly named this phenomenon as ``numerical'', the idea that Hill-type muscle models can be ``numerically unstable'' has unfortunately gained traction (see, for example, \cite{Mendoza2025,SampaioDeOliveiraUchida2025}). 
 
-Nevertheless, the fact that some force-length curves do have a descending limb is an interesting fact in itself, especially when it has been shown that active stretching can lead to muscle forces larger than its maximum isometric force (i.e., no descending limb). This phenomenon is known as \textit{residual force enhancement} (RFE) \cite{HerzogLeonard2002} and it has been attributed to the protein titin \cite{Herzog2014Titin}. Thus, many muscle models that include titin are considered ``stable'' (see, for example, \cite{HeidlaufEtAl2017,Millard2024,SampaioDeOliveiraUchida2025}). However, the significance of titin is a matter of discussion \cite{Lieber2018NotTitin}, and other factors, such as the extracellular matrix (ECM), are also thought to bring stability to muscles \cite{GilliesLieber2011ECM}.
+Nevertheless, the fact that some force-length curves do have a descending limb is an interesting fact in itself, especially when it has been shown that active stretching can lead to muscle forces larger than its maximum isometric force (i.e., no descending limb). This phenomenon is known as \textit{residual force enhancement} (RFE) \cite{HerzogLeonard2002} and it has been attributed to the protein titin \cite{Herzog2014Titin}. Thus, many muscle models that include titin (as a separate, activation-dependent element) are considered ``stable'' (see, for example, \cite{HeidlaufEtAl2017,Millard2024,SampaioDeOliveiraUchida2025}). However, the significance of titin is a matter of discussion \cite{Lieber2018NotTitin}, and other factors, such as the extracellular matrix (ECM), are also thought to bring stability to muscles \cite{GilliesLieber2011ECM}.
 
 The question of stability in 3D is much more difficult to answer. For instance, the dynamical stability of models such as Blemker's \cite{BlemkerPinskyDelp2005}, as well as the development of an eigenvalue solver for active muscle deformation are still open problems. In turn, the numerical stability of 3D finite element models is associated to the polyconvexity of the strain-energy function that models the system \cite{SchroderNeff2003}. In particular, Heidlauf et al. \cite{HeidlaufEtAl2017} developed a 3D muscle model that includes actin-titin interactions, and which therefore is stable given that the condition of polyconvexity is satisfied (see also \cite{SampaioDeOliveiraUchida2025}).
 
@@ -496,9 +500,9 @@ In this highly interdisciplinary work, a recurring challenge has been to mathema
 
 In this thesis, we develop a rigorous mathematical and scientific computing framework to study the nonlinear elastodynamics of 1D and 3D Hill-type muscle models, with an emphasis on adapting our mathematical definitions and numerical methods to the commonly-accepted physiological principles in this area. 
 
-In \textbf{Chapter 2}, we study the inertial effects due to the addition of mass in multibody 1D models of the muscle-tendon unit, especially when compared to a model that does not have mass. We first provide a mathematical description of the models, to then implement them in Matlab. Then, using experimentally-obtained data by Chen \cite{Evan} and Dick et al. \cite{Dick2016} from multiple muscles of the lower limb and multiple tasks of common human locomotion, such as walking, running, and cycling, we perform dynamic simulations that show not only the influence of mass for muscles of larger sizes, but also how the number of masses in the system affects the quality of the solutions, which may not necessarily follow the guidelines by G\"{u}nther et al. \cite{Gunther2012}.
+In \textbf{Chapter 2}, we study the inertial effects due to the addition of mass in multibody 1D models of the muscle-tendon unit, especially when compared to a model that does not have mass. We first provide a mathematical description of the models, to then implement them in Matlab. Then, using experimentally-obtained data by Chen \cite{EvanThesis} and Dick et al. \cite{Dick2016} from multiple muscles of the lower limb and multiple tasks of common human locomotion, such as walking, running, and cycling, we perform dynamic simulations that show not only the influence of mass for muscles of larger sizes, but also how the number of masses in the system affects the quality of the solutions, which may not necessarily follow the guidelines by G\"{u}nther et al. \cite{Gunther2012}.
 
-In \textbf{Chapter 3}, we study the dynamical stability of the multibody muscle model discussed in Chapter 2, in particular, the so-called descending limb instability. We first show that the multibody model (which does show this instability) corresponds to a particular discretization of a 1D wave equation, which can be seen as a 1D reduction of 3D elasticity. Based on this fact, we consider a novel 1D continuum model of muscle that includes a base material contribution to stabilize the dynamical system, showing that there could be other muscle components (not necessarily titin, for instance), that can provide dynamical stability to Hill-type muscle models.
+In \textbf{Chapter 3}, we study the dynamical stability of the multibody muscle model discussed in Chapter 2, in particular, the so-called descending limb instability. We first show that the multibody model (which does show this instability) corresponds to a particular discretization of a 1D wave equation, which can be seen as a 1D reduction of 3D elasticity. Based on this fact, we consider a novel 1D continuum model of muscle that includes a base material contribution to stabilize the dynamical system, showing that there could be other muscle components (not necessarily titin as an activation-dependent element, for instance), that can provide dynamical stability to Hill-type muscle models.
 
 In \textbf{Chapter 4}, we study different time stepping schemes for 1D Neo-Hookean deformation. Here, the main goal is to gather information about the performance of these methods on a stiff material similar to skeletal muscle tissue, with the intention of making an informed choice when choosing the time discretization for the fully dynamic 3D model. We performed a systematic study of Newmark-type methods and we analyze the performance of first and second order implicit time stepping schemes in the presence of nonsmooth boundary conditions, with a focus on potential overshooting.
 
@@ -593,7 +597,7 @@ The \textit{optimal tendon length} $l_T^{opt}$ can be computed from the \textit{
     \caption{Force-length (FL) and force-velocity (FV) relationships that are part of Hill's muscle model \eqref{eq:Hill_force}. \label{fig:plot_FL_FV}}
 \end{figure}
 
-In a simple model, such as the one shown in Figure \ref{fig:muscle_models_1D}A, muscle can be thought as a one-dimensional spring containing a contractile element (CE) and a parallel elastic element (PEE). The first one is related to the force produced by actin-myosin interactions during activation, whereas the latter is related to passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres that form the muscle fibre. The muscle force $F_M$ in this case is given by Hill's equation \cite{Zajac1989},
+In a simple model, such as the one shown in Figure \ref{fig:muscle_models_1D}A, muscle can be thought as a one-dimensional spring containing a contractile element (CE) and a parallel elastic element (PEE). The first one is related to the force produced by actin-myosin interactions during activation, whereas the latter is related to passive components of the muscle fibre (such as titin), which act to prevent overstretching of the sarcomeres that form the muscle fibre. The muscle force $F_M$ in this case is given by (cf. \cite{Zajac1989}):
 \begin{equation} \label{eq:Hill_force}
     F_{Hill}(\lambda_M, \depsilon_M) = F_0 \Big\{ a(t) \widehat{F}_A(\lambda_M) \widehat{F}_V(\depsilon_M) + \widehat{F}_P(\lambda_M) \Big\}.
 \end{equation}
@@ -4637,7 +4641,7 @@ This thesis covered the nonlinear elastodynamics of skeletal muscle tissue, comb
 
 \chapter{Force relationships} \label{app:force_relationships}
 
-In this Appendix, we describe the mathematical expressions used for the force relationships in this study. A GitHub repository that can be used as a submodule is available at:
+In this Appendix, we describe the mathematical expressions used for the force relationships in this study. A GitHub repository with Matlab implementations of these curves is available at:
 \begin{center}
     \url{https://github.com/sfu-nml/force-relationships}.
 \end{center}
