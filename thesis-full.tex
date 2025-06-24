@@ -4637,8 +4637,214 @@ This thesis covered the nonlinear elastodynamics of skeletal muscle tissue, comb
 
 \chapter{Force relationships} \label{app:force_relationships}
 
-Describe in detail force-length and force-velocity relationships in use.
-Github repository: force-relationships
+In this Appendix, we describe the mathematical expressions used for the force relationships in this study. A GitHub repository that can be used as a submodule is available at:
+\begin{center}
+    \url{https://github.com/sfu-nml/force-relationships}.
+\end{center}
+
+\section{Forces used in 1D experiments}
+
+For these experiments, we fitted the force relationships originally given by B\'{e}zier curves in \cite{RossWakeling2016Multibody} to cubic splines. Thus, the forces take the a piecewise form. For $k = 1, 2, \dots, N$, a force $\widehat{F}$ can take the form:
+\begin{equation}
+    \widehat{F}(t) = a_3^{(k)}(t-t_{k-1})^3 + a_2^{(k)}(t - t_{k-1})^2 + a_1^{(k)}(t-t_{k-1}) + a_0^{(k)}, \quad t_{k-1} \leq t < t_{k}.
+\end{equation}
+We thus have $N$ pieces and $N+1$ knots $\{t_0, t_1, \dots, t_N\}$. We show the coefficients and knots that define the active force-length, passive force-length, force-velocity, and tendon force relationships in Tables \ref{tab:coef_1D_active}-\ref{tab:coef_1D_tendon}.
+
+\begin{table}
+\centering
+\begin{tabular}{|cccc|c|}
+\hline
+\multicolumn{4}{|c|}{Coefficients in descending polynomial order} & Interval \\\hline
+16.259504 & 2.735529 & 0.000000 & 0.000000 & $0.4 \leq \lambda_M < 0.6$\\
+-71.836426 & 12.491232 & 3.045352 & 0.239497 & $0.6 \leq \lambda_M < 0.7$\\
+7.352394 & -9.059696 & 3.388506 & 0.597108 & $0.7 \leq \lambda_M < 0.9$\\
+11.676119 & -4.648260 & 0.646915 & 0.971241 & $0.9 \leq \lambda_M < 0.95$\\
+2.669948 & -2.896842 & 0.269660 & 0.993425 & $0.95 \leq \lambda_M < 1.0$\\
+185.407729 & -30.069106 & 0.000000 & 1.000000 & $1.0 \leq \lambda_M < 1.05$\\
+2.958338 & -2.257947 & -1.616353 & 0.948003 & $1.05 \leq \lambda_M < 1.1$\\
+7.333359 & -1.814196 & -1.819960 & 0.861910 & $1.1 \leq \lambda_M < 1.2$\\
+1.162833 & 0.385812 & -1.962798 & 0.669106 & $1.2 \leq \lambda_M < 1.4$\\
+3.773432 & 1.083512 & -1.668934 & 0.301281 & $1.4 \leq \lambda_M \leq 1.7$\\
+\hline
+\end{tabular}
+\caption{Cubic spline coefficients for the active force-length relationship $\widehat{F}_A$ used for 1D experiments.\label{tab:coef_1D_active}}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|cccc|c|}
+\hline
+\multicolumn{4}{|c|}{Coefficients in descending polynomial order} & Interval \\\hline
+0.637061 & 0.073924 & 0.000706 & 0.000000 & $0.7 \leq \lambda_M < 1.0$\\
+1.239310 & 0.647279 & 0.217067 & 0.024066 & $1.0 \leq \lambda_M < 1.12$\\
+7.439238 & 1.093430 & 0.425952 & 0.061576 & $1.12 \leq \lambda_M < 1.35$\\
+-18.101816 & 6.226505 & 2.109537 & 0.307901 & $1.35 \leq \lambda_M < 1.47$\\
+-3.080909 & -0.290149 & 2.821900 & 0.619427 & $1.47 \leq \lambda_M \leq 1.65$\\
+\hline
+\end{tabular}
+\caption{Cubic spline coefficients for the passive force-length relationship $\widehat{F}_P$ used for 1D experiments.}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|cccc|c|}
+\hline
+\multicolumn{4}{|c|}{Coefficients in descending polynomial order} & Interval \\\hline
+0.220624 & 0.180895 & 0.169799 & 0.000000 & $-1.0 \leq \depsilon_M < -0.6$\\
+0.809642 & 0.445644 & 0.420414 & 0.110983 & $-0.6 \leq \depsilon_M < -0.4$\\
+1.352406 & 0.931429 & 0.695829 & 0.219368 & $-0.4 \leq \depsilon_M < -0.3$\\
+5.649771 & 1.337151 & 0.922687 & 0.299618 & $-0.3 \leq \depsilon_M < -0.15$\\
+33.819416 & 3.879548 & 1.705192 & 0.487175 & $-0.15 \leq \depsilon_M < -0.1$\\
+29.535258 & 8.952460 & 2.346792 & 0.586361 & $-0.1 \leq \depsilon_M < -0.05$\\
+508.735536 & 13.382749 & 3.463553 & 0.729774 & $-0.05 \leq \depsilon_M < 0.00$\\
+143713.368503 & -204.615076 & 8.745168 & 1.000000 & $0.00 \leq \depsilon_M < 0.007$\\
+-705905.249709 & 2813.365662 & 27.006422 & 1.100484 & $0.007 \leq \depsilon_M < 0.01$\\
+234818.856704 & -3539.781585 & 24.827174 & 1.187764 & $0.01 \leq \depsilon_M < 0.015$\\
+-14695.733995 & -17.498735 & 7.040773 & 1.252758 & $0.015 \leq \depsilon_M < 0.02$\\
+6806.732497 & -237.934745 & 5.763605 & 1.285687 & $0.02 \leq \depsilon_M < 0.03$\\
+117.239184 & -33.732770 & 3.046930 & 1.326336 & $0.03 \leq \depsilon_M < 0.04$\\
+257.061419 & -30.215594 & 2.407447 & 1.353550 & $0.04 \leq \depsilon_M < 0.07$\\
+26.551643 & -7.080067 & 1.288577 & 1.405520 & $0.07 \leq \depsilon_M < 0.12$\\
+8.331011 & -3.097320 & 0.779708 & 1.455567 & $0.12 \leq \depsilon_M < 0.2$\\
+1.699155 & -1.097878 & 0.444092 & 1.502386 & $0.2 \leq \depsilon_M < 0.3$\\
+0.842130 & -0.588131 & 0.275491 & 1.537516 & $0.3 \leq \depsilon_M < 0.4$\\
+0.299331 & -0.335492 & 0.183129 & 1.560026 & $0.4 \leq \depsilon_M < 0.6$\\
+0.083998 & -0.155894 & 0.084851 & 1.585627 & $0.6 \leq \depsilon_M \leq 1.0$\\
+\hline
+\end{tabular}
+\caption{Cubic spline coefficients for the force-velocity $\widehat{F}_V$ relationship used for 1D experiments.}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|cccc|c|}
+\hline
+\multicolumn{4}{|c|}{Coefficients in descending polynomial order} & Interval \\\hline
+0.000000 & 0.000000 & 0.009717 & 0.000000  & $0.0 \leq \lambda_T < 1.00472$\\
+-32632.569799 & 961.712634 & 5.666232 & 0.009763 & $1.00472 \leq \lambda_T < 1.01$\\
+-12072.697295 & 444.812728 & 13.092686 & 0.061688 & $1.01 \leq \lambda_T < 1.02$ \\
+-770.792801 & 82.631809 & 18.367131 & 0.225024 & $1.02 \leq \lambda_T < 1.058$\\
+0.000000 & 0.000000 & 21.308074 & 1.000000 & $1.058 \leq \lambda_T $\\
+\hline
+\end{tabular}
+\caption{Cubic spline coefficients for the tendon force-length relationship $\widehat{F}_T$ used for 1D experiments.\label{tab:coef_1D_tendon}}
+\end{table}
+
+\section{Forces used in 3D experiments}
+
+In this case, we decide to keep the stress relationships used in previous studies \cite{Seba,KonnoNigamWakeling2021_ECM,Paper3_RossEtAl2021,Paper2_RyanEtAl2020,Paper1_WakelingEtAl2020}.
+
+The active stress-stretch relationship for muscle was reported by Konno \cite{KonnoNigamWakeling2021_ECM} as:
+\begin{equation} 
+\widehat{\sigma}_A(\bar{\lambda}) = \left\{
+\begin{aligned}
+&\sum_{k=1}^7 c_k \sin \left( a_k \bar{\lambda} + b_k \right), \quad && 0.4 \leq \bar{\lambda} \leq 1.75 \\
+&0.0, \quad &&\text{otherwise},
+\end{aligned}
+\right.
+\end{equation}
+with $a_k, b_k, c_k \in \R$. This corresponds to a fit from experimental data in \cite{Winters2011}. The constants that define this function are listed in Table \ref{tab:coef_3D_active}.
+
+The passive stress-stretch relationship for muscle was reported by Konno \cite{KonnoNigamWakeling2021_ECM} as:
+\begin{equation} 
+\widehat{\sigma}_P(\bar{\lambda}) = \left\{
+\begin{aligned}
+&0, \quad &&\bar{\lambda} \leq 1, \\
+&c_1 (\bar{\lambda}-1)^2 + c_2 (\bar{\lambda}-1) + c_3, \quad &&1 < \bar{\lambda} \leq 1.25, \\
+&c_4 (\bar{\lambda}-1.25)^2 + c_5 (\bar{\lambda} - 1.25) + c_6, \quad && 1.25 < \bar{\lambda} \leq 1.5, \\
+&c_7 (\bar{\lambda}-1.5)^2 + c_8 (\bar{\lambda}-1.5) + c_9, \quad &&1.5 < \bar{\lambda} \leq 1.65, \\
+&c_{10} (\bar{\lambda}-1.65) + c_{11}, \quad && \bar{\lambda} > 1.65,
+\end{aligned}
+\right.
+\end{equation}
+with $c_k \in \R$. This corresponds to a fit from experimental data in \cite{Winters2011}. The constants that define this function are listed in Table \ref{tab:coef_3D_passive}.
+
+The stress-strain-rate relationship for muscle was reported by Ross et al. \cite{Ross2018-1D} as:
+\begin{equation} 
+\widehat{\sigma}_V(\bar{\depsilon}) = \left\{
+\begin{aligned}
+&0.0, \quad && \bar{\depsilon} < -1.2, \\
+&c_1 \left( \bar{\depsilon} + 1.2 \right)^3 + c_2 \left( \bar{\depsilon} + 1.2 \right)^2 + c_3 \left( \bar{\depsilon} + 1.2 \right) + c_4, \quad &&-1.2 \leq \bar{\depsilon} \leq -0.25, \\
+&c_5 \left( \bar{\depsilon} + 0.25 \right)^3 + c_6 \left( \bar{\depsilon} + 0.25 \right)^2 + c_7 \left( \bar{\depsilon} + 0.25 \right) + c_8, \quad &&-0.25 \leq \bar{\depsilon} < 0.0 \\
+&c_9 \left( \bar{\depsilon} - 0.0 \right)^3 + c_{10} \left( \bar{\depsilon} - 0.0 \right)^2 + c_{11} \left( \bar{\depsilon} - 0.0 \right) + c_{12}, \quad &&0.0 \leq \bar{\depsilon} \leq 0.05 \\
+&c_{13} \left( \bar{\depsilon} - 0.05 \right)^3 + c_{14} \left( \bar{\depsilon} - 0.05 \right)^2 + c_{15} \left( \bar{\depsilon} - 0.05 \right) + c_{16}, \quad &&0.05 \leq \bar{\depsilon} < 0.75 \\
+&c_{17}, \quad && \bar{\depsilon} \geq 0.75,
+\end{aligned}
+\right.
+\end{equation}
+with $c_k \in \R$. This corresponds to a fit from experimental data in \cite{Roots2007}. The constants that define this function are listed in Table \ref{tab:coef_3D_velocity}.
+
+The stress-stretch relationship for aponeurosis was fit from experimental data by Dick \cite{Taylor}:
+\begin{equation} 
+\widehat{\sigma}_{apo}(\bar{\lambda}) = \left\{
+\begin{aligned}
+&c_0\bar{\lambda}, \quad && 0 < \bar{\lambda} < 1.00, \\
+&c_1 \left( \bar{\lambda} - 1.00 \right)^2 + c_2 \left( \bar{\lambda} - 1.00 \right) + c_3, \quad &&1.00 \leq \bar{\lambda} < 1.01, \\
+&c_4 \left( \bar{\lambda} - 1.01 \right)^2 + c_5 \left( \bar{\lambda} - 1.01 \right) + c_6, \quad &&1.01 \leq \bar{\lambda} < 1.02, \\
+&c_7 \left( \bar{\lambda} - 1.02 \right)^2 + c_8 \left( \bar{\lambda} - 1.02 \right) + c_9, \quad &&1.02 \leq \bar{\lambda} <1.15, \\
+&c_{10} \left( \bar{\lambda} - 1.15 \right) + c_{11}, \quad && \bar{\lambda} \geq 1.15,
+\end{aligned}
+\right.
+\end{equation}
+with $c_k \in \R$. The constants that define this function are listed in Table \ref{tab:coef_3D_apo}.
+
+
+
+
+\begin{table}
+\centering 
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+$c_k$ & Value & $a_k$ & Value & $b_k$ & Value \\\hline
+$c_1$ & 0.642587 & $a_1$ & 1.290128 & $b_1$ & 0.629168 \\\hline
+$c_2$ & 0.325980 & $a_2$ & 5.308970 & $b_2$ & -4.520102 \\\hline
+$c_3$ & 0.328204 & $a_3$ & 6.744187 & $b_3$ & 1.689156 \\\hline
+$c_4$ & 0.015389 & $a_4$ & 19.823677 & $b_4$ & -7.386155 \\\hline
+$c_5$ & 0.139240 & $a_5$ & 8.038287 & $b_5$ & 2.543022 \\\hline
+$c_6$ & 0.001802 & $a_6$ & 32.237736 & $b_6$ & -6.454098 \\\hline
+$c_7$ & 0.012561 & $a_7$ & 23.117614 & $b_7$ & -2.643347 \\\hline
+\end{tabular}
+\caption{Parameters describing the muscle active stress-stretch relationship $\widehat{\sigma}_A$ used for 3D experiments.\label{tab:coef_3D_active}}
+\end{table}
+
+\begin{table}
+\centering 
+\begin{tabular}{|c|c|c|c|}\hline
+Parameter & Value  & Parameter & Value \\\hline
+$\sigma_{0,M}$ & 200 kPa & $c_6$ & 0.147115 \\\hline
+$c_1$ & 2.353845 & $c_7$ & 0.427408 \\\hline
+$c_2$ & 0.000000 & $c_8$ & 2.895101 \\\hline
+$c_3$ & 0.000000 & $c_9$ & 0.656118 \\\hline
+$c_4$ & 3.436357 & $c_{10}$ & 3.023323 \\\hline
+$c_5$ & 1.176922 & $c_{11}$ & 1.100000 \\\hline
+\end{tabular}
+\caption{Parameters describing the muscle passive stress-stretch relationship $\widehat{\sigma}_P$ used for 3D experiments.\label{tab:coef_3D_passive}}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+$c_k$ & Value & $c_k$ & Value & $c_k$ & Value \\\hline
+$c_1$ & 0.257927 & $c_7$ & 0.970369 & $c_{13}$ & 0.688221 \\\hline
+$c_2$ & 0.143175 & $c_8$ & 0.350355 & $c_{14}$ & -1.413963 \\\hline
+$c_3$ & 0.000000 & $c_9$ & -3165.684798 & $c_{15}$ & 0.967864 \\\hline
+$c_4$ & 0.000000 & $c_{10}$ & 186.196125 & $c_{16}$ & 1.374324 \\\hline
+$c_5$ & 29.825565 & $c_{11}$ & 6.090887 & $c_{17}$ & 1.595047 \\\hline
+$c_6$ & -0.943550 & $c_{12}$ & 1.000000 & -- & -- \\\hline
+\end{tabular}
+\caption{Parameters describing the muscle passive stress-strain-rate relationship $\widehat{\sigma}_V$ used for 3D experiments.\label{tab:coef_3D_velocity}}
+\end{table}
+
+\begin{table}
+\centering 
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+$c_k$ & Value & $c_k$ & Value & $c_k$ & Value \\\hline
+$c_0$ & 0.010000 & $c_4$ & 600.590242 & $c_8$ & 22.339446 \\\hline
+$c_1$ & 515.882034 & $c_5$ & 10.327641 & $c_9$ & 0.225024 \\\hline
+$c_2$ & 0.010000 & $c_6$ & 0.061688 & $c_{10}$ & 19.745862 \\\hline
+$c_3$ & 0.010000 & $c_7$ & -9.975322 & $c_{11}$ & 2.960569 \\\hline
+\end{tabular}
+\caption{Parameters describing the aponeurosis stress-stretch relationship $\widehat{\sigma}_{apo}$ used for 3D experiments.\label{tab:coef_3D_apo}}
+\end{table}
 
 %\chapter{Flexodeal Lite v1.5.4 default experiment} \label{app:default_flexodeal_lite}
 
