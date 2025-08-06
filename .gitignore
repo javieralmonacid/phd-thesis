@@ -35,7 +35,11 @@
 
 ### Compiled output ###
 *.pdf
+*.png
+
 
 ### Other files ###
 draft-elements_of_continuum_mechanics.tex
 corrections_*
+!thesis-javier-almonacid-2025-06-24.pdf
+acknowledgements.txt
