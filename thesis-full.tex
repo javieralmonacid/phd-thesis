@@ -51,7 +51,7 @@
     \member{Nilima Nigam}{Supervisor \\ Professor \\ Department of Mathematics}
     \member{James Wakeling}{Co-Supervisor\\ Professor \\ Department of Biomedical Physiology and Kinesiology}
     \member{Ben Adcock}{Internal Examiner \\ Professor \\ Department of Mathematics}
-    \member{TBD}{External Examiner \\ TBD Professor \\ Department of TBD \\ TBD University}
+    \member{Jay Gopalakrishnan}{External Examiner \\ Professor \\ Fariborz Maseeh Department of Mathematics and Statistics \\ Portland State University}
 }
 
 
@@ -397,7 +397,7 @@ Mechanistic models are rooted in the work by H. F. Huxley \cite{Huxley1957} in 1
 \[
  \pder{n}{t} - v(t) \pder{n}{x} = (1-n) \mathfrak{f}(x,a) - n \mathfrak{g}(x),
 \]
-where $v = \frac{dx}{dt}$ is the speed at which actin and myosin filaments past each other (see Figure \ref{fig:diagram_huxley}), $\mathfrak{f}(x,a)$ and $\mathfrak{g}(x)$ are respectively the attachment and detachment rates of the cross-bridges, and $a = a(t)$ is a function describing the activation of muscle \cite{Milicevic2022HuxleySurrogates}. The active force $F_{CE}$ is then computed as the first moment of the distribution $n$, that is,
+where $v = \frac{dx}{dt}$ is the speed at which actin and myosin filaments slide past each other (see Figure \ref{fig:diagram_huxley}), $\mathfrak{f}(x,a)$ and $\mathfrak{g}(x)$ are respectively the attachment and detachment rates of the cross-bridges, and $a = a(t)$ is a function describing the activation of muscle \cite{Milicevic2022HuxleySurrogates}. The active force $F_{CE}$ is then computed as the first moment of the distribution $n$, that is,
 \[
 F_{CE}(t) = k \int_{-\infty}^\infty n(x,t) \, x \, dx,
 \]
@@ -813,7 +813,7 @@ Furthermore, we assume that the true values for $L_M(0)$ and $L_T(0)$ are off by
 \end{equation}
 Then, we can find the value of this correction by solving the equation
 \begin{equation} \label{eq:calibration_2}
-    F_P \left( \dfrac{\widetilde{L_M(0)} - \Delta L_M(0)}{l_M^{opt}}\right) = F_T \left( \dfrac{\widetilde{L_T(0)} + \Delta L_M(0)}{l_T^{opt}}\right).
+    \widehat{F}_P \left( \dfrac{\widetilde{L_M(0)} - \Delta L_M(0)}{l_M^{opt}}\right) = \widehat{F}_T \left( \dfrac{\widetilde{L_T(0)} + \Delta L_M(0)}{l_T^{opt}}\right).
 \end{equation}
 The corrections $\Delta l_M^{opt}$ and $\Delta L_M(0)$ are typically small and represent the correct setup of the locomotion experiment at the time of data collection.
 
@@ -961,7 +961,7 @@ In general, we observed that the number of masses needed to fully resolve the tr
 
 We now turn our attention to the issue of stability in muscle models. In particular, we refer to a dynamical system (such as the mass-enhanced model \eqref{eq:massenhanced_model}) being \textit{dynamically} stable if small perturbations or deviations from an equilibrium state result in the system eventually remaining near or returning to that equilibrium state over time (see, e.g., \cite{strogratz}). This is in contrast to the concept of \textit{numerical} stability, which is tied to the numerical scheme used to approximate the solution to a dynamical system. We remark that these terms are \textit{not} interchangeable and that the present chapter will focus entirely on the dynamical stability of models such as \eqref{eq:massenhanced_model}.
 
-First, we introduce the context in which multibody models are unstable and the mathematical reasons behind. We present some numerical experiments to visualize the effects of this instability. Next, we propose a simple method to stabilize the system based on previously-validated three-dimensional models. This will require us to explore the continuum limit of the mass-enhanced model, that is, as the number of masses in the system grows infinitely. Finally, we visualize the dynamics on this updated system and the implications when analyzing the mass effects in a one-dimensional context.
+First, we introduce the context in which multibody models are unstable and the mathematical reasons behind it. We present some numerical experiments to visualize the effects of this instability. Next, we propose a simple method to stabilize the system based on previously-validated three-dimensional models. This will require us to explore the continuum limit of the mass-enhanced model, that is, as the number of masses in the system grows infinitely. Finally, we visualize the dynamics on this updated system and the implications when analyzing the mass effects in a one-dimensional context.
 
 %In this chapter, we focus on the \textit{dynamical} stability of the mass-enhanced model introduced in the previous chapter. More precisely, we study the instability of the system \eqref{eq:massenhanced_model} during isomeric contractions along a region of the total FL relationship known as the \textit{descending limb}, a phenomenon known as the \textit{descending limb instability} (DLI). Given that this is only a computational phenomenon and not a physiological one, it is clear that models such as \eqref{eq:massenhanced_model} lack an important feature describing skeletal muscle tissue. 
 
@@ -1245,7 +1245,7 @@ and initial conditions
 Here, $F$ corresponds to Hill's force defined in \eqref{eq:Hill_force_stability} and $\rho_{0,L} := m_{mus}/L_{mus}^{opt}$ is a linear density.
 \end{claim}
 
-Note that the Neumann condition \eqref{eq:Neumann_F_ext} to a nonlinear type of boundary condition depending on $\frac{\partial u}{\partial x}$. Thus, the problem \eqref{eq:hill_pde_1}-\eqref{eq:hill_pde_3} is at least well-defined. Whether it is \textit{well-posed} (that is, given a smooth $F_{ext}$, the problem has a unique regular solution depending continuously on $F_{ext}$) is a different story and will not be discussed here. As it is known, this can only be done in limited scenarios (for instance, when $F$ is linear, see \cite{TruesdellNoll2004}), so a general result cannot be stated for arbitrary $F$ and $F_{ext}$.
+Note that the Neumann condition \eqref{eq:Neumann_F_ext} corresponds to a nonlinear type of boundary condition depending on $\frac{\partial u}{\partial x}$. Thus, the problem \eqref{eq:hill_pde_1}-\eqref{eq:hill_pde_3} is at least well-defined. Whether it is \textit{well-posed} (that is, given a smooth $F_{ext}$, the problem has a unique regular solution depending continuously on $F_{ext}$) is a different story and will not be discussed here. As it is known, this can only be done in limited scenarios (for instance, when $F$ is linear, see \cite{TruesdellNoll2004}), so a general result cannot be stated for arbitrary $F$ and $F_{ext}$.
 
 \begin{proof}
     Consider a discretization $\{x_0, x_1, \dots, x_N\}$ with constant spacing $\Delta x := L_{mus}^{opt}/N$ of the interval $[0,L_{mus}^{opt}]$ where $x_0 = 0$ and $x_N = L_{mus}^{opt}$, then, define $u_i := u(x_i,t)$ for $t \geq 0$, $i=1,\dots,N$. Furthermore, consider a backwards first-order formula for the stretch and strain rates, that is,
@@ -1292,7 +1292,7 @@ Following the result in Claim \ref{cl:hill_pde}, we can write a stabilized versi
 \begin{multline} \label{eq:odes_hill_stabilized}
     \quad m_{i-1} \ddot{u}_{i-1} =
     (1-\chi_{BM})\left[ F_{Hill}(\lambda_i, \depsilon_i) - F_{Hill}(\lambda_{i-1}, \depsilon_{i-1}) \right] \\ 
-    + \chi_{BM}\left[ F_{BM}(\lambda_i) - F_{BM}(\lambda_{i-1}) \right], \quad i = 1,\dots,N-1, \quad 
+    + \chi_{BM}\left[ F_{NH}(\lambda_i) - F_{NH}(\lambda_{i-1}) \right], \quad i = 1,\dots,N-1, \quad 
 \end{multline}
 with the stretches $\lambda_i$ and strain rates $\depsilon_i$ as in \eqref{eq:def_stretches_stability} and \eqref{eq:def_strain_rates_stability}, respectively. Then, we can repeat the experiment from Section \ref{sec:stability_zero_solution} to test the stability of the zero solution. In particular, we take in equation \eqref{eq:force_hill_plus_bm} a bulk modulus $\kappa = 10^6 \ \text{Pa}$ and a maximum isometric stress $\sigma_0 = 200 \ \text{kPa}$ \cite{AlmonacidEtAl2022_SIAP_Paper}. Furthermore, we consider $\chi_{BM} = 0.0015$, that is, we assume that 99.85\% of the force that a muscle fibre produces is due to Hill's force and 0.15\% from a base material contribution. 
 
@@ -1314,7 +1314,7 @@ First, we portray the resulting forces in Figure \ref{fig:forces_stabilized} whe
 
 \section{Nondimensionalization of the continuum system and the influence of mass}
 
-The elastic model \eqref{eq:hill_pde_1} with the force $F$ given by \eqref{eq:force_hill_plus_bm} can be used to explain the mass effects discussed in Chapter \ref{ch:mass_enhanced_model} in a succinct way. First, let
+The elastic model \eqref{eq:hill_pde_1} with the force $F$ given by \eqref{eq:force_hill_plus_bm} can be used to explain the mass effects discussed in Chapter \ref{ch:mass_enhanced_model}, as well as how the dynamic stability of \eqref{eq:odes_hill_stabilized} is \textit{not} influenced by the size of the muscle. First, let
 \begin{equation}
     \widehat{F}_{Hill} = \dfrac{F_{Hill}}{F_0}, \quad \widehat{F}_{NH} = \dfrac{F_{NH}}{F_0},
 \end{equation}
@@ -1355,10 +1355,10 @@ The nondimensional number in the previous expression can be viewed as a ratio be
 \end{table}
 
 Therefore, if the length of the muscle scales by a factor $s$, the rescaled musculoskeletal Reynolds number becomes:
-\begin{equation}
+\begin{equation} \label{eq:nondim_final}
     \text{Re}_{MSK} = s^2 \, \dfrac{\rho_0 (L_{mus}^{opt})^2 \depsilon_0}{\sigma_0 / \depsilon_0}.
 \end{equation}
-This explains why one can expect, in this one-dimensional context, that mass effects are larger for larger scales, longer muscles (such as the semitendinosus), and muscles that contain a higher proportion of faster fibres (i.e., larger $\depsilon_0$). See Table \ref{tab:re_msk} for some values of this nondimensional number. 
+This explains why one can expect, in this one-dimensional context, that mass effects are larger for larger scales, longer muscles (such as the semitendinosus), and muscles that contain a higher proportion of faster fibres (i.e., larger $\depsilon_0$). See Table \ref{tab:re_msk} for some values of this nondimensional number. Furthermore, the definition of $\text{Re}_{MSK}$ and the nondimensional equation \eqref{eq:nondim_final} suggest that the dynamic stability of the multibody model \eqref{eq:odes_hill_stabilized} does not depend on the size of the muscle (in terms of density $\rho_0$, scale $s$, and optimal muscle length $L_{mus}^{opt}$) or the maximum unloaded strain rate $\depsilon_0$.
 
 
 \chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation} \label{ch:neohookean}
@@ -1405,7 +1405,7 @@ While numerical methods such as Newmark's or HHT-$\alpha$ do verify characterist
 \[
     \ddot{y} = \varphi(y,\dot{y}) \quad \text{in } (0,\infty),
 \]
-where $\varphi:\R \times \R \to \R$ is smooth function. If an implicit method is used to discretize this equation, then at each time step, the nonlinear problem must be linearized (using strategies such as Newton's method). Furthermore, if iterative solvers are used to solve the (discretized) linear problem, then multiple linear systems are solved at each Newton iteration, and multiple Newton iterations are needed for each time step. Therefore, second-order accuracy might not be achieved, or if it does, the numerical methods might still exhibit overshooting and oscillations beyond the high-frequency regime \cite{ErlicherBonaventuraBursi2002}.
+where $\varphi:\R \times \R \to \R$ is smooth function. If an implicit method is used to discretize this equation, then at each time step, the nonlinear problem must be linearized (using strategies such as Newton's method). Furthermore, if iterative solvers are used to solve the (discretized) linear problem, then multiple linear systems are solved at each Newton iteration, and multiple Newton iterations are needed for each time step. Therefore, second-order accuracy might not be achieved, or if it is, the numerical methods might still exhibit overshooting and oscillations beyond the high-frequency regime \cite{ErlicherBonaventuraBursi2002}.
 
 %In general, numerical methods for nonlinear elastodynamics continues to be an active research area (see, e.g. \cite{ChenEtAl2017Fabrication,JanzBetschFranke2019,LiEtAl2020LargeDefornationDynamics,PellecchiaCesarano2021Hysteretic} and the references therein).
 
@@ -1461,7 +1461,7 @@ where the stretch $\lambda^{n+1} = \partial_x u^{n+1} + 1$. Combining these two 
 \begin{equation} \label{eq:rothe_first_order_combined}
 	\rho_0 u^{n+1} - \Delta t^2 P(\lambda^{n+1})_x = \rho_0 (u^n + \Delta t v^n), \quad n \geq 0.
 \end{equation}
-Then, we take steps to discretize the spatial variable as specified at the beginning of this section. Multiplying \eqref{eq:rothe_first_order_combined} by a test function $w \in H_0^1(\Omega)$ and integrating by part we obtain the nonlinear variational formulation: find $u^{n+1} \in  H^1(\Omega)$ such that $u^{n+1}(0) = 0$, $u^{n+1}(L) = g(t^{n+1})$, and
+Then, we take steps to discretize the spatial variable as specified at the beginning of this section. Multiplying \eqref{eq:rothe_first_order_combined} by a test function $w \in H_0^1(\Omega)$ and integrating by parts we obtain the nonlinear variational formulation: find $u^{n+1} \in  H^1(\Omega)$ such that $u^{n+1}(0) = 0$, $u^{n+1}(L) = g(t^{n+1})$, and
 \begin{equation} \label{eq:rothe_first_order_VF}
 	R(u^{n+1}, w) = 0 \quad \forall \ w \in H_0^1(\Omega),
 \end{equation}
@@ -2429,7 +2429,7 @@ is the \textit{rate of rotation tensor} or \textit{vorticity tensor}. %Note that
 
 In elasticity, one of the primary focuses is determining the distribution of strains and stresses throughout the entire body. However, when analyzing skeletal muscle deformation, an additional key aspect is the deformation along the muscle fibres. This along-fibre deformation is critical for understanding muscle function, as it directly influences force transmission, tissue mechanics, and physiological behaviour. 
 
-Consider the \textit{left} and \textit{right Cauchy-Green strain tensors}, defined respectively:
+Consider the \textit{right} and \textit{left Cauchy-Green strain tensors}, defined respectively:
 \begin{equation}
     \*C = \*F^\T \*F \quad \text{or} \quad C_{AB} = F_{aA} F_{aB},
 \end{equation}
@@ -3066,7 +3066,7 @@ In Equation \eqref{eq:def_Rint}, we have written $\btau^{n+1} = \btau(\*U^{n+1},
     \begin{equation}
         R_{int}(\*U^{n+1}, p^{n+1}, D^{n+1} ; \delta\*U, \delta p, \delta D) = R_{ext}(\delta \*U),
     \end{equation} 
-    for all virtual displacements $\delta\*U \in \*H_0^1(\B_0)$, virtual pressures $\delta p \in L^2(\B_0)$, and virtual dilatations $\delta D \in L^2(\B_0)$. Recall that, in this case, the equations do not involve
+    for all virtual displacements $\delta\*U \in \*H_0^1(\B_0)$, virtual pressures $\delta p \in L^2(\B_0)$, and virtual dilatations $\delta D \in L^2(\B_0)$. %Recall that, in this case, the equations do not involve
 \end{remark}
 
 Before jumping into the linearization of the nonlinear problem \eqref{eq:LF_weak}, let us see how this formulation differs from the one introduced in \cite{Seba}.
@@ -3388,7 +3388,7 @@ we conjecture that if $\*d\*U_k^{n+1} \in \*H^{s+1}(\B_0)$, $dp_k^{n+1} \in H^s(
 \end{multline}
 This result would follow straight from the C\'{e}a estimate \eqref{eq:cea} and the approximation properties $(\mathbf{AP}_h^\*U)$, $(\mathbf{AP}_h^p)$, and $(\mathbf{AP}_h^D)$ (see, for instance, \cite{AlmonacidGatica2018}). Furthermore, if the error in the increment of the displacement variable is measured in the $\*L^2(\B_0)$ norm, as opposed to the $\*H^1(\B_0)$ norm, then there holds \cite{BoffiBrezziFortin2013}:
 \begin{equation}
-    \norm{\*d\*U_{k}^{n+1} - \*d\*U_{k,h}^{n+1}}_{1,\B_0} \leq \widehat{C}  h^{\min\{s,k+1\}}  \norm{\*d\*U_k^{n+1}}_{s+1,\B_0}
+    \norm{\*d\*U_{k}^{n+1} - \*d\*U_{k,h}^{n+1}}_{0,\B_0} \leq \widehat{C}  h^{\min\{s,k+1\}}  \norm{\*d\*U_k^{n+1}}_{s+1,\B_0}
 \end{equation}
 
 Hence, if the $Q_2/P_1$ family of elements is used to approximate each linear problem \eqref{eq:newton}, then one would expect rates of convergence of 3 for the displacement (in the $\*L^2(\B_0)$ norm) and 2 for the pressure and dilatation, but only if \textit{all} the Newton increments are sufficiently smooth (i.e., at every Newton iteration \textit{and} at every time step).
@@ -4571,7 +4571,7 @@ The developments presented in this thesis open the door to multiple avenues of r
 
 \subsection{Mass-enhanced muscle models in 1D}
 
-In Chapter 2, we noticed that converged results required to consider a large number of masses in the multibody model, which results in high computing times. To mitigate this, one could use the the 1D wave equation introduced in \eqref{eq:hill_pde_1}, that is:
+In Chapter 2, we noticed that converged results required a large number of masses in the multibody model, which results in high computing times. To mitigate this, one could use the the 1D wave equation introduced in \eqref{eq:hill_pde_1}, that is:
 \begin{equation}
     \rho_{0,L} \pder{^2 u(x,t)}{t^2}  = \pder{F(\lambda(x,t),\depsilon(x,t))}{x}, \quad 0 < x < L_{mus}^{opt}, \quad 0 < t < \infty,
 \end{equation}
