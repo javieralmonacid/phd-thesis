@@ -151,6 +151,14 @@
         right=1.25in,
         includefoot   % ensure page numbers do not extend into margins
     }
+}{
+    \newgeometry{
+        twoside,
+        top=0.75in,
+        inner=1.15in,
+        outer=0.75in,
+        bottom=0.75in
+    }
 }
 
 
@@ -227,7 +235,13 @@
 %   \pagestyle{plain} sets page numbers in the bottom center.
 %
 
-\pagestyle{plain}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\leftmark}
+\fancyhead[LO]{\rightmark}
+
 
 \apptocmd{\frontmatter}{%
     \pagenumbering{roman}

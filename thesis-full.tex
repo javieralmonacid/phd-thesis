@@ -7,7 +7,7 @@
 %   SFU Research Commons.
 
 
-\documentclass{sfuthesis}
+\documentclass[twoside]{sfuthesis}
 
 
 
@@ -315,13 +315,16 @@ To my partner, my non-mathematician friends, and my family back in Chile, thank 
 
 Finally, to all the scientists I have met along the way, from Kyoto to Dublin, from Vancouver to Montr\'{e}al and Concepci\'{o}n, thank you for sharing your curiosity and enthusiasm with me. I hope we continue exchanging ideas and working together to make this world a better place for everyone.
 
+\medskip
+
+I gratefully acknowledge the financial support provided by Simon Fraser University through the Graduate Dean's Entrance Scholarship and the PhD Research Scholarship, as well as the support of the Department of Mathematics through the Travel and Research Awards that allowed me to communicate my research and create new connections.
+
 \vfill
 
 \begin{center}
     \includegraphics[scale=0.5]{nml-logo.png}
 \end{center}
 
-\noindent I gratefully acknowledge the financial support provided by Simon Fraser University through the Graduate Dean's Entrance Scholarship and the PhD Research Scholarship, as well as the support of the Department of Mathematics through the Travel and Research Awards that allowed me to communicate my research and create new connections.
 \end{acknowledgements}
 
 \addtoToC{Table of Contents}%
@@ -560,6 +563,7 @@ In turn, some of the results in Chapter 7 are available in:
 \part{One-dimensional elastodynamics}
 
 \chapter{Inertial effects in a multibody mass-spring model of the muscle-tendon unit} \label{ch:mass_enhanced_model}
+\chaptermark{Inertial effects in a mass-spring model of the MTU}
 
 %Work with Evan on mass enhanced muscle models. We need to discuss what would be appropriate to show here, besides the model and the numerical strategy (dynamic/mass effects? Focus on one cycle? Effects of different muscles and activities?).
 %Github repository: mass-enhanced-muscle-models.
@@ -659,12 +663,12 @@ We show these curves in Figure \ref{fig:plot_FL_FV} and give their exact definit
     \centering
     \begin{tikzpicture}
         \centering
-        \node at (-2.8,1) {\huge \textbf{A}};
+        \node at (-2.9,1) {\huge \textbf{A}};
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.3\textwidth]{hill-massless.eps}};
-        \node at (-0.92,0.5) {\footnotesize CE};
-        \node at (-0.92, -0.47) {\footnotesize PEE};
-        \node at (1.33,-0.2) {SEE};
+        \node at (-0.97,0.55) {\footnotesize CE};
+        \node at (-0.97, -0.5) {\footnotesize PEE};
+        \node at (1.35,-0.2) {SEE};
         \node at (-0.92, -1.25) {\footnotesize $L_M$};
         \node at (1.33, -1.25) {\footnotesize $L_T$};
         \node at (0.1, 1.45) {\footnotesize $\vec{F}_M$};
@@ -673,32 +677,32 @@ We show these curves in Figure \ref{fig:plot_FL_FV} and give their exact definit
     \hspace{0.5em}
     \begin{tikzpicture}
         \centering
-        \node at (-4.5,1) {\huge \textbf{B}};
+        \node at (-4.8,1) {\huge \textbf{B}};
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced.eps}};
-        \node at (-2.31, 0.1) {\tiny $m_1$};
+        \node at (-2.55, 0.1) {\tiny $m_1$};
         \node at (-2.85, 1.44) {\tiny $-$};
-        \node at (-0.56, 0.1) {\tiny $m_2$};
+        \node at (-0.64, 0.1) {\tiny $m_2$};
         \node at (-1.15, 1.44) {\tiny $-$};
-        \node at (1.94, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
-        \node at (-3.2, 0.5) {\tiny CE$_1$};
-        \node at (-3.2, -0.5) {\tiny PEE$_1$};
-        \node at (-3.2, -1.26) {\footnotesize $l_1$};
-        \node at (-1.45, 0.5) {\tiny CE$_2$};
-        \node at (-1.45, -0.5) {\tiny PEE$_2$};
-        \node at (-1.45, -1.26) {\footnotesize $l_2$};
-        \node at (1.08, 0.5) {\tiny CE$_{\hspace{-0.15em}N}$};
-        \node at (1.08, -0.5) {\tiny PEE$_{\hspace{-0.15em}N}$};
-        \node at (1.08, -1.26) {\footnotesize $l_N$};
-        \node at (3.05, -0.2) {\tiny SEE};
-        \node at (3.05, -1.26) {\footnotesize $L_T$};
+        \node at (2.15, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
+        \node at (-3.5, 0.55) {\tiny CE$_1$};
+        \node at (-3.5, -0.5) {\tiny PEE$_1$};
+        \node at (-3.5, -1.26) {\footnotesize $l_1$};
+        \node at (-1.55, 0.55) {\tiny CE$_2$};
+        \node at (-1.55, -0.5) {\tiny PEE$_2$};
+        \node at (-1.55, -1.26) {\footnotesize $l_2$};
+        \node at (1.14, 0.55) {\tiny CE$_{\hspace{-0.15em}N}$};
+        \node at (1.14, -0.5) {\tiny PEE$_{\hspace{-0.15em}N}$};
+        \node at (1.14, -1.26) {\footnotesize $l_N$};
+        \node at (3.15, -0.2) {\tiny SEE};
+        \node at (3.15, -1.26) {\footnotesize $L_T$};
         \node at (-2.6, 1.45) {\footnotesize $\vec{F}_1$};
         \node at (-2.0, 1.45) {\footnotesize $\vec{F}_2$};
         \node at (-0.9, 1.45) {\footnotesize $\vec{F}_2$};
         \node at (-0.3, 1.45) {\footnotesize $\vec{F}_3$};
         \node at (1.65, 1.45) {\footnotesize $\vec{F}_N$};
         \node at (1.38, 1.44) {\tiny $-$};
-        \node at (2.25, 1.45) {\footnotesize $\vec{F}_T$};
+        \node at (2.45, 1.45) {\footnotesize $\vec{F}_T$};
         \node at (0.1,0.14) {\footnotesize $\dots$};
         \node at (-0.1,-1.0) {\footnotesize $\dots$};
     \end{tikzpicture}
@@ -975,13 +979,14 @@ In general, we observed that the number of masses needed to fully resolve the tr
 
 \begin{figure}
     \centering
-    \hspace*{-3.5em}\includegraphics[width=1.2\textwidth]{multibody-homog-study.png}
-    \caption{Traces of muscle strains ($\lambda_M$), strain rates ($\depsilon_M$), and (normalized) muscle force $\widehat{F}_M$ as the number of masses vary in the mass-enhanced model: from $N=0$ (second row, i.e. massless model), $N=2$ (third row), up to $N=128$ (last row). For reference we have added the computed activation in the first row.}
+    \hspace*{-3em}\includegraphics[width=1.1\textwidth]{multibody-homog-study.png}
+    \caption{Traces of muscle strains ($\lambda_M$), strain rates ($\depsilon_M$), and (normalized) muscle force $\widehat{F}_M$ as the number of masses vary in the mass-enhanced model: from $N=0$ (second row, i.e. massless model), $N=2$ (third row), up to $N=128$ (last row). For reference, we have added the computed activation in the first row.}
     \label{fig:multibody-homog-study}
 \end{figure}
 
 
 \chapter{Dynamical stability and the continuum limit of multibody models}
+\chaptermark{Dynamical stability and the continuum limit}
 
 We now turn our attention to the issue of stability in muscle models. In particular, we refer to a dynamical system (such as the mass-enhanced model \eqref{eq:massenhanced_model}) being \textit{dynamically} stable if small perturbations or deviations from an equilibrium state result in the system eventually remaining near or returning to that equilibrium state over time (see, e.g., \cite{strogratz}). This is in contrast to the concept of \textit{numerical} stability, which is tied to the numerical scheme used to approximate the solution to a dynamical system. We remark that these terms are \textit{not} interchangeable and that the present chapter will focus entirely on the dynamical stability of models such as \eqref{eq:massenhanced_model}.
 
@@ -1017,7 +1022,7 @@ When active and passive forces are combined, the resulting curve may have a ``di
 Let us dive into the reasons behind the descending limb instability (DLI) in the context of the mass-enhanced model \eqref{eq:massenhanced_model}. This will be useful to understand what originates this instability and what can be done to remediate it. We begin this section by establishing what an isometric contraction means for our purposes.
 
 \begin{definition}[Isometric contraction] \label{def:isometric_contraction}
-    Consider a muscle modelled as a series of one-dimensional elastic elements (i.e. as in the mass-enhanced model). We say that a muscle is contracted \textit{isometrically} if the total muscle length $L_M$ remains constant at all times, independent of the activation level. For the case of a muscle-tendon unit (MTU), we say the MTU is contracted isometrically if the combined length of muscle and tendon remains constant throughout the experiment, 
+    Consider a muscle modelled as a series of 1D elastic elements (i.e. as in the mass-enhanced model). We say that a muscle is contracted \textit{isometrically} if the total muscle length $L_M$ remains constant at all times, independent of the activation level. For the case of a muscle-tendon unit (MTU), we say the MTU is contracted isometrically if the combined length of muscle and tendon remains constant throughout the experiment, 
 \end{definition}
 
 The definition above implies that, although the length of the muscle (or an MTU) remains fixed during an isometric contraction, the length of its constitutive elements (i.e., each segment in the mass-enhanced model, or the muscle and tendon lengths in an MTU) may experience individual variations.
@@ -1053,35 +1058,37 @@ We remark that, because we are modelling an isometric contraction, these strain 
 
 \begin{figure}
     \centering
+    \scalebox{1.5}{
     \begin{tikzpicture}
         \centering
         %\node at (-4.5,1) {\huge \textbf{B}};
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced-isometric.eps}};
-        \node at (-2.31, 0.1) {\tiny $m_1$};
-        \node at (-0.56, 0.1) {\tiny $m_2$};
-        \node at (1.94, 0.1) {\tiny $m_{\hspace{-0.15em}{N-1}}$};
-        \node at (-3.2, 0.5) {\tiny CE$_1$};
-        \node at (-3.2, -0.5) {\tiny PEE$_1$};
-        \node at (-3.2, -1.26) {\footnotesize $l_1$};
-        \node at (-1.45, 0.5) {\tiny CE$_2$};
+        \node at (-2.55, 0.1) {\tiny $m_1$};
+        \node at (-0.63, 0.1) {\tiny $m_2$};
+        \node at (2.1, 0.45) {\tiny $m_{\hspace{-0.15em}{N-1}}$};
+        \node at (-3.5, 0.55) {\tiny CE$_1$};
+        \node at (-3.5, -0.5) {\tiny PEE$_1$};
+        \node at (-3.5, -1.26) {\footnotesize $l_1$};
+        \node at (-1.52, 0.55) {\tiny CE$_2$};
         \node at (-1.45, -0.5) {\tiny PEE$_2$};
         \node at (-1.45, -1.26) {\footnotesize $l_2$};
-        \node at (1.08, 0.15) {\tiny CE$_{{N-1}}$};
-        \node at (1.08, -0.5) {\tiny PEE$_{{N-1}}$};
-        \node at (2.85, 0.15) {\tiny CE$_{N}$};
-        \node at (2.85, -0.5) {\tiny PEE$_{N}$};
-        \node at (1.08, -1.26) {\footnotesize $l_{N-1}$};
-        \node at (2.85, -1.26) {\footnotesize $l_{N}$};
-        \node at (-2.6, 1.45) {\footnotesize $\vec{F}_1$};
+        \node at (1.15, 0.15) {\tiny CE$_{{N-1}}$};
+        \node at (1.15, -0.5) {\tiny PEE$_{{N-1}}$};
+        \node at (3.1, 0.15) {\tiny CE$_{N}$};
+        \node at (3.1, -0.5) {\tiny PEE$_{N}$};
+        \node at (1.15, -1.26) {\footnotesize $l_{N-1}$};
+        \node at (3.1, -1.26) {\footnotesize $l_{N}$};
+        \node at (-2.8, 1.45) {\footnotesize $-\vec{F}_1$};
         \node at (-2.0, 1.45) {\footnotesize $\vec{F}_2$};
-        \node at (-0.9, 1.45) {\footnotesize $\vec{F}_2$};
+        \node at (-1.1, 1.45) {\footnotesize $-\vec{F}_2$};
         \node at (-0.3, 1.45) {\footnotesize $\vec{F}_3$};
-        \node at (1.5, 1.45) {\footnotesize $\vec{F}_{N-1}$};
-        \node at (2.25, 1.45) {\footnotesize $\vec{F}_N$};
+        \node at (1.5, 1.45) {\footnotesize $-\vec{F}_{N-1}$};
+        \node at (2.45, 1.45) {\footnotesize $\vec{F}_N$};
         \node at (0.1,0.14) {\footnotesize $\dots$};
         \node at (-0.1,-1.0) {\footnotesize $\dots$};
     \end{tikzpicture}
+    }
     \caption{Mass-enhanced muscle model adapted for an isometric contraction. Here, the sum of all element lengths (i.e. $\sum_{i=1}^N l_i = L_M$) is fixed.}
     \label{fig:model_isometric_contraction}
 \end{figure}
@@ -1336,7 +1343,9 @@ First, we portray the resulting forces in Figure \ref{fig:forces_stabilized} whe
     \label{fig:hill_plus_nh_stable}
 \end{figure}
 
-\section{Nondimensionalization of the continuum system and the influence of mass}
+%\section{Nondimensionalization of the continuum system and the influence of mass}
+\section[Nondimensionalization of the continuum system and the influence of mass]{Nondimensionalization of the continuum system and the influence of mass\sectionmark{Nondimensionalization and the influence of mass}}
+\sectionmark{Nondimensionalization and the influence of mass}
 
 The elastic model \eqref{eq:hill_pde_1} with the force $F$ given by \eqref{eq:force_hill_plus_bm} can be used to explain the mass effects discussed in Chapter \ref{ch:mass_enhanced_model}, as well as how the dynamic stability of \eqref{eq:odes_hill_stabilized} is \textit{not} influenced by the size of the muscle. First, let
 \begin{equation}
@@ -1386,6 +1395,7 @@ This explains why one can expect, in this one-dimensional context, that mass eff
 
 
 \chapter{First order is enough: time discretization alternatives for dynamic Neo-Hookean deformation} \label{ch:neohookean}
+\chaptermark{Time stepping for Neo-Hookean deformation}
 
 %Newmark methods, Rothe's vs. method of lines comparisons. Stiff solvers is (one of) the key mathematical concepts here.
 %Github repository: one-dimensional-elasticity
@@ -2081,7 +2091,9 @@ With this in mind, we first, fix the space mesh size to $\Delta x = L/8 = 62.5 \
     \caption{Error behaviour for each of the proposed methods. Left three columns: convergence in time ($L^\infty$ norm) with fixed space mesh size ($\Delta x = L/8 = 62.5 \ \text{mm}$). Right three columns: convergence in space ($L^2$ norm) with fixed time step size $\Delta t = 10^{-5}$ s. \label{tab:convergence_linear_elasticty_1d}}
 \end{table}
 
-\section{Neo-Hookean experiments, overshooting, and velocity approximations}
+%\section{Neo-Hookean experiments, overshooting, and velocity approximations}
+\section[Neo-Hookean experiments, overshooting, and velocity approximations]{Neo-Hookean experiments, overshooting, and velocity approximations\sectionmark{NH experiments, overshooting, and velocity approximations}}
+\sectionmark{NH experiments, overshooting, and velocity approximations}
 
 We now turn to a nonlinear problem. Consider, for the 1D elasticity model \eqref{eq:elasticity_1d}, a stress $P = P(\lambda)$  given by a Neo-Hookean relationship:
 \begin{equation} \label{eq:neohookean_stress_1d}
@@ -2279,6 +2291,7 @@ These suggest a first-order implicit method is a good time stepping scheme candi
 \part{Three-dimensional elastodynamics}
 
 \chapter{A Lagrangian framework for a model of skeletal muscle tissue} \label{ch:lagrangian_formulation}
+\chaptermark{A Lagrangian framework for skeletal muscle}
 
 In this Chapter, we focus on the development of the theoretical background for a 3D finite element code base for dynamic skeletal muscle deformation, which we shall call \textit{Flexodeal}. Some parts of this Chapter have been published in:
 
@@ -2946,7 +2959,7 @@ Following \cite{Seba} we assume that the constants $c_k$, $k=1,2,3$, are identic
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\textwidth]{sketch_mtu_3D.pdf}
+    \includegraphics[width=0.60\textwidth]{sketch_mtu_3D.pdf}
     \caption{Three-dimensional continuum representation of the muscle-tendon unit showing its main three components: muscle tissue, aponeurosis, and tendon.
     \label{fig:continuum_mtu}}
 \end{figure}
@@ -3069,16 +3082,13 @@ We may also refer to \eqref{eq:LF_weak} as the (semi-discretized) \textit{princi
     R = R_{ine} + R_{int} - R_{ext},
 \end{equation}
 where the (semi-discrete) work due to inertial, internal, and external forces are respectively given by:
-\begin{align}
-    \notag R_{ine}(\*U^{n+1} ; \delta\*U) &= \Delta t^{-2} \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta\*U \\
-    \notag &- \Delta t^{-2} \int_{\B_0} \rho_0 \*U^n \cdot \delta\*U \\
-    \label{eq:def_Rine}&- \Delta t^{-1} \int_{\B_0} \rho_0 \*V^n \cdot \delta\*U,
-\end{align}
-\begin{align}
-    \notag R_{int}(\*U^{n+1}, p^{n+1}, D^{n+1} ; \delta\*U, \delta p, \delta D) &= \int_{\B_0} \btau^{n+1} : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1} \\
-    \notag &+ \int_{\B_0} \Big\{ J(\*U^{n+1}) - D^{n+1} \Big\} \cdot \delta p \\
-    \label{eq:def_Rint}&+ \int_{\B_0} \Big\{ \psi'_{vol}(D^{n+1}) - p^{n+1} \Big\} \cdot \delta D,
-\end{align}
+\begin{equation} \label{eq:def_Rine}
+    R_{ine}(\*U^{n+1} ; \delta\*U) = \Delta t^{-2} \int_{\B_0} \rho_0 \*U^{n+1} \cdot \delta\*U - \Delta t^{-2} \int_{\B_0} \rho_0 \*U^n \cdot \delta\*U - \Delta t^{-1} \int_{\B_0} \rho_0 \*V^n \cdot \delta\*U,
+\end{equation}
+\begin{multline} \label{eq:def_Rint}
+    R_{int}(\*U^{n+1}, p^{n+1}, D^{n+1} ; \delta\*U, \delta p, \delta D) = \int_{\B_0} \btau^{n+1} : \nabla_0(\delta\*U) \*F(\*U^{n+1})^{-1} \\
+     + \int_{\B_0} \Big\{ J(\*U^{n+1}) - D^{n+1} \Big\} \cdot \delta p + \int_{\B_0} \Big\{ \psi'_{vol}(D^{n+1}) - p^{n+1} \Big\} \cdot \delta D,
+\end{multline}
 and
 \begin{equation}
     \label{eq:def_Rext}R_{ext}(\delta \*U) =  \int_{\Gamma_{N,0}} \*T^{n+1} \cdot \delta\*U + \int_{\B_0} \*f_0^{n+1}  \cdot \delta\*U.
@@ -3524,6 +3534,7 @@ We omit details of the discretization as this will be solved using the C++ finit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Flexodeal: a new finite-element framework for studying musculoskeletal dynamics} \label{ch:flexodeal}
+\chaptermark{Flexodeal}
 
 \texttt{Flexodeal} is a new finite-element framework developed during this research project. It aims to be a research software for the study of 3D skeletal muscle deformation in a fully dynamic regime (with quasi-static deformations provided as an option as well). Some elements are based on previous codes developed by the Neuromuscular Mechanics Laboratory at Simon Fraser University, but they have been significantly restructured. \texttt{Flexodeal} is completely open-source and licensed under the same conditions as deal.II (GNU Lesser General Public License, version 2.1 \cite{dealii}). It is freely available at:
 \begin{center}
@@ -4209,6 +4220,7 @@ The performance of the numerical methods along the ascending limb of the fibre F
 The unsuccessful results discuss in this section here should not demotivate users of Flexodeal. For submaximal contractions, and especially for activations lower than 20\%, the fibre FL curve \textit{does not} have a descending limb (see Figure \ref{fig:FL_curves_diff_act}), so active lengthening should not pose a major difficulty. We will show in Section \ref{sec:flexodeal_mri} a more realistic example in which we combine a domain derived from magnetic resonance imaging (MRI) and experimentally-obtained activation and whole muscle stretch profiles.
 
 \section{The effect of mass and the force-velocity relationship in isometric contractions} \label{sec:flexodeal_dynamic_effects}
+\sectionmark{Mass and FV effects in isometric contractions}
 
 The title of this section might sound strange at first to many biomechanists. After all, in the traditional context of a single mass-spring system (i.e. Figure \ref{fig:muscle_models_1D} Left), if there is no change in the length of the muscle (the isometric condition) then there is no change in velocity, and so force-velocity (FV) properties do not play a role. This idea would also apply to the three-dimensional case \textit{if}, in Definition \ref{def:isometric_contraction_3d}, we had included a ``holding'' step after $t = T$ seconds, that is, a period of time in which the muscle is held at a fixed length and at a fixed activation until the quasi-static state is achieved (i.e. no accelerations and no velocities). Before reaching this state, however, muscle experiences local deformations with non-negligible velocity. Given that fibres rotate when they are activated \cite{LieberFriden2000}, fibre strain rates are locally not zero, and therefore FV effects (represented by the term $\widehat{\sigma}_V$ in Equation \eqref{eq:def_hill_stress_sigma}) are not necessarily negligible.
 
@@ -4263,7 +4275,8 @@ In turn, Figure \ref{fig:ic-mean-fibre-strain-rate-slab} (middle) shows the mean
 \end{figure}
 
 
-\section{Deformation of a human medial gastrocnemius during locomotion} \label{sec:flexodeal_mri}
+\section[Deformation of a human medial gastrocnemius during locomotion]{Deformation of a human medial gastrocnemius during locomotion\sectionmark{Deformation of a human MG during locomotion}} \label{sec:flexodeal_mri}
+\sectionmark{Deformation of a human MG during locomotion}
 
 In this last experiment, we move one step closer towards the realistic simulation of skeletal muscle deformation. Here, we combined a computational domain based on magnetic resonance imaging (MRI) with motion capture and electromyography (EMG) data obtained from a locomotion study. This constitutes a ``proof of concept'' of the applicability of \texttt{Flexodeal} to subject-specific inputs, which could further lead into the development of digital twins of muscle. This is an active research area that has the potential to provide transformative solutions in healthcare and musculoskeletal simulation in general \cite{Diniz2025DigitalTwin}.
 
@@ -4313,6 +4326,7 @@ Finally, we show in Figure \ref{fig:mri_displacement_3d} snapshots of the displa
 
 
 \chapter{Gearing in muscle tissues: a first-of-its-kind computational study} \label{ch:gearing}
+\chaptermark{Gearing in muscle tissues}
 
 %Parts of this study are intended to be published in the review article:
 
@@ -4859,7 +4873,7 @@ $c_4$ & 0.000000 & $c_{10}$ & 186.196125 & $c_{16}$ & 1.374324 \\\hline
 $c_5$ & 29.825565 & $c_{11}$ & 6.090887 & $c_{17}$ & 1.595047 \\\hline
 $c_6$ & -0.943550 & $c_{12}$ & 1.000000 & -- & -- \\\hline
 \end{tabular}
-\caption{Parameters describing the muscle passive stress-strain-rate relationship $\widehat{\sigma}_V$ used for 3D experiments.\label{tab:coef_3D_velocity}}
+\caption{Parameters describing the muscle stress-strain-rate relationship $\widehat{\sigma}_V$ used for 3D experiments.\label{tab:coef_3D_velocity}}
 \end{table}
 
 \begin{table}
