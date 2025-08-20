@@ -1053,14 +1053,14 @@ We remark that, because we are modelling an isometric contraction, these strain 
 
 \begin{figure}
     \centering
-    \begin{tikzpicture}
+    \scalebox{1.5}{\begin{tikzpicture}
         \centering
         %\node at (-4.5,1) {\huge \textbf{B}};
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced-isometric.eps}};
         \node at (-2.31, 0.1) {\tiny $m_1$};
         \node at (-0.56, 0.1) {\tiny $m_2$};
-        \node at (1.94, 0.1) {\tiny $m_{\hspace{-0.15em}{N-1}}$};
+        \node at (1.94, 0.4) {\tiny $m_{\hspace{-0.15em}{N-1}}$};
         \node at (-3.2, 0.5) {\tiny CE$_1$};
         \node at (-3.2, -0.5) {\tiny PEE$_1$};
         \node at (-3.2, -1.26) {\footnotesize $l_1$};
@@ -1073,15 +1073,15 @@ We remark that, because we are modelling an isometric contraction, these strain 
         \node at (2.85, -0.5) {\tiny PEE$_{N}$};
         \node at (1.08, -1.26) {\footnotesize $l_{N-1}$};
         \node at (2.85, -1.26) {\footnotesize $l_{N}$};
-        \node at (-2.6, 1.45) {\footnotesize $\vec{F}_1$};
+        \node at (-2.6, 1.45) {\footnotesize $-\vec{F}_1$};
         \node at (-2.0, 1.45) {\footnotesize $\vec{F}_2$};
-        \node at (-0.9, 1.45) {\footnotesize $\vec{F}_2$};
+        \node at (-0.9, 1.45) {\footnotesize $-\vec{F}_2$};
         \node at (-0.3, 1.45) {\footnotesize $\vec{F}_3$};
-        \node at (1.5, 1.45) {\footnotesize $\vec{F}_{N-1}$};
+        \node at (1.4, 1.45) {\footnotesize $-\vec{F}_{N-1}$};
         \node at (2.25, 1.45) {\footnotesize $\vec{F}_N$};
         \node at (0.1,0.14) {\footnotesize $\dots$};
         \node at (-0.1,-1.0) {\footnotesize $\dots$};
-    \end{tikzpicture}
+    \end{tikzpicture}}
     \caption{Mass-enhanced muscle model adapted for an isometric contraction. Here, the sum of all element lengths (i.e. $\sum_{i=1}^N l_i = L_M$) is fixed.}
     \label{fig:model_isometric_contraction}
 \end{figure}
@@ -4859,7 +4859,7 @@ $c_4$ & 0.000000 & $c_{10}$ & 186.196125 & $c_{16}$ & 1.374324 \\\hline
 $c_5$ & 29.825565 & $c_{11}$ & 6.090887 & $c_{17}$ & 1.595047 \\\hline
 $c_6$ & -0.943550 & $c_{12}$ & 1.000000 & -- & -- \\\hline
 \end{tabular}
-\caption{Parameters describing the muscle passive stress-strain-rate relationship $\widehat{\sigma}_V$ used for 3D experiments.\label{tab:coef_3D_velocity}}
+\caption{Parameters describing the muscle stress-strain-rate relationship $\widehat{\sigma}_V$ used for 3D experiments.\label{tab:coef_3D_velocity}}
 \end{table}
 
 \begin{table}
