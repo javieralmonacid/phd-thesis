@@ -680,14 +680,14 @@ We show these curves in Figure \ref{fig:plot_FL_FV} and give their exact definit
         \node at (-4.8,1) {\huge \textbf{B}};
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced.eps}};
-        \node at (-2.55, 0.1) {\tiny $m_1$};
+        \node at (-2.4, 0.1) {\tiny $m_1$};
         \node at (-2.85, 1.44) {\tiny $-$};
-        \node at (-0.64, 0.1) {\tiny $m_2$};
+        \node at (-0.6, 0.1) {\tiny $m_2$};
         \node at (-1.15, 1.44) {\tiny $-$};
-        \node at (2.15, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
-        \node at (-3.5, 0.55) {\tiny CE$_1$};
-        \node at (-3.5, -0.5) {\tiny PEE$_1$};
-        \node at (-3.5, -1.26) {\footnotesize $l_1$};
+        \node at (2.0, 0.1) {\tiny $m_{\hspace{-0.15em}N}$};
+        \node at (-3.3, 0.55) {\tiny CE$_1$};
+        \node at (-3.3, -0.5) {\tiny PEE$_1$};
+        \node at (-3.3, -1.26) {\footnotesize $l_1$};
         \node at (-1.55, 0.55) {\tiny CE$_2$};
         \node at (-1.55, -0.5) {\tiny PEE$_2$};
         \node at (-1.55, -1.26) {\footnotesize $l_2$};
@@ -756,7 +756,7 @@ For the model in Figure \ref{fig:muscle_models_1D}A, the muscle force $F_M \equi
 \begin{equation} \label{eq:massless_model}
     F_M(\lambda_M, \depsilon_M) = F_T(\lambda_T), \quad t > 0.
 \end{equation}
-This first-order implicit ODE, which we refer to as the \textit{massless} model, represents a model of the MTU in which the mass of the muscle is not taken into consideration. While this may seem like an outrageous simplification of the problem, it is actually what is being solved in the backend of many popular biomechanics software, such as OpenSim \cite{Delp2007OpenSim}. Hence, \textbf{this model's absence of mass raises the question of whether including mass has any effect in the prediction of the dynamics of the system}. 
+This first-order implicit ODE, which we refer to as the \textit{massless} model, represents a model of the MTU in which the mass of the muscle is not taken into consideration. While this may seem like an outrageous simplification of the problem, it is actually what is being solved in the backend of many popular biomechanics software, such as OpenSim \cite{Delp2007OpenSim}. Hence, this model's absence of mass raises the question of whether including mass has any effect in the prediction of the dynamics of the system. 
 
 In an attempt to answer the previous question, based on the work by G\"{u}nther et al. \cite{Gunther2012}, Ross et al. \cite{Ross2018}, and Ross \& Wakeling \cite{RossWakeling2016Multibody, Paper4_RossWakeling2021}, Chen \cite{EvanThesis} has put forward a muscle model in which the mass of the muscle is equally distributed into $N$ segments (see Figure \ref{fig:muscle_models_1D}B), forming a multibody system with $N$ bodies. The dynamics in this model, which we refer to as the \textit{mass-enhanced} model, are given by the set of second-order ODEs:
 \begin{subequations} \label{eq:massenhanced_model}
@@ -1064,12 +1064,12 @@ We remark that, because we are modelling an isometric contraction, these strain 
         %\node at (-4.5,1) {\huge \textbf{B}};
         \node[inner sep=0pt] at (0,0)
             {\includegraphics[width=0.525\textwidth]{hill-mass-enhanced-isometric.eps}};
-        \node at (-2.55, 0.1) {\tiny $m_1$};
-        \node at (-0.63, 0.1) {\tiny $m_2$};
-        \node at (2.1, 0.45) {\tiny $m_{\hspace{-0.15em}{N-1}}$};
-        \node at (-3.5, 0.55) {\tiny CE$_1$};
-        \node at (-3.5, -0.5) {\tiny PEE$_1$};
-        \node at (-3.5, -1.26) {\footnotesize $l_1$};
+        \node at (-2.4, 0.1) {\tiny $m_1$};
+        \node at (-0.6, 0.1) {\tiny $m_2$};
+        \node at (2.0, 0.45) {\tiny $m_{\hspace{-0.15em}{N-1}}$};
+        \node at (-3.3, 0.55) {\tiny CE$_1$};
+        \node at (-3.3, -0.5) {\tiny PEE$_1$};
+        \node at (-3.3, -1.26) {\footnotesize $l_1$};
         \node at (-1.52, 0.55) {\tiny CE$_2$};
         \node at (-1.45, -0.5) {\tiny PEE$_2$};
         \node at (-1.45, -1.26) {\footnotesize $l_2$};
@@ -2959,7 +2959,7 @@ Following \cite{Seba} we assume that the constants $c_k$, $k=1,2,3$, are identic
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.60\textwidth]{sketch_mtu_3D.pdf}
+    \includegraphics[scale=0.65]{sketch_mtu_3D.pdf}
     \caption{Three-dimensional continuum representation of the muscle-tendon unit showing its main three components: muscle tissue, aponeurosis, and tendon.
     \label{fig:continuum_mtu}}
 \end{figure}
@@ -3987,7 +3987,7 @@ Therefore, when $\Gamma_D$ coincides with the ends of the muscle (as it is our c
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{geometry_muscle_block_with_pennation.pdf}
+    \includegraphics[width=0.95\textwidth]{geometry_muscle_block_with_pennation.pdf}
     \caption{Muscle block geometry, including a 3D view (top) and the main quantities that describe the muscle architecture (bottom). In particular, the fibres are parallel to each other and oriented with an initial pennation angle $\beta_0$ in the $xz$ plane, which results in an initial orientation field $\*a_0(\*X) = \langle \cos(\beta_0), 0, \sin(\beta_0) \rangle$ for any $\*X \in \B_0$.\label{fig:muscle_block}}
 \end{figure}
 
@@ -4219,7 +4219,7 @@ The performance of the numerical methods along the ascending limb of the fibre F
 
 The unsuccessful results discuss in this section here should not demotivate users of Flexodeal. For submaximal contractions, and especially for activations lower than 20\%, the fibre FL curve \textit{does not} have a descending limb (see Figure \ref{fig:FL_curves_diff_act}), so active lengthening should not pose a major difficulty. We will show in Section \ref{sec:flexodeal_mri} a more realistic example in which we combine a domain derived from magnetic resonance imaging (MRI) and experimentally-obtained activation and whole muscle stretch profiles.
 
-\section{The effect of mass and the force-velocity relationship in isometric contractions} \label{sec:flexodeal_dynamic_effects}
+\section[The effect of mass and the force-velocity relationship in isometric contractions]{The effect of mass and the force-velocity relationship in isometric contractions\sectionmark{Mass and FV effects in isometric contractions}} \label{sec:flexodeal_dynamic_effects}
 \sectionmark{Mass and FV effects in isometric contractions}
 
 The title of this section might sound strange at first to many biomechanists. After all, in the traditional context of a single mass-spring system (i.e. Figure \ref{fig:muscle_models_1D} Left), if there is no change in the length of the muscle (the isometric condition) then there is no change in velocity, and so force-velocity (FV) properties do not play a role. This idea would also apply to the three-dimensional case \textit{if}, in Definition \ref{def:isometric_contraction_3d}, we had included a ``holding'' step after $t = T$ seconds, that is, a period of time in which the muscle is held at a fixed length and at a fixed activation until the quasi-static state is achieved (i.e. no accelerations and no velocities). Before reaching this state, however, muscle experiences local deformations with non-negligible velocity. Given that fibres rotate when they are activated \cite{LieberFriden2000}, fibre strain rates are locally not zero, and therefore FV effects (represented by the term $\widehat{\sigma}_V$ in Equation \eqref{eq:def_hill_stress_sigma}) are not necessarily negligible.

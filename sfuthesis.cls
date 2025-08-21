@@ -155,7 +155,7 @@
     \newgeometry{
         twoside,
         top=0.75in,
-        inner=1.15in,
+        inner=1.5in,
         outer=0.75in,
         bottom=0.75in
     }
