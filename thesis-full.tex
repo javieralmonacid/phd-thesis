@@ -47,11 +47,11 @@
 \keywords{skeletal muscle; continuum mechanics; finite element method; time stepping schemes; musculoskeletal simulation; gearing}
 
 \committee{
-    \chair{Amarpreet Rattan}{Associate Professor \\ Department of Mathematics}
-    \member{Nilima Nigam}{Supervisor \\ Professor \\ Department of Mathematics}
-    \member{James Wakeling}{Co-Supervisor\\ Professor \\ Department of Biomedical Physiology and Kinesiology}
-    \member{Ben Adcock}{Internal Examiner \\ Professor \\ Department of Mathematics}
-    \member{Jay Gopalakrishnan}{External Examiner \\ Professor \\ Fariborz Maseeh Department of Mathematics and Statistics \\ Portland State University}
+    \chair{Amarpreet Rattan}{Associate Professor, Mathematics}
+    \member{Nilima Nigam}{Supervisor \\ Professor, Mathematics}
+    \member{James Wakeling}{Committee Member\\ Professor, Biomedical Physiology and Kinesiology}
+    \member{Ben Adcock}{Internal Examiner \\ Professor, Mathematics}
+    \member{Jay Gopalakrishnan}{External Examiner \\ Professor, Mathematics and Statistics \\ Portland State University}
 }
 
 
@@ -190,6 +190,8 @@
 \newtheorem{definition}{Definition}[chapter]
 \newtheorem{lemma}[definition]{Lemma}
 \newtheorem{example}[definition]{Example}
+
+\usepackage{caption}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -975,7 +977,8 @@ In general, we observed that the number of masses needed to fully resolve the tr
 
 \begin{figure}
     \centering
-    \hspace*{-3.5em}\includegraphics[width=1.2\textwidth]{multibody-homog-study.png}
+    %\hspace*{-3.5em}\includegraphics[width=1.2\textwidth]{multibody-homog-study.png}
+    \hspace*{-0.9em}\includegraphics[width=1.03\textwidth]{multibody-homog-study.png}
     \caption{Traces of muscle strains ($\lambda_M$), strain rates ($\depsilon_M$), and (normalized) muscle force $\widehat{F}_M$ as the number of masses vary in the mass-enhanced model: from $N=0$ (second row, i.e. massless model), $N=2$ (third row), up to $N=128$ (last row). For reference we have added the computed activation in the first row.}
     \label{fig:multibody-homog-study}
 \end{figure}
@@ -4662,6 +4665,7 @@ This thesis covered the nonlinear elastodynamics of skeletal muscle tissue, comb
     \bibliography{references}
 
 \begin{appendices} % optional
+\captionsetup[table]{list=no}
 
 \chapter{Force relationships} \label{app:force_relationships}
 
